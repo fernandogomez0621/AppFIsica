@@ -1,5 +1,7 @@
 # 🏦 Sistema de Riesgo Crediticio con RBM y RAG Educativo
 
+🔗 **App desplegada:** [http://157.137.229.69:1111/](http://157.137.229.69:1111/)  
+📘 **Documentación:** [http://157.137.229.69:2222/](http://157.137.229.69:2222/)
 Sistema integral de análisis y predicción de riesgo crediticio hipotecario para Colombia, implementado con **Streamlit**, **Máquinas de Boltzmann Restringidas (RBM)** y **sistema RAG educativo**.
 
 ## 🎯 Características Principales
