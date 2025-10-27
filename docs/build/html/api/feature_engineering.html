@@ -1,0 +1,408 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>feature_engineering &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="clustering" href="clustering.html" />
+    <link rel="prev" title="bivariate_analysis" href="bivariate_analysis.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Módulos del Sistema</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#modulos-principales">Módulos Principales</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../modules.html#referencia-completa-de-la-api">Referencia Completa de la API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="generar_datos.html">generar_datos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_processor.html">data_processor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="univariate_analysis.html">univariate_analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bivariate_analysis.html">bivariate_analysis</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">feature_engineering</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#descripcion-general">Descripción General</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#clases-principales">Clases Principales</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-de-creacion-de-caracteristicas">Métodos de Creación de Características</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#funciones-de-renderizado">Funciones de Renderizado</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ejemplo-completo-de-uso">Ejemplo Completo de Uso</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#formulas-de-caracteristicas">Fórmulas de Características</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ver-tambien">Ver también</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="clustering.html">clustering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbm_model.html">rbm_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="supervised_models.html">supervised_models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="prediction.html">prediction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="educational_rag.html">educational_rag</a></li>
+<li class="toctree-l3"><a class="reference internal" href="retraining.html">retraining</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#arquitectura-del-sistema">Arquitectura del Sistema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#flujo-de-datos">Flujo de Datos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#descripcion-de-modulos">Descripción de Módulos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#configuracion-avanzada">Configuración Avanzada</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#integracion-con-otros-sistemas">Integración con Otros Sistemas</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">Módulos del Sistema</a></li>
+      <li class="breadcrumb-item active">feature_engineering</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/feature_engineering.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="feature-engineering">
+<h1>feature_engineering<a class="headerlink" href="#feature-engineering" title="Link to this heading"></a></h1>
+<section id="descripcion-general">
+<h2>Descripción General<a class="headerlink" href="#descripcion-general" title="Link to this heading"></a></h2>
+<p>Módulo de ingeniería de características para crear variables derivadas automáticamente. Mejora el poder predictivo de los modelos mediante transformaciones, ratios e interacciones.</p>
+</section>
+<section id="clases-principales">
+<h2>Clases Principales<a class="headerlink" href="#clases-principales" title="Link to this heading"></a></h2>
+<section id="featureengineer">
+<h3>FeatureEngineer<a class="headerlink" href="#featureengineer" title="Link to this heading"></a></h3>
+</section>
+</section>
+<section id="metodos-de-creacion-de-caracteristicas">
+<h2>Métodos de Creación de Características<a class="headerlink" href="#metodos-de-creacion-de-caracteristicas" title="Link to this heading"></a></h2>
+<section id="create-financial-ratios">
+<h3>create_financial_ratios<a class="headerlink" href="#create-financial-ratios" title="Link to this heading"></a></h3>
+<p>Crea ratios financieros fundamentales.</p>
+<dl class="simple">
+<dt><strong>Returns:</strong></dt><dd><p>DataFrame con ratios financieros</p>
+</dd>
+</dl>
+<p><strong>Ratios creados:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>ltv_ratio:</strong> Loan-to-Value (Préstamo/Valor inmueble) %</p></li>
+<li><p><strong>dti_ratio:</strong> Debt-to-Income (Deuda/Ingreso) %</p></li>
+<li><p><strong>capacidad_ahorro_nueva:</strong> Salario - Egresos</p></li>
+<li><p><strong>ratio_ahorro_salario:</strong> (Ahorro/Salario) %</p></li>
+<li><p><strong>ratio_patrimonio_deuda:</strong> Patrimonio/Deuda</p></li>
+<li><p><strong>saldo_relativo:</strong> Saldo banco/Salario</p></li>
+<li><p><strong>meses_colchon:</strong> Saldo/Cuota mensual</p></li>
+<li><p><strong>ratio_cuota_inicial:</strong> (Cuota inicial/Valor inmueble) %</p></li>
+</ol>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df_with_ratios</span> <span class="o">=</span> <span class="n">engineer</span><span class="o">.</span><span class="n">create_financial_ratios</span><span class="p">()</span>
+
+<span class="c1"># Ver nuevos ratios</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_with_ratios</span><span class="p">[[</span><span class="s1">&#39;ltv_ratio&#39;</span><span class="p">,</span> <span class="s1">&#39;dti_ratio&#39;</span><span class="p">,</span> <span class="s1">&#39;meses_colchon&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="create-risk-indicators">
+<h3>create_risk_indicators<a class="headerlink" href="#create-risk-indicators" title="Link to this heading"></a></h3>
+<p>Crea indicadores de riesgo específicos.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">df</span></code> (DataFrame): DataFrame con ratios financieros</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>DataFrame con indicadores de riesgo</p>
+</dd>
+</dl>
+<p><strong>Indicadores creados:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>score_edad:</strong> Penalización por edades extremas</p></li>
+<li><p><strong>flag_sobreendeudamiento:</strong> DTI &gt; 40% (binario)</p></li>
+<li><p><strong>nivel_sobreendeudamiento:</strong> Bajo/Moderado/Alto/Crítico</p></li>
+<li><p><strong>score_estabilidad:</strong> Estabilidad laboral (0-125)</p></li>
+<li><p><strong>riesgo_legal:</strong> Función exponencial de demandas</p></li>
+<li><p><strong>score_educacion:</strong> Codificación ordinal (1-4)</p></li>
+<li><p><strong>flag_alta_liquidez:</strong> Saldo &gt; 3 salarios (binario)</p></li>
+</ol>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df_with_indicators</span> <span class="o">=</span> <span class="n">engineer</span><span class="o">.</span><span class="n">create_risk_indicators</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Ver indicadores</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_with_indicators</span><span class="p">[[</span><span class="s1">&#39;score_edad&#39;</span><span class="p">,</span> <span class="s1">&#39;score_estabilidad&#39;</span><span class="p">,</span> <span class="s1">&#39;riesgo_legal&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="create-interaction-features">
+<h3>create_interaction_features<a class="headerlink" href="#create-interaction-features" title="Link to this heading"></a></h3>
+<p>Crea variables de interacción entre características.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">df</span></code> (DataFrame): DataFrame con características base</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>DataFrame con interacciones</p>
+</dd>
+</dl>
+<p><strong>Interacciones creadas:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>educacion_x_salario:</strong> Educación × Salario/1M</p></li>
+<li><p><strong>propiedades_x_patrimonio:</strong> Propiedades × log(Patrimonio)</p></li>
+<li><p><strong>edad_x_empleo:</strong> Edad × Antigüedad empleo</p></li>
+<li><p><strong>ltv_x_puntaje:</strong> LTV × (900 - Puntaje DataCrédito)/100</p></li>
+</ol>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df_with_interactions</span> <span class="o">=</span> <span class="n">engineer</span><span class="o">.</span><span class="n">create_interaction_features</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Ver interacciones</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_with_interactions</span><span class="p">[[</span><span class="s1">&#39;educacion_x_salario&#39;</span><span class="p">,</span> <span class="s1">&#39;ltv_x_puntaje&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="create-binned-features">
+<h3>create_binned_features<a class="headerlink" href="#create-binned-features" title="Link to this heading"></a></h3>
+<p>Crea variables discretizadas/categorizadas.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">df</span></code> (DataFrame): DataFrame con variables continuas</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>DataFrame con variables discretizadas</p>
+</dd>
+</dl>
+<p><strong>Variables discretizadas:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>grupo_edad:</strong> Joven/Adulto_Joven/Adulto/Adulto_Mayor</p></li>
+<li><p><strong>rango_salarial:</strong> Muy_Bajo/Bajo/Medio/Alto/Muy_Alto</p></li>
+<li><p><strong>categoria_puntaje:</strong> Malo/Regular/Bueno/Muy_Bueno/Excelente</p></li>
+<li><p><strong>nivel_ltv:</strong> Muy_Bajo/Bajo/Medio/Alto/Muy_Alto</p></li>
+</ol>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df_binned</span> <span class="o">=</span> <span class="n">engineer</span><span class="o">.</span><span class="n">create_binned_features</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Ver distribución de grupos</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_binned</span><span class="p">[</span><span class="s1">&#39;grupo_edad&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_binned</span><span class="p">[</span><span class="s1">&#39;rango_salarial&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="create-transformed-features">
+<h3>create_transformed_features<a class="headerlink" href="#create-transformed-features" title="Link to this heading"></a></h3>
+<p>Crea variables transformadas matemáticamente.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">df</span></code> (DataFrame): DataFrame con variables originales</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>DataFrame con transformaciones</p>
+</dd>
+</dl>
+<p><strong>Transformaciones aplicadas:</strong></p>
+<ul class="simple">
+<li><p><strong>Logarítmica:</strong> Para variables con distribución sesgada</p></li>
+<li><p><strong>Raíz cuadrada:</strong> Alternativa a log para valores pequeños</p></li>
+<li><p><strong>Cuadrática:</strong> Para capturar relaciones no lineales</p></li>
+</ul>
+<dl class="simple">
+<dt><strong>Variables transformadas:</strong></dt><dd><ul class="simple">
+<li><p>salario_mensual_log, salario_mensual_sqrt</p></li>
+<li><p>patrimonio_total_log, patrimonio_total_sqrt</p></li>
+<li><p>valor_inmueble_log, valor_inmueble_sqrt</p></li>
+<li><p>saldo_promedio_banco_log, saldo_promedio_banco_sqrt</p></li>
+<li><p>dti_cuadrado</p></li>
+<li><p>edad_cuadrado</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="calculate-feature-importance">
+<h3>calculate_feature_importance<a class="headerlink" href="#calculate-feature-importance" title="Link to this heading"></a></h3>
+<p>Calcula importancia de características usando mutual information.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">df</span></code> (DataFrame): DataFrame con características</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">target_col</span></code> (str): Variable objetivo (default: “nivel_riesgo”)</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Diccionario ordenado con importancias</p>
+</dd>
+</dl>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">importance</span> <span class="o">=</span> <span class="n">engineer</span><span class="o">.</span><span class="n">calculate_feature_importance</span><span class="p">(</span><span class="n">df_enhanced</span><span class="p">,</span> <span class="s1">&#39;nivel_riesgo&#39;</span><span class="p">)</span>
+
+<span class="c1"># Top 10 características</span>
+<span class="k">for</span> <span class="n">feature</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">importance</span><span class="o">.</span><span class="n">items</span><span class="p">())[:</span><span class="mi">10</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">feature</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">score</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="generate-all-features">
+<h3>generate_all_features<a class="headerlink" href="#generate-all-features" title="Link to this heading"></a></h3>
+<p>Genera todas las características derivadas en un solo paso.</p>
+<dl class="simple">
+<dt><strong>Returns:</strong></dt><dd><p>DataFrame con todas las características</p>
+</dd>
+</dl>
+<p><strong>Proceso completo:</strong></p>
+<ol class="arabic simple">
+<li><p>Ratios financieros</p></li>
+<li><p>Indicadores de riesgo</p></li>
+<li><p>Variables de interacción</p></li>
+<li><p>Variables discretizadas</p></li>
+<li><p>Transformaciones matemáticas</p></li>
+</ol>
+</section>
+</section>
+<section id="funciones-de-renderizado">
+<h2>Funciones de Renderizado<a class="headerlink" href="#funciones-de-renderizado" title="Link to this heading"></a></h2>
+<section id="render-feature-engineering">
+<h3>render_feature_engineering<a class="headerlink" href="#render-feature-engineering" title="Link to this heading"></a></h3>
+<p>Renderiza el módulo de ingeniería de características en Streamlit.</p>
+</section>
+<section id="render-feature-engineering-module">
+<h3>render_feature_engineering_module<a class="headerlink" href="#render-feature-engineering-module" title="Link to this heading"></a></h3>
+<p>Función principal para renderizar el módulo completo.</p>
+</section>
+</section>
+<section id="ejemplo-completo-de-uso">
+<h2>Ejemplo Completo de Uso<a class="headerlink" href="#ejemplo-completo-de-uso" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.feature_engineering</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureEngineer</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Cargar datos originales</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;datos_credito_hipotecario_realista.csv&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Características originales: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Crear ingeniero</span>
+<span class="n">engineer</span> <span class="o">=</span> <span class="n">FeatureEngineer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Generar todas las características</span>
+<span class="n">df_enhanced</span> <span class="o">=</span> <span class="n">engineer</span><span class="o">.</span><span class="n">generate_all_features</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Características totales: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_enhanced</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Nuevas características: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">engineer</span><span class="o">.</span><span class="n">new_features</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Ver nuevas características</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Nuevas características creadas:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">feature</span><span class="p">,</span> <span class="n">description</span> <span class="ow">in</span> <span class="n">engineer</span><span class="o">.</span><span class="n">new_features</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="n">feature</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Calcular importancia</span>
+<span class="n">importance</span> <span class="o">=</span> <span class="n">engineer</span><span class="o">.</span><span class="n">calculate_feature_importance</span><span class="p">(</span><span class="n">df_enhanced</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Top 10 características más importantes:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">importance</span><span class="o">.</span><span class="n">items</span><span class="p">())[:</span><span class="mi">10</span><span class="p">],</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2">. </span><span class="si">{</span><span class="n">feature</span><span class="si">:</span><span class="s2">30s</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">score</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Guardar dataset enriquecido</span>
+<span class="n">df_enhanced</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;datos_con_caracteristicas.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">✅ Dataset enriquecido guardado&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="formulas-de-caracteristicas">
+<h2>Fórmulas de Características<a class="headerlink" href="#formulas-de-caracteristicas" title="Link to this heading"></a></h2>
+<section id="ratios-financieros">
+<h3>Ratios Financieros<a class="headerlink" href="#ratios-financieros" title="Link to this heading"></a></h3>
+<div class="math notranslate nohighlight">
+\[LTV = \frac{\text{Monto Crédito}}{\text{Valor Inmueble}} \times 100\]</div>
+<div class="math notranslate nohighlight">
+\[DTI = \frac{\text{Cuota Mensual}}{\text{Salario Mensual}} \times 100\]</div>
+<div class="math notranslate nohighlight">
+\[\text{Capacidad Ahorro} = \text{Salario} - \text{Egresos}\]</div>
+<div class="math notranslate nohighlight">
+\[\text{Meses Colchón} = \frac{\text{Saldo Banco}}{\text{Cuota Mensual}}\]</div>
+</section>
+<section id="indicadores-de-riesgo">
+<h3>Indicadores de Riesgo<a class="headerlink" href="#indicadores-de-riesgo" title="Link to this heading"></a></h3>
+<div class="math notranslate nohighlight">
+\[\text{Riesgo Legal} = 100 \times (1 - e^{-2 \times \text{Demandas}})\]</div>
+<div class="math notranslate nohighlight">
+\[\text{Score Estabilidad} = \min(125, \text{Antigüedad} \times 10 + \text{Bonus Empleo})\]</div>
+</section>
+</section>
+<section id="ver-tambien">
+<h2>Ver también<a class="headerlink" href="#ver-tambien" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="data_processor.html"><span class="doc">data_processor</span></a> - Procesamiento de datos</p></li>
+<li><p><a class="reference internal" href="supervised_models.html"><span class="doc">supervised_models</span></a> - Modelos de clasificación</p></li>
+<li><p><a class="reference internal" href="rbm_model.html"><span class="doc">rbm_model</span></a> - Características RBM</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="bivariate_analysis.html" class="btn btn-neutral float-left" title="bivariate_analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="clustering.html" class="btn btn-neutral float-right" title="clustering" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, Andrés Fernando Gómez Rojas &amp; Carlos Andrés Gómez Vasco. Software Libre bajo Licencia MIT.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

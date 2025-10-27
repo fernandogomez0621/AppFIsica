@@ -1,0 +1,593 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>11. Sistema RAG Educativo &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="Módulos del Sistema" href="../modules.html" />
+    <link rel="prev" title="10. Reentrenamiento de Modelos" href="10_reentrenamiento.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#introduccion">Introducción</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#flujo-de-trabajo-recomendado">Flujo de Trabajo Recomendado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#requisitos-previos">Requisitos Previos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#convenciones-de-este-manual">Convenciones de este Manual</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../user_guide.html#estructura-del-manual">Estructura del Manual</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="01_inicio.html">1. Página de Inicio y Navegación</a></li>
+<li class="toctree-l3"><a class="reference internal" href="02_generar_datos.html">2. Generar Datos Sintéticos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="03_cargar_datos.html">3. Cargar Datos Externos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04_analisis_descriptivo.html">4. Análisis Descriptivo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05_ingenieria_caracteristicas.html">5. Ingeniería de Características</a></li>
+<li class="toctree-l3"><a class="reference internal" href="06_clustering.html">6. Clustering y Segmentación</a></li>
+<li class="toctree-l3"><a class="reference internal" href="07_rbm.html">7. Máquina de Boltzmann Restringida (RBM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="08_modelos_supervisados.html">8. Modelos Supervisados</a></li>
+<li class="toctree-l3"><a class="reference internal" href="09_prediccion.html">9. Predicción de Riesgo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="10_reentrenamiento.html">10. Reentrenamiento de Modelos</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">11. Sistema RAG Educativo</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#que-es-rag">¿Qué es RAG?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#acceso-al-modulo">Acceso al Módulo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#base-de-conocimiento">Base de Conocimiento</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usar-el-chat-educativo">Usar el Chat Educativo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#preguntas-sugeridas">Preguntas Sugeridas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#caracteristicas-del-sistema">Características del Sistema</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configuracion-avanzada">Configuración Avanzada</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#casos-de-uso">Casos de Uso</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tips-y-mejores-practicas">Tips y Mejores Prácticas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#limitaciones">Limitaciones</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#acceso-rapido">Acceso Rápido</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#soporte-y-recursos">Soporte y Recursos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Módulos del Sistema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../user_guide.html">Manual de Usuario</a></li>
+      <li class="breadcrumb-item active">11. Sistema RAG Educativo</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/11_rag_educativo.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="sistema-rag-educativo">
+<h1>11. Sistema RAG Educativo<a class="headerlink" href="#sistema-rag-educativo" title="Link to this heading"></a></h1>
+<p>Esta guía te enseñará a usar el asistente educativo basado en RAG (Retrieval-Augmented Generation) para aprender sobre Máquinas de Boltzmann Restringidas y conceptos relacionados.</p>
+<section id="objetivo-del-modulo">
+<h2>Objetivo del Módulo<a class="headerlink" href="#objetivo-del-modulo" title="Link to this heading"></a></h2>
+<p>El sistema RAG educativo te permite:</p>
+<ul class="simple">
+<li><p>🎓 <strong>Aprender sobre RBMs</strong> de forma interactiva</p></li>
+<li><p>📚 <strong>Consultar papers científicos</strong> automáticamente</p></li>
+<li><p>💬 <strong>Chat con IA</strong> especializada en física estadística</p></li>
+<li><p>🔍 <strong>Búsqueda semántica</strong> en literatura científica</p></li>
+<li><p>📖 <strong>Citas y referencias</strong> automáticas</p></li>
+<li><p>📤 <strong>Cargar tus propios PDFs</strong> para análisis</p></li>
+</ul>
+</section>
+<section id="que-es-rag">
+<h2>¿Qué es RAG?<a class="headerlink" href="#que-es-rag" title="Link to this heading"></a></h2>
+<section id="definicion">
+<h3>Definición<a class="headerlink" href="#definicion" title="Link to this heading"></a></h3>
+<p><strong>RAG (Retrieval-Augmented Generation)</strong> es un sistema que:</p>
+<ol class="arabic simple">
+<li><p><strong>Recupera</strong> información relevante de una base de conocimiento</p></li>
+<li><p><strong>Aumenta</strong> el contexto del LLM con esa información</p></li>
+<li><p><strong>Genera</strong> respuestas basadas en fuentes confiables</p></li>
+</ol>
+</section>
+<section id="arquitectura">
+<h3>Arquitectura<a class="headerlink" href="#arquitectura" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Tu Pregunta
+    ↓
+[Embedding] → Búsqueda Vectorial
+    ↓
+Base de Conocimiento (ChromaDB)
+    ↓
+Top-K Documentos Relevantes
+    ↓
+[LLM: Llama 3.3 70B] + Contexto
+    ↓
+Respuesta con Citas
+</pre></div>
+</div>
+</section>
+</section>
+<section id="acceso-al-modulo">
+<h2>Acceso al Módulo<a class="headerlink" href="#acceso-al-modulo" title="Link to this heading"></a></h2>
+<p>En el sidebar, click en:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>🎓 Educación → 🎓 Aprende sobre RBMs
+</pre></div>
+</div>
+</section>
+<section id="base-de-conocimiento">
+<h2>Base de Conocimiento<a class="headerlink" href="#base-de-conocimiento" title="Link to this heading"></a></h2>
+<section id="papers-incluidos">
+<h3>Papers Incluidos<a class="headerlink" href="#papers-incluidos" title="Link to this heading"></a></h3>
+<p>El sistema incluye 13 papers científicos fundamentales:</p>
+<p><strong>Fundamentos de RBM:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Hinton (2002)</strong> - Training Products of Experts by Minimizing Contrastive Divergence</p></li>
+<li><p><strong>Hinton (2010)</strong> - A Practical Guide to Training Restricted Boltzmann Machines</p></li>
+<li><p><strong>Fischer &amp; Igel (2012)</strong> - An Introduction to Restricted Boltzmann Machines</p></li>
+</ol>
+<p><strong>Deep Learning:</strong></p>
+<ol class="arabic simple" start="4">
+<li><p><strong>Hinton &amp; Salakhutdinov (2006)</strong> - Reducing the Dimensionality of Data with Neural Networks</p></li>
+<li><p><strong>Salakhutdinov (2009)</strong> - Deep Boltzmann Machines</p></li>
+<li><p><strong>Bengio (2013)</strong> - Better Mixing via Deep Representations</p></li>
+</ol>
+<p><strong>Aplicaciones:</strong></p>
+<ol class="arabic simple" start="7">
+<li><p><strong>Salakhutdinov (2007)</strong> - Restricted Boltzmann Machines for Collaborative Filtering</p></li>
+<li><p><strong>Larochelle (2008)</strong> - Classification using Discriminative RBMs</p></li>
+</ol>
+<p><strong>Modelos Relacionados:</strong></p>
+<ol class="arabic simple" start="9">
+<li><p><strong>Ackley (1985)</strong> - A Learning Algorithm for Boltzmann Machines</p></li>
+<li><p><strong>Montúfar (2011)</strong> - Universal Approximation Depth and Errors</p></li>
+<li><p><strong>Goodfellow (2014)</strong> - Generative Adversarial Networks</p></li>
+<li><p><strong>Kingma (2014)</strong> - Auto-Encoding Variational Bayes</p></li>
+</ol>
+</section>
+<section id="cargar-nuevos-papers">
+<h3>Cargar Nuevos Papers<a class="headerlink" href="#cargar-nuevos-papers" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[📤 Cargar Nuevo PDF]
+
+Formatos: PDF
+Tamaño máximo: 50 MB
+
+Archivo: mi_paper_rbm.pdf
+
+[⬆️ Subir y Procesar]
+
+Procesando...
+✓ PDF extraído (45 páginas)
+✓ Texto dividido en chunks
+✓ Embeddings generados
+✓ Agregado a base de conocimiento
+
+Listo para consultar ✓
+</pre></div>
+</div>
+</section>
+</section>
+<section id="usar-el-chat-educativo">
+<h2>Usar el Chat Educativo<a class="headerlink" href="#usar-el-chat-educativo" title="Link to this heading"></a></h2>
+<section id="interfaz-del-chat">
+<h3>Interfaz del Chat<a class="headerlink" href="#interfaz-del-chat" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>╔══════════════════════════════════════╗
+║   🎓 Asistente Educativo RBM        ║
+╠══════════════════════════════════════╣
+║                                      ║
+║  Haz preguntas sobre:                ║
+║  • Máquinas de Boltzmann             ║
+║  • Contrastive Divergence            ║
+║  • Deep Learning                     ║
+║  • Aplicaciones en finanzas          ║
+║                                      ║
+║  Escribe tu pregunta abajo...        ║
+║                                      ║
+╚══════════════════════════════════════╝
+
+Tu pregunta: _
+</pre></div>
+</div>
+</section>
+<section id="hacer-una-pregunta">
+<h3>Hacer una Pregunta<a class="headerlink" href="#hacer-una-pregunta" title="Link to this heading"></a></h3>
+<p><strong>Ejemplo 1: Pregunta Básica</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Tú: ¿Qué es una Máquina de Boltzmann Restringida?
+
+🤖 Asistente:
+
+Una Máquina de Boltzmann Restringida (RBM) es un modelo
+generativo estocástico que consiste en dos capas de
+unidades: una capa visible y una capa oculta. La
+&quot;restricción&quot; significa que no hay conexiones dentro de
+cada capa, solo entre capas.
+
+Características clave:
+
+1. **Arquitectura bipartita**: Unidades visibles (v) y
+   ocultas (h) sin conexiones intra-capa
+
+2. **Función de energía**:
+   E(v,h) = -∑ᵢ aᵢvᵢ - ∑ⱼ bⱼhⱼ - ∑ᵢⱼ vᵢWᵢⱼhⱼ
+
+3. **Entrenamiento**: Usa Contrastive Divergence (CD-k)
+   para aproximar el gradiente de log-verosimilitud
+
+📚 Fuentes:
+• Hinton (2010) - A Practical Guide to Training RBMs
+• Fischer &amp; Igel (2012) - Introduction to RBMs
+
+¿Quieres saber más sobre algún aspecto específico?
+</pre></div>
+</div>
+<p><strong>Ejemplo 2: Pregunta Técnica</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Tú: ¿Cómo funciona Contrastive Divergence?
+
+🤖 Asistente:
+
+Contrastive Divergence (CD-k) es un algoritmo de
+aprendizaje para RBMs propuesto por Hinton (2002).
+Aproxima el gradiente de la log-verosimilitud mediante
+un proceso de muestreo truncado.
+
+**Algoritmo CD-1:**
+
+1. Inicializar v⁰ con datos de entrenamiento
+2. Calcular p(h|v⁰) y muestrear h⁰
+3. Calcular p(v|h⁰) y muestrear v¹
+4. Calcular p(h|v¹) para obtener h¹
+5. Actualizar pesos: ΔW ∝ ⟨v⁰h⁰⟩ - ⟨v¹h¹⟩
+
+**Ventajas:**
+• Mucho más rápido que MCMC completo
+• Funciona bien en práctica (k=1 suele ser suficiente)
+• Permite entrenamiento de redes profundas
+
+**Limitaciones:**
+• Es una aproximación (no gradiente exacto)
+• Puede tener problemas con modos múltiples
+
+📚 Fuentes:
+• Hinton (2002) - Training Products of Experts
+• Bengio (2013) - Better Mixing via Deep Representations
+
+¿Te gustaría ver un ejemplo de implementación?
+</pre></div>
+</div>
+<p><strong>Ejemplo 3: Aplicación Práctica</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Tú: ¿Cómo puedo usar RBM para riesgo crediticio?
+
+🤖 Asistente:
+
+Las RBMs son excelentes para riesgo crediticio por
+varias razones:
+
+**1. Extracción de Características No Lineales:**
+
+Las RBMs pueden aprender representaciones latentes que
+capturan patrones complejos en datos financieros que
+modelos lineales no detectan.
+
+**2. Reducción de Dimensionalidad:**
+
+Si tienes 50 variables financieras, una RBM puede
+comprimirlas a 20-30 características latentes más
+informativas.
+
+**3. Detección de Anomalías:**
+
+El error de reconstrucción de la RBM puede identificar
+solicitudes atípicas o fraudulentas.
+
+**Pipeline Recomendado:**
+
+1. Pre-entrenar RBM con datos no etiquetados
+2. Extraer activaciones de capa oculta
+3. Usar como features para Random Forest/XGBoost
+4. Típicamente mejora 3-5% en accuracy
+
+**Ejemplo de Código:**
+
+```python
+# Entrenar RBM
+rbm = RBM(n_hidden=100, learning_rate=0.01)
+rbm.fit(X_train)
+
+# Extraer features
+X_train_rbm = rbm.transform(X_train)
+X_test_rbm = rbm.transform(X_test)
+
+# Entrenar clasificador
+clf = RandomForestClassifier()
+clf.fit(X_train_rbm, y_train)
+```
+
+📚 Fuentes:
+• Salakhutdinov (2007) - Collaborative Filtering
+• Larochelle (2008) - Discriminative RBMs
+
+¿Necesitas ayuda con la implementación?
+</pre></div>
+</div>
+</section>
+</section>
+<section id="preguntas-sugeridas">
+<h2>Preguntas Sugeridas<a class="headerlink" href="#preguntas-sugeridas" title="Link to this heading"></a></h2>
+<section id="conceptos-basicos">
+<h3>Conceptos Básicos<a class="headerlink" href="#conceptos-basicos" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>💡 Preguntas Sugeridas:
+
+• ¿Qué es una Máquina de Boltzmann?
+• ¿Cuál es la diferencia entre RBM y Autoencoder?
+• ¿Qué es la función de energía en RBMs?
+• ¿Cómo se calculan las probabilidades en RBMs?
+• ¿Qué significa &quot;restringida&quot;?
+</pre></div>
+</div>
+</section>
+<section id="entrenamiento">
+<h3>Entrenamiento<a class="headerlink" href="#entrenamiento" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>💡 Preguntas Sugeridas:
+
+• ¿Cómo entrenar una RBM?
+• ¿Qué es Contrastive Divergence?
+• ¿Cuántas épocas necesito?
+• ¿Cómo elegir el learning rate?
+• ¿Qué es Gibbs sampling?
+</pre></div>
+</div>
+</section>
+<section id="aplicaciones">
+<h3>Aplicaciones<a class="headerlink" href="#aplicaciones" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>💡 Preguntas Sugeridas:
+
+• ¿Para qué sirven las RBMs?
+• ¿Cómo usar RBM en clasificación?
+• ¿RBM vs PCA para reducción dimensional?
+• ¿Cómo detectar anomalías con RBM?
+• ¿RBM en sistemas de recomendación?
+</pre></div>
+</div>
+</section>
+<section id="avanzado">
+<h3>Avanzado<a class="headerlink" href="#avanzado" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>💡 Preguntas Sugeridas:
+
+• ¿Qué son las Deep Boltzmann Machines?
+• ¿Cómo apilar múltiples RBMs?
+• ¿Qué es persistent Contrastive Divergence?
+• ¿Cómo regularizar RBMs?
+• ¿RBM vs VAE vs GAN?
+</pre></div>
+</div>
+</section>
+</section>
+<section id="caracteristicas-del-sistema">
+<h2>Características del Sistema<a class="headerlink" href="#caracteristicas-del-sistema" title="Link to this heading"></a></h2>
+<section id="busqueda-semantica">
+<h3>Búsqueda Semántica<a class="headerlink" href="#busqueda-semantica" title="Link to this heading"></a></h3>
+<p>El sistema usa embeddings para encontrar información relevante:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Tu pregunta: &quot;problemas de convergencia en RBMs&quot;
+
+Búsqueda semántica encuentra:
+1. Sección sobre &quot;training difficulties&quot; (relevancia: 0.89)
+2. Párrafo sobre &quot;divergence issues&quot; (relevancia: 0.85)
+3. Discusión de &quot;learning rate tuning&quot; (relevancia: 0.82)
+
+Contexto enviado al LLM con estos fragmentos
+</pre></div>
+</div>
+</section>
+<section id="citas-automaticas">
+<h3>Citas Automáticas<a class="headerlink" href="#citas-automaticas" title="Link to this heading"></a></h3>
+<p>Todas las respuestas incluyen referencias:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>📚 Fuentes citadas:
+
+[1] Hinton, G. E. (2002). Training products of experts
+    by minimizing contrastive divergence. Neural
+    computation, 14(8), 1771-1800.
+
+[2] Fischer, A., &amp; Igel, C. (2012). An introduction to
+    restricted Boltzmann machines. In Progress in
+    Pattern Recognition (pp. 14-36).
+</pre></div>
+</div>
+</section>
+<section id="multilingue">
+<h3>Multilingüe<a class="headerlink" href="#multilingue" title="Link to this heading"></a></h3>
+<p>El sistema responde en el idioma de tu pregunta:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Pregunta en español → Respuesta en español
+Question in English → Answer in English
+</pre></div>
+</div>
+</section>
+<section id="historial-de-conversacion">
+<h3>Historial de Conversación<a class="headerlink" href="#historial-de-conversacion" title="Link to this heading"></a></h3>
+<p>El chat mantiene contexto:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Tú: ¿Qué es una RBM?
+🤖: [Explicación detallada]
+
+Tú: ¿Y cómo se entrena?
+🤖: [Explica entrenamiento, recordando que ya
+     explicó qué es una RBM]
+</pre></div>
+</div>
+</section>
+</section>
+<section id="configuracion-avanzada">
+<h2>Configuración Avanzada<a class="headerlink" href="#configuracion-avanzada" title="Link to this heading"></a></h2>
+<section id="parametros-del-sistema">
+<h3>Parámetros del Sistema<a class="headerlink" href="#parametros-del-sistema" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>⚙️ Configuración RAG:
+
+Modelo LLM: Llama 3.3 70B (Groq)
+Temperatura: 0.3 (más determinista)
+Top-K documentos: 6
+Chunk size: 1500 caracteres
+Chunk overlap: 300 caracteres
+
+[💾 Guardar Configuración]
+</pre></div>
+</div>
+</section>
+<section id="ajustar-temperatura">
+<h3>Ajustar Temperatura<a class="headerlink" href="#ajustar-temperatura" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Temperatura: [0.3]
+Rango: 0.0 - 1.0
+
+• 0.0-0.3: Respuestas precisas y consistentes
+• 0.4-0.6: Balance creatividad/precisión
+• 0.7-1.0: Respuestas más creativas
+</pre></div>
+</div>
+</section>
+</section>
+<section id="casos-de-uso">
+<h2>Casos de Uso<a class="headerlink" href="#casos-de-uso" title="Link to this heading"></a></h2>
+<p><strong>Caso 1: Estudiante de Física</strong></p>
+<p>Aprender conceptos de física estadística aplicados a ML.</p>
+<p><strong>Caso 2: Data Scientist</strong></p>
+<p>Entender implementación técnica de RBMs.</p>
+<p><strong>Caso 3: Investigador</strong></p>
+<p>Consultar literatura científica rápidamente.</p>
+<p><strong>Caso 4: Desarrollador</strong></p>
+<p>Obtener ejemplos de código y mejores prácticas.</p>
+</section>
+<section id="tips-y-mejores-practicas">
+<h2>Tips y Mejores Prácticas<a class="headerlink" href="#tips-y-mejores-practicas" title="Link to this heading"></a></h2>
+<p>✅ <strong>Haz:</strong></p>
+<ul class="simple">
+<li><p>Preguntas específicas y claras</p></li>
+<li><p>Pide ejemplos de código</p></li>
+<li><p>Solicita referencias adicionales</p></li>
+<li><p>Usa el contexto de conversaciones previas</p></li>
+</ul>
+<p>❌ <strong>Evita:</strong></p>
+<ul class="simple">
+<li><p>Preguntas muy generales</p></li>
+<li><p>Esperar respuestas fuera del dominio (RBMs/ML)</p></li>
+<li><p>Ignorar las citas y referencias</p></li>
+<li><p>Preguntas sin contexto</p></li>
+</ul>
+</section>
+<section id="limitaciones">
+<h2>Limitaciones<a class="headerlink" href="#limitaciones" title="Link to this heading"></a></h2>
+<p><strong>El sistema NO puede:</strong></p>
+<ul class="simple">
+<li><p>Ejecutar código</p></li>
+<li><p>Acceder a internet en tiempo real</p></li>
+<li><p>Responder sobre temas fuera de los papers cargados</p></li>
+<li><p>Garantizar 100% de precisión (siempre verifica)</p></li>
+</ul>
+<p><strong>El sistema SÍ puede:</strong></p>
+<ul class="simple">
+<li><p>Explicar conceptos de RBMs y ML</p></li>
+<li><p>Citar papers científicos</p></li>
+<li><p>Proporcionar ejemplos de código</p></li>
+<li><p>Responder preguntas técnicas detalladas</p></li>
+</ul>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<p><strong>Problema: Respuesta no relevante</strong></p>
+<p>Solución: Reformula la pregunta más específicamente.</p>
+<p><strong>Problema: Sin citas</strong></p>
+<p>Solución: Pregunta explícitamente por referencias.</p>
+<p><strong>Problema: Respuesta muy técnica</strong></p>
+<p>Solución: Pide una explicación más simple.</p>
+<p><strong>Problema: Error de API</strong></p>
+<p>Solución: Verifica API key de Groq en configuración.</p>
+</section>
+<section id="proximos-pasos">
+<h2>Próximos Pasos<a class="headerlink" href="#proximos-pasos" title="Link to this heading"></a></h2>
+<p>Después de aprender:</p>
+<ol class="arabic simple">
+<li><p><strong>Aplicar conocimiento</strong>: <a class="reference internal" href="07_rbm.html"><span class="doc">7. Máquina de Boltzmann Restringida (RBM)</span></a></p></li>
+<li><p><strong>Experimentar</strong>: <a class="reference internal" href="08_modelos_supervisados.html"><span class="doc">8. Modelos Supervisados</span></a></p></li>
+<li><p><strong>Compartir</strong>: Documenta tus hallazgos</p></li>
+</ol>
+<p>¡Disfruta aprendiendo sobre RBMs! 🎓</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="10_reentrenamiento.html" class="btn btn-neutral float-left" title="10. Reentrenamiento de Modelos" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="../modules.html" class="btn btn-neutral float-right" title="Módulos del Sistema" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, Andrés Fernando Gómez Rojas &amp; Carlos Andrés Gómez Vasco. Software Libre bajo Licencia MIT.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

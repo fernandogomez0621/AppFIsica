@@ -1,0 +1,744 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1. Página de Inicio y Navegación &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="2. Generar Datos Sintéticos" href="02_generar_datos.html" />
+    <link rel="prev" title="Manual de Usuario" href="../user_guide.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#introduccion">Introducción</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#flujo-de-trabajo-recomendado">Flujo de Trabajo Recomendado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#requisitos-previos">Requisitos Previos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#convenciones-de-este-manual">Convenciones de este Manual</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../user_guide.html#estructura-del-manual">Estructura del Manual</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">1. Página de Inicio y Navegación</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#acceso-a-la-aplicacion">Acceso a la Aplicación</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interfaz-principal">Interfaz Principal</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#navegacion-por-modulos">Navegación por Módulos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#elementos-de-la-interfaz">Elementos de la Interfaz</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#estado-del-sistema">Estado del Sistema</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configuracion-de-la-aplicacion">Configuración de la Aplicación</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#casos-de-uso-comunes">Casos de Uso Comunes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tips-y-mejores-practicas">Tips y Mejores Prácticas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#obtener-ayuda">Obtener Ayuda</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="02_generar_datos.html">2. Generar Datos Sintéticos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="03_cargar_datos.html">3. Cargar Datos Externos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04_analisis_descriptivo.html">4. Análisis Descriptivo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05_ingenieria_caracteristicas.html">5. Ingeniería de Características</a></li>
+<li class="toctree-l3"><a class="reference internal" href="06_clustering.html">6. Clustering y Segmentación</a></li>
+<li class="toctree-l3"><a class="reference internal" href="07_rbm.html">7. Máquina de Boltzmann Restringida (RBM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="08_modelos_supervisados.html">8. Modelos Supervisados</a></li>
+<li class="toctree-l3"><a class="reference internal" href="09_prediccion.html">9. Predicción de Riesgo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="10_reentrenamiento.html">10. Reentrenamiento de Modelos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="11_rag_educativo.html">11. Sistema RAG Educativo</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#acceso-rapido">Acceso Rápido</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#soporte-y-recursos">Soporte y Recursos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Módulos del Sistema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../user_guide.html">Manual de Usuario</a></li>
+      <li class="breadcrumb-item active">1. Página de Inicio y Navegación</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/01_inicio.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pagina-de-inicio-y-navegacion">
+<h1>1. Página de Inicio y Navegación<a class="headerlink" href="#pagina-de-inicio-y-navegacion" title="Link to this heading"></a></h1>
+<p>Esta guía te ayudará a familiarizarte con la interfaz de la aplicación y a navegar eficientemente entre los diferentes módulos.</p>
+<section id="objetivo-del-modulo">
+<h2>Objetivo del Módulo<a class="headerlink" href="#objetivo-del-modulo" title="Link to this heading"></a></h2>
+<p>La página de inicio es tu punto de partida en el sistema. Aquí podrás:</p>
+<ul class="simple">
+<li><p>🏠 Ver un resumen general del sistema</p></li>
+<li><p>📊 Acceder rápidamente a todos los módulos</p></li>
+<li><p>📈 Visualizar el estado actual de tus datos y modelos</p></li>
+<li><p>🎯 Entender el flujo de trabajo recomendado</p></li>
+<li><p>🚀 Comenzar tu análisis de riesgo crediticio</p></li>
+</ul>
+</section>
+<section id="acceso-a-la-aplicacion">
+<h2>Acceso a la Aplicación<a class="headerlink" href="#acceso-a-la-aplicacion" title="Link to this heading"></a></h2>
+<section id="iniciar-la-aplicacion">
+<h3>Iniciar la Aplicación<a class="headerlink" href="#iniciar-la-aplicacion" title="Link to this heading"></a></h3>
+<p><strong>Paso 1: Activar el ambiente virtual</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># En Linux/Mac</span>
+<span class="nb">source</span><span class="w"> </span>venv_fisica/bin/activate
+
+<span class="c1"># En Windows</span>
+venv_fisica<span class="se">\S</span>cripts<span class="se">\a</span>ctivate
+</pre></div>
+</div>
+<p><strong>Paso 2: Ejecutar Streamlit</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>streamlit<span class="w"> </span>run<span class="w"> </span>app.py
+</pre></div>
+</div>
+<p><strong>Paso 3: Abrir en el navegador</strong></p>
+<p>La aplicación se abrirá automáticamente en: <code class="docutils literal notranslate"><span class="pre">http://localhost:8501</span></code></p>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p>Si el navegador no se abre automáticamente, copia y pega la URL en tu navegador preferido.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Truco</p>
+<p>Usa el script de activación rápida: <code class="docutils literal notranslate"><span class="pre">./activate_env.sh</span></code> (Linux/Mac)</p>
+</div>
+</section>
+</section>
+<section id="interfaz-principal">
+<h2>Interfaz Principal<a class="headerlink" href="#interfaz-principal" title="Link to this heading"></a></h2>
+<section id="estructura-de-la-pagina">
+<h3>Estructura de la Página<a class="headerlink" href="#estructura-de-la-pagina" title="Link to this heading"></a></h3>
+<p>La interfaz está dividida en tres áreas principales:</p>
+<ol class="arabic simple">
+<li><p><strong>Sidebar (Barra lateral izquierda)</strong></p>
+<ul class="simple">
+<li><p>Menú de navegación principal</p></li>
+<li><p>Acceso a todos los módulos</p></li>
+<li><p>Configuraciones globales</p></li>
+</ul>
+</li>
+<li><p><strong>Área de contenido central</strong></p>
+<ul class="simple">
+<li><p>Dashboard principal</p></li>
+<li><p>Visualizaciones y resultados</p></li>
+<li><p>Formularios de entrada</p></li>
+</ul>
+</li>
+<li><p><strong>Barra superior</strong></p>
+<ul class="simple">
+<li><p>Título de la aplicación</p></li>
+<li><p>Menú de configuración de Streamlit</p></li>
+<li><p>Opciones de tema (claro/oscuro)</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="dashboard-principal">
+<h3>Dashboard Principal<a class="headerlink" href="#dashboard-principal" title="Link to this heading"></a></h3>
+<p>Al abrir la aplicación, verás el dashboard principal con:</p>
+<p><strong>Sección de Bienvenida:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>🏦 Sistema de Riesgo Crediticio con RBM
+=======================================
+
+Bienvenido al sistema integral de análisis y predicción
+de riesgo crediticio hipotecario.
+</pre></div>
+</div>
+<p><strong>Tarjetas de Estado:</strong></p>
+<p>Muestra el estado actual de:</p>
+<ul class="simple">
+<li><p>📊 <strong>Datos cargados</strong>: Número de registros disponibles</p></li>
+<li><p>⚡ <strong>Modelos entrenados</strong>: RBM y clasificadores activos</p></li>
+<li><p>🎯 <strong>Última predicción</strong>: Timestamp de la última evaluación</p></li>
+<li><p>📈 <strong>Precisión del modelo</strong>: Métricas de rendimiento</p></li>
+</ul>
+<p><strong>Flujo de Trabajo Visual:</strong></p>
+<p>Un diagrama interactivo que muestra:</p>
+<ol class="arabic simple">
+<li><p>Generar/Cargar Datos → 2. Validar → 3. Analizar → 4. Modelar → 5. Predecir</p></li>
+</ol>
+<div class="admonition important">
+<p class="admonition-title">Importante</p>
+<p>El dashboard se actualiza automáticamente cuando realizas cambios en cualquier módulo.</p>
+</div>
+</section>
+</section>
+<section id="navegacion-por-modulos">
+<h2>Navegación por Módulos<a class="headerlink" href="#navegacion-por-modulos" title="Link to this heading"></a></h2>
+<section id="sidebar-menu-principal">
+<h3>Sidebar - Menú Principal<a class="headerlink" href="#sidebar-menu-principal" title="Link to this heading"></a></h3>
+<p>El sidebar contiene todos los módulos organizados por categoría:</p>
+<p><strong>📊 Gestión de Datos:</strong></p>
+<ul class="simple">
+<li><p><strong>🏠 Inicio</strong>: Dashboard principal (esta página)</p></li>
+<li><p><strong>📊 Generar Datos</strong>: Crear datasets sintéticos</p></li>
+<li><p><strong>📁 Cargar Datos</strong>: Importar datos externos</p></li>
+</ul>
+<p><strong>📈 Análisis:</strong></p>
+<ul class="simple">
+<li><p><strong>📈 Análisis Descriptivo</strong>: Estadísticas y visualizaciones</p></li>
+<li><p><strong>🔧 Ingeniería de Características</strong>: Variables derivadas</p></li>
+<li><p><strong>🎯 Clustering</strong>: Segmentación de clientes</p></li>
+</ul>
+<p><strong>🤖 Modelado:</strong></p>
+<ul class="simple">
+<li><p><strong>⚡ Máquina de Boltzmann (RBM)</strong>: Extracción de características</p></li>
+<li><p><strong>🤖 Modelos Supervisados</strong>: Clasificadores de riesgo</p></li>
+</ul>
+<p><strong>🔮 Predicción:</strong></p>
+<ul class="simple">
+<li><p><strong>🔮 Predicción de Riesgo</strong>: Evaluar nuevos solicitantes</p></li>
+<li><p><strong>🔄 Reentrenamiento</strong>: Actualizar modelos</p></li>
+</ul>
+<p><strong>🎓 Educación:</strong></p>
+<ul class="simple">
+<li><p><strong>🎓 Aprende sobre RBMs</strong>: Asistente RAG educativo</p></li>
+</ul>
+</section>
+<section id="como-navegar">
+<h3>Cómo Navegar<a class="headerlink" href="#como-navegar" title="Link to this heading"></a></h3>
+<p><strong>Método 1: Click en el Sidebar</strong></p>
+<ol class="arabic simple">
+<li><p>Abre el sidebar (si está colapsado, click en <code class="docutils literal notranslate"><span class="pre">&gt;</span></code> arriba a la izquierda)</p></li>
+<li><p>Click en el módulo deseado</p></li>
+<li><p>El contenido se carga en el área central</p></li>
+</ol>
+<p><strong>Método 2: Atajos de Teclado</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Ctrl</span> <span class="pre">+</span> <span class="pre">K</span></code> (Windows/Linux) o <code class="docutils literal notranslate"><span class="pre">Cmd</span> <span class="pre">+</span> <span class="pre">K</span></code> (Mac): Abrir búsqueda rápida</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Ctrl</span> <span class="pre">+</span> <span class="pre">R</span></code> (Windows/Linux) o <code class="docutils literal notranslate"><span class="pre">Cmd</span> <span class="pre">+</span> <span class="pre">R</span></code> (Mac): Recargar aplicación</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Esc</span></code>: Cerrar diálogos o modales</p></li>
+</ul>
+<p><strong>Método 3: Flujo Secuencial</strong></p>
+<p>Cada módulo incluye botones de navegación al final:</p>
+<ul class="simple">
+<li><p><strong>← Anterior</strong>: Volver al módulo previo</p></li>
+<li><p><strong>Siguiente →</strong>: Avanzar al siguiente paso</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Truco</p>
+<p>Sigue el flujo secuencial si es tu primera vez usando el sistema.</p>
+</div>
+</section>
+</section>
+<section id="elementos-de-la-interfaz">
+<h2>Elementos de la Interfaz<a class="headerlink" href="#elementos-de-la-interfaz" title="Link to this heading"></a></h2>
+<section id="componentes-comunes">
+<h3>Componentes Comunes<a class="headerlink" href="#componentes-comunes" title="Link to this heading"></a></h3>
+<p><strong>Botones de Acción:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[🎯 Ejecutar Análisis]  [💾 Guardar Resultados]  [🔄 Reiniciar]
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Primarios</strong> (azul): Acciones principales</p></li>
+<li><p><strong>Secundarios</strong> (gris): Acciones opcionales</p></li>
+<li><p><strong>Peligro</strong> (rojo): Acciones destructivas (eliminar, reiniciar)</p></li>
+</ul>
+<p><strong>Campos de Entrada:</strong></p>
+<ul class="simple">
+<li><p><strong>Numéricos</strong>: Usa flechas o escribe directamente</p></li>
+<li><p><strong>Texto</strong>: Escribe libremente</p></li>
+<li><p><strong>Selectores</strong>: Despliega opciones con click</p></li>
+<li><p><strong>Sliders</strong>: Arrastra para ajustar valores</p></li>
+</ul>
+<p><strong>Expandibles:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>▶ Configuración Avanzada
+
+(Click para expandir y ver más opciones)
+</pre></div>
+</div>
+<p><strong>Pestañas:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[Resumen] [Gráficos] [Datos] [Configuración]
+</pre></div>
+</div>
+<p>Click en cada pestaña para cambiar de vista.</p>
+</section>
+<section id="mensajes-y-notificaciones">
+<h3>Mensajes y Notificaciones<a class="headerlink" href="#mensajes-y-notificaciones" title="Link to this heading"></a></h3>
+<p><strong>Tipos de Mensajes:</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p><strong>Información (azul)</strong>: Consejos útiles y contexto adicional.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Advertencia</p>
+<p><strong>Advertencia (amarillo)</strong>: Precauciones importantes.</p>
+</div>
+<div class="admonition error">
+<p class="admonition-title">Error</p>
+<p><strong>Error (rojo)</strong>: Algo salió mal, revisa los detalles.</p>
+</div>
+<p><strong>Spinners de Carga:</strong></p>
+<p>Cuando el sistema está procesando, verás:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>⏳ Procesando datos...
+⏳ Entrenando modelo...
+⏳ Generando visualizaciones...
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Truco</p>
+<p>Los spinners indican que el sistema está trabajando. No recargues la página.</p>
+</div>
+</section>
+</section>
+<section id="estado-del-sistema">
+<h2>Estado del Sistema<a class="headerlink" href="#estado-del-sistema" title="Link to this heading"></a></h2>
+<section id="indicadores-de-estado">
+<h3>Indicadores de Estado<a class="headerlink" href="#indicadores-de-estado" title="Link to this heading"></a></h3>
+<p><strong>Panel de Estado (esquina superior derecha):</strong></p>
+<ul class="simple">
+<li><p>🟢 <strong>Verde</strong>: Sistema operativo, todo funcionando</p></li>
+<li><p>🟡 <strong>Amarillo</strong>: Advertencias menores, puede continuar</p></li>
+<li><p>🔴 <strong>Rojo</strong>: Error crítico, requiere atención</p></li>
+</ul>
+<p><strong>Información de Datos:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>📊 Dataset Actual
+─────────────────
+Registros: 10,000
+Variables: 47
+Última actualización: 2024-01-15 10:30
+
+Distribución de Riesgo:
+• Bajo: 60.7% (6,074)
+• Medio: 29.4% (2,943)
+• Alto: 9.8% (983)
+</pre></div>
+</div>
+<p><strong>Información de Modelos:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>🤖 Modelos Activos
+──────────────────
+RBM: ✅ Entrenado (100 épocas)
+Random Forest: ✅ Entrenado (Acc: 94.2%)
+XGBoost: ✅ Entrenado (Acc: 95.1%)
+
+Última actualización: 2024-01-15 11:45
+</pre></div>
+</div>
+</section>
+</section>
+<section id="configuracion-de-la-aplicacion">
+<h2>Configuración de la Aplicación<a class="headerlink" href="#configuracion-de-la-aplicacion" title="Link to this heading"></a></h2>
+<section id="menu-de-configuracion">
+<h3>Menú de Configuración<a class="headerlink" href="#menu-de-configuracion" title="Link to this heading"></a></h3>
+<p>Click en el menú <code class="docutils literal notranslate"><span class="pre">⋮</span></code> (tres puntos) en la esquina superior derecha:</p>
+<p><strong>Opciones Disponibles:</strong></p>
+<ul class="simple">
+<li><p><strong>Settings</strong>: Configuración de Streamlit</p></li>
+<li><p><strong>Print</strong>: Imprimir página actual</p></li>
+<li><p><strong>Record a screencast</strong>: Grabar sesión</p></li>
+<li><p><strong>Report a bug</strong>: Reportar problemas</p></li>
+<li><p><strong>Get help</strong>: Documentación de Streamlit</p></li>
+<li><p><strong>About</strong>: Información de la aplicación</p></li>
+</ul>
+</section>
+<section id="tema-de-la-aplicacion">
+<h3>Tema de la Aplicación<a class="headerlink" href="#tema-de-la-aplicacion" title="Link to this heading"></a></h3>
+<p><strong>Cambiar entre tema claro y oscuro:</strong></p>
+<ol class="arabic simple">
+<li><p>Click en <code class="docutils literal notranslate"><span class="pre">⋮</span></code> → <strong>Settings</strong></p></li>
+<li><p>En <strong>Theme</strong>, selecciona:
+* <strong>Light</strong>: Tema claro (fondo blanco)
+* <strong>Dark</strong>: Tema oscuro (fondo negro)
+* <strong>Use system setting</strong>: Usar configuración del sistema</p></li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Truco</p>
+<p>El tema oscuro es más cómodo para sesiones largas y reduce la fatiga visual.</p>
+</div>
+</section>
+<section id="configuracion-de-ejecucion">
+<h3>Configuración de Ejecución<a class="headerlink" href="#configuracion-de-ejecucion" title="Link to this heading"></a></h3>
+<p><strong>Always rerun:</strong></p>
+<ul class="simple">
+<li><p>✅ Activado: La app se recarga automáticamente al cambiar código</p></li>
+<li><p>❌ Desactivado: Debes recargar manualmente</p></li>
+</ul>
+<p><strong>Run on save:</strong></p>
+<ul class="simple">
+<li><p>✅ Activado: Cambios en archivos recargan la app</p></li>
+<li><p>❌ Desactivado: Cambios no afectan la app en ejecución</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p>Estas opciones son útiles para desarrolladores. Como usuario, déjalas en sus valores por defecto.</p>
+</div>
+</section>
+</section>
+<section id="casos-de-uso-comunes">
+<h2>Casos de Uso Comunes<a class="headerlink" href="#casos-de-uso-comunes" title="Link to this heading"></a></h2>
+<section id="caso-1-primera-vez-en-el-sistema">
+<h3>Caso 1: Primera Vez en el Sistema<a class="headerlink" href="#caso-1-primera-vez-en-el-sistema" title="Link to this heading"></a></h3>
+<p><strong>Objetivo</strong>: Familiarizarte con la interfaz y generar tu primer análisis.</p>
+<p><strong>Pasos:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Explora el Dashboard</strong></p>
+<ul class="simple">
+<li><p>Lee la información de bienvenida</p></li>
+<li><p>Revisa el flujo de trabajo visual</p></li>
+<li><p>Identifica los módulos disponibles</p></li>
+</ul>
+</li>
+<li><p><strong>Genera Datos de Prueba</strong></p>
+<ul class="simple">
+<li><p>Ve a <strong>📊 Generar Datos</strong></p></li>
+<li><p>Usa configuración por defecto (10,000 registros)</p></li>
+<li><p>Click en <strong>«Generar Dataset»</strong></p></li>
+</ul>
+</li>
+<li><p><strong>Visualiza los Datos</strong></p>
+<ul class="simple">
+<li><p>Ve a <strong>📈 Análisis Descriptivo</strong></p></li>
+<li><p>Selecciona variables como <code class="docutils literal notranslate"><span class="pre">salario_mensual</span></code> y <code class="docutils literal notranslate"><span class="pre">nivel_riesgo</span></code></p></li>
+<li><p>Explora las visualizaciones</p></li>
+</ul>
+</li>
+<li><p><strong>Aprende sobre RBMs</strong></p>
+<ul class="simple">
+<li><p>Ve a <strong>🎓 Aprende sobre RBMs</strong></p></li>
+<li><p>Haz preguntas básicas sobre el sistema</p></li>
+</ul>
+</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Truco</p>
+<p>Dedica 15-20 minutos a explorar cada módulo sin presión. La familiaridad con la interfaz mejorará tu eficiencia.</p>
+</div>
+</section>
+<section id="caso-2-analisis-rapido-de-datos-existentes">
+<h3>Caso 2: Análisis Rápido de Datos Existentes<a class="headerlink" href="#caso-2-analisis-rapido-de-datos-existentes" title="Link to this heading"></a></h3>
+<p><strong>Objetivo</strong>: Cargar tus datos y obtener insights rápidos.</p>
+<p><strong>Pasos:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Carga tus Datos</strong></p>
+<ul class="simple">
+<li><p>Ve a <strong>📁 Cargar Datos</strong></p></li>
+<li><p>Arrastra tu archivo CSV/Excel</p></li>
+<li><p>Valida la calidad de los datos</p></li>
+</ul>
+</li>
+<li><p><strong>Análisis Exploratorio</strong></p>
+<ul class="simple">
+<li><p>Ve a <strong>📈 Análisis Descriptivo</strong></p></li>
+<li><p>Revisa estadísticas univariadas</p></li>
+<li><p>Identifica outliers y patrones</p></li>
+</ul>
+</li>
+<li><p><strong>Genera Reporte</strong></p>
+<ul class="simple">
+<li><p>Descarga visualizaciones</p></li>
+<li><p>Exporta estadísticas</p></li>
+<li><p>Comparte con tu equipo</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="caso-3-flujo-completo-de-modelado">
+<h3>Caso 3: Flujo Completo de Modelado<a class="headerlink" href="#caso-3-flujo-completo-de-modelado" title="Link to this heading"></a></h3>
+<p><strong>Objetivo</strong>: Entrenar modelos y realizar predicciones.</p>
+<p><strong>Pasos:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Preparación</strong> → <strong>📊 Generar Datos</strong> o <strong>📁 Cargar Datos</strong></p></li>
+<li><p><strong>Análisis</strong> → <strong>📈 Análisis Descriptivo</strong></p></li>
+<li><p><strong>Ingeniería</strong> → <strong>🔧 Ingeniería de Características</strong></p></li>
+<li><p><strong>RBM</strong> → <strong>⚡ Máquina de Boltzmann</strong></p></li>
+<li><p><strong>Clasificadores</strong> → <strong>🤖 Modelos Supervisados</strong></p></li>
+<li><p><strong>Predicción</strong> → <strong>🔮 Predicción de Riesgo</strong></p></li>
+</ol>
+<div class="admonition important">
+<p class="admonition-title">Importante</p>
+<p>Sigue este flujo secuencialmente para mejores resultados. Cada paso construye sobre el anterior.</p>
+</div>
+</section>
+</section>
+<section id="tips-y-mejores-practicas">
+<h2>Tips y Mejores Prácticas<a class="headerlink" href="#tips-y-mejores-practicas" title="Link to this heading"></a></h2>
+<section id="navegacion-eficiente">
+<h3>Navegación Eficiente<a class="headerlink" href="#navegacion-eficiente" title="Link to this heading"></a></h3>
+<p>✅ <strong>Haz:</strong></p>
+<ul class="simple">
+<li><p>Usa el sidebar para navegación rápida</p></li>
+<li><p>Guarda tu trabajo frecuentemente</p></li>
+<li><p>Revisa los mensajes de estado</p></li>
+<li><p>Sigue el flujo de trabajo recomendado</p></li>
+</ul>
+<p>❌ <strong>Evita:</strong></p>
+<ul class="simple">
+<li><p>Recargar la página durante procesamiento</p></li>
+<li><p>Saltar pasos críticos del flujo</p></li>
+<li><p>Ignorar mensajes de advertencia</p></li>
+<li><p>Cerrar la app sin guardar</p></li>
+</ul>
+</section>
+<section id="organizacion-del-trabajo">
+<h3>Organización del Trabajo<a class="headerlink" href="#organizacion-del-trabajo" title="Link to this heading"></a></h3>
+<p><strong>Nombra tus Archivos Claramente:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>✅ Bueno:
+- creditos_enero_2024.csv
+- modelo_rbm_v2_20240115.pkl
+- predicciones_nuevos_clientes.csv
+
+❌ Malo:
+- datos.csv
+- modelo.pkl
+- output.csv
+</pre></div>
+</div>
+<p><strong>Mantén un Log de Experimentos:</strong></p>
+<p>Documenta:</p>
+<ul class="simple">
+<li><p>Fecha y hora del análisis</p></li>
+<li><p>Parámetros utilizados</p></li>
+<li><p>Resultados obtenidos</p></li>
+<li><p>Decisiones tomadas</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Truco</p>
+<p>Usa la función de descarga de reportes para mantener un historial automático.</p>
+</div>
+</section>
+<section id="rendimiento">
+<h3>Rendimiento<a class="headerlink" href="#rendimiento" title="Link to this heading"></a></h3>
+<p><strong>Para Datasets Grandes (&gt;50K registros):</strong></p>
+<ul class="simple">
+<li><p>Usa muestreo para análisis exploratorio</p></li>
+<li><p>Aumenta el batch_size en RBM</p></li>
+<li><p>Considera usar menos épocas inicialmente</p></li>
+<li><p>Monitorea el uso de memoria</p></li>
+</ul>
+<p><strong>Para Sesiones Largas:</strong></p>
+<ul class="simple">
+<li><p>Guarda modelos intermedios</p></li>
+<li><p>Exporta resultados periódicamente</p></li>
+<li><p>Reinicia la app si se vuelve lenta</p></li>
+<li><p>Cierra pestañas no utilizadas</p></li>
+</ul>
+</section>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<section id="problemas-comunes">
+<h3>Problemas Comunes<a class="headerlink" href="#problemas-comunes" title="Link to this heading"></a></h3>
+<p><strong>Problema 1: La aplicación no carga</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Error: ModuleNotFoundError: No module named &#39;streamlit&#39;
+</pre></div>
+</div>
+<p><strong>Solución:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Verifica que el ambiente virtual esté activado</span>
+which<span class="w"> </span>python<span class="w">  </span><span class="c1"># Debe mostrar ruta a venv_fisica</span>
+
+<span class="c1"># Reinstala dependencias si es necesario</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+<p>—</p>
+<p><strong>Problema 2: Sidebar no aparece</strong></p>
+<p><strong>Solución:</strong></p>
+<ul class="simple">
+<li><p>Click en <code class="docutils literal notranslate"><span class="pre">&gt;</span></code> en la esquina superior izquierda</p></li>
+<li><p>Presiona <code class="docutils literal notranslate"><span class="pre">Ctrl</span> <span class="pre">+</span> <span class="pre">Shift</span> <span class="pre">+</span> <span class="pre">R</span></code> para recargar</p></li>
+<li><p>Verifica el ancho de tu ventana (debe ser &gt;768px)</p></li>
+</ul>
+<p>—</p>
+<p><strong>Problema 3: Página en blanco después de navegar</strong></p>
+<p><strong>Solución:</strong></p>
+<ol class="arabic simple">
+<li><p>Espera 5-10 segundos (puede estar cargando)</p></li>
+<li><p>Revisa la consola del navegador (F12) por errores</p></li>
+<li><p>Recarga la página (F5)</p></li>
+<li><p>Reinicia la aplicación si persiste</p></li>
+</ol>
+<p>—</p>
+<p><strong>Problema 4: Cambios no se reflejan</strong></p>
+<p><strong>Solución:</strong></p>
+<ul class="simple">
+<li><p>Verifica que hayas guardado los cambios</p></li>
+<li><p>Recarga la página (F5)</p></li>
+<li><p>Limpia la caché del navegador</p></li>
+<li><p>Reinicia la aplicación Streamlit</p></li>
+</ul>
+</section>
+<section id="errores-de-datos">
+<h3>Errores de Datos<a class="headerlink" href="#errores-de-datos" title="Link to this heading"></a></h3>
+<p><strong>Error: «No hay datos cargados»</strong></p>
+<p><strong>Causa</strong>: No has generado ni cargado datos.</p>
+<p><strong>Solución</strong>: Ve a <strong>📊 Generar Datos</strong> o <strong>📁 Cargar Datos</strong> primero.</p>
+<p>—</p>
+<p><strong>Error: «Formato de archivo no soportado»</strong></p>
+<p><strong>Causa</strong>: Archivo no es CSV, Excel o Parquet.</p>
+<p><strong>Solución</strong>: Convierte tu archivo a uno de los formatos soportados.</p>
+<p>—</p>
+<p><strong>Error: «Columnas requeridas faltantes»</strong></p>
+<p><strong>Causa</strong>: Tu dataset no tiene las columnas esperadas.</p>
+<p><strong>Solución</strong>: Revisa la documentación de variables requeridas en <a class="reference internal" href="02_generar_datos.html"><span class="doc">2. Generar Datos Sintéticos</span></a>.</p>
+</section>
+<section id="errores-de-rendimiento">
+<h3>Errores de Rendimiento<a class="headerlink" href="#errores-de-rendimiento" title="Link to this heading"></a></h3>
+<p><strong>Síntoma: Aplicación muy lenta</strong></p>
+<p><strong>Posibles causas y soluciones:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Dataset muy grande</strong></p>
+<ul class="simple">
+<li><p>Reduce el tamaño del dataset</p></li>
+<li><p>Usa muestreo estratificado</p></li>
+<li><p>Aumenta la RAM disponible</p></li>
+</ul>
+</li>
+<li><p><strong>Muchos modelos entrenados</strong></p>
+<ul class="simple">
+<li><p>Elimina modelos antiguos</p></li>
+<li><p>Usa solo los modelos necesarios</p></li>
+<li><p>Reinicia la aplicación</p></li>
+</ul>
+</li>
+<li><p><strong>Navegador con muchas pestañas</strong></p>
+<ul class="simple">
+<li><p>Cierra pestañas no utilizadas</p></li>
+<li><p>Usa modo incógnito</p></li>
+<li><p>Prueba otro navegador</p></li>
+</ul>
+</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Advertencia</p>
+<p>Si la aplicación se congela por más de 2 minutos, reiníciala con <code class="docutils literal notranslate"><span class="pre">Ctrl</span> <span class="pre">+</span> <span class="pre">C</span></code> en la terminal.</p>
+</div>
+</section>
+</section>
+<section id="obtener-ayuda">
+<h2>Obtener Ayuda<a class="headerlink" href="#obtener-ayuda" title="Link to this heading"></a></h2>
+<section id="recursos-disponibles">
+<h3>Recursos Disponibles<a class="headerlink" href="#recursos-disponibles" title="Link to this heading"></a></h3>
+<p><strong>Dentro de la Aplicación:</strong></p>
+<ul class="simple">
+<li><p>🎓 <strong>Sistema RAG</strong>: Haz preguntas sobre RBMs y el sistema</p></li>
+<li><p>📖 <strong>Tooltips</strong>: Pasa el cursor sobre <code class="docutils literal notranslate"><span class="pre">ⓘ</span></code> para ayuda contextual</p></li>
+<li><p>💡 <strong>Ejemplos</strong>: Cada módulo incluye casos de uso</p></li>
+</ul>
+<p><strong>Documentación:</strong></p>
+<ul class="simple">
+<li><p>📚 <strong>Manual de Usuario</strong>: Este documento</p></li>
+<li><p>🔧 <strong>API Reference</strong>: Documentación técnica</p></li>
+<li><p>📝 <strong>README</strong>: Guía de instalación</p></li>
+</ul>
+<p><strong>Comunidad:</strong></p>
+<ul class="simple">
+<li><p>💬 <strong>GitHub Issues</strong>: Reporta bugs y solicita features</p></li>
+<li><p>📧 <strong>Email</strong>: <a class="reference external" href="mailto:soporte&#37;&#52;&#48;sistema-fisica&#46;com">soporte<span>&#64;</span>sistema-fisica<span>&#46;</span>com</a></p></li>
+<li><p>🌐 <strong>Foro</strong>: Discusiones y preguntas</p></li>
+</ul>
+</section>
+<section id="reportar-problemas">
+<h3>Reportar Problemas<a class="headerlink" href="#reportar-problemas" title="Link to this heading"></a></h3>
+<p>Al reportar un problema, incluye:</p>
+<ol class="arabic simple">
+<li><p><strong>Descripción del problema</strong>: Qué intentabas hacer</p></li>
+<li><p><strong>Pasos para reproducir</strong>: Cómo llegaste al error</p></li>
+<li><p><strong>Mensaje de error</strong>: Copia el texto completo</p></li>
+<li><p><strong>Contexto</strong>: Sistema operativo, versión de Python, etc.</p></li>
+<li><p><strong>Screenshots</strong>: Capturas de pantalla si es relevante</p></li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Truco</p>
+<p>Usa el botón <strong>«Report a bug»</strong> en el menú <code class="docutils literal notranslate"><span class="pre">⋮</span></code> para reportar automáticamente con contexto del sistema.</p>
+</div>
+</section>
+</section>
+<section id="proximos-pasos">
+<h2>Próximos Pasos<a class="headerlink" href="#proximos-pasos" title="Link to this heading"></a></h2>
+<p>Ahora que conoces la interfaz, estás listo para:</p>
+<ol class="arabic simple">
+<li><p><strong>Generar tu primer dataset</strong>: <a class="reference internal" href="02_generar_datos.html"><span class="doc">2. Generar Datos Sintéticos</span></a></p></li>
+<li><p><strong>Cargar datos externos</strong>: <a class="reference internal" href="03_cargar_datos.html"><span class="doc">3. Cargar Datos Externos</span></a></p></li>
+<li><p><strong>Explorar análisis descriptivo</strong>: <a class="reference internal" href="04_analisis_descriptivo.html"><span class="doc">4. Análisis Descriptivo</span></a></p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p>Te recomendamos seguir el orden de los módulos para una experiencia de aprendizaje óptima.</p>
+</div>
+<p>¡Disfruta explorando el sistema! 🚀</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="../user_guide.html" class="btn btn-neutral float-left" title="Manual de Usuario" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="02_generar_datos.html" class="btn btn-neutral float-right" title="2. Generar Datos Sintéticos" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, Andrés Fernando Gómez Rojas &amp; Carlos Andrés Gómez Vasco. Software Libre bajo Licencia MIT.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

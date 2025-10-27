@@ -1,0 +1,545 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5. Ingeniería de Características &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="6. Clustering y Segmentación" href="06_clustering.html" />
+    <link rel="prev" title="4. Análisis Descriptivo" href="04_analisis_descriptivo.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#introduccion">Introducción</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#flujo-de-trabajo-recomendado">Flujo de Trabajo Recomendado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#requisitos-previos">Requisitos Previos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#convenciones-de-este-manual">Convenciones de este Manual</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../user_guide.html#estructura-del-manual">Estructura del Manual</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="01_inicio.html">1. Página de Inicio y Navegación</a></li>
+<li class="toctree-l3"><a class="reference internal" href="02_generar_datos.html">2. Generar Datos Sintéticos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="03_cargar_datos.html">3. Cargar Datos Externos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04_analisis_descriptivo.html">4. Análisis Descriptivo</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">5. Ingeniería de Características</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#acceso-al-modulo">Acceso al Módulo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#variables-derivadas-automaticas">Variables Derivadas Automáticas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#transformaciones">Transformaciones</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#codificacion-de-variables">Codificación de Variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#normalizacion-y-escalado">Normalización y Escalado</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#binning-y-discretizacion">Binning y Discretización</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#seleccion-de-caracteristicas">Selección de Características</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#casos-de-uso">Casos de Uso</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tips-y-mejores-practicas">Tips y Mejores Prácticas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#guardar-transformaciones">Guardar Transformaciones</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="06_clustering.html">6. Clustering y Segmentación</a></li>
+<li class="toctree-l3"><a class="reference internal" href="07_rbm.html">7. Máquina de Boltzmann Restringida (RBM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="08_modelos_supervisados.html">8. Modelos Supervisados</a></li>
+<li class="toctree-l3"><a class="reference internal" href="09_prediccion.html">9. Predicción de Riesgo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="10_reentrenamiento.html">10. Reentrenamiento de Modelos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="11_rag_educativo.html">11. Sistema RAG Educativo</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#acceso-rapido">Acceso Rápido</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#soporte-y-recursos">Soporte y Recursos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Módulos del Sistema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../user_guide.html">Manual de Usuario</a></li>
+      <li class="breadcrumb-item active">5. Ingeniería de Características</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/05_ingenieria_caracteristicas.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ingenieria-de-caracteristicas">
+<h1>5. Ingeniería de Características<a class="headerlink" href="#ingenieria-de-caracteristicas" title="Link to this heading"></a></h1>
+<p>Esta guía te enseñará a crear variables derivadas y transformaciones que mejoren el poder predictivo de tus modelos de Machine Learning.</p>
+<section id="objetivo-del-modulo">
+<h2>Objetivo del Módulo<a class="headerlink" href="#objetivo-del-modulo" title="Link to this heading"></a></h2>
+<p>El módulo de ingeniería de características te permite:</p>
+<ul class="simple">
+<li><p>🔧 <strong>Crear variables derivadas</strong> automáticamente</p></li>
+<li><p>📐 <strong>Transformar variables</strong> (log, sqrt, polinomiales)</p></li>
+<li><p>🎯 <strong>Codificar categóricas</strong> (one-hot, label encoding)</p></li>
+<li><p>📊 <strong>Normalizar y escalar</strong> datos</p></li>
+<li><p>🔗 <strong>Generar interacciones</strong> entre variables</p></li>
+<li><p>💡 <strong>Aplicar domain knowledge</strong> financiero</p></li>
+</ul>
+</section>
+<section id="acceso-al-modulo">
+<h2>Acceso al Módulo<a class="headerlink" href="#acceso-al-modulo" title="Link to this heading"></a></h2>
+<p>En el sidebar, click en:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>📈 Análisis → 🔧 Ingeniería de Características
+</pre></div>
+</div>
+</section>
+<section id="variables-derivadas-automaticas">
+<h2>Variables Derivadas Automáticas<a class="headerlink" href="#variables-derivadas-automaticas" title="Link to this heading"></a></h2>
+<p>El sistema genera automáticamente 15+ características derivadas:</p>
+<section id="ratios-financieros">
+<h3>Ratios Financieros<a class="headerlink" href="#ratios-financieros" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>✓ dti (Debt-to-Income): cuota / salario * 100
+✓ ltv (Loan-to-Value): monto / valor_inmueble * 100
+✓ ratio_patrimonio_deuda: patrimonio / monto
+✓ ratio_cuota_ahorro: cuota / capacidad_ahorro
+✓ ratio_egreso_salario: egresos / salario * 100
+</pre></div>
+</div>
+</section>
+<section id="capacidades">
+<h3>Capacidades<a class="headerlink" href="#capacidades" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>✓ capacidad_ahorro: salario - egresos
+✓ capacidad_residual: capacidad_ahorro - cuota
+✓ meses_colchon: saldo_banco / cuota
+</pre></div>
+</div>
+</section>
+<section id="scores">
+<h3>Scores<a class="headerlink" href="#scores" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>✓ score_edad: Puntaje basado en edad óptima
+✓ score_estabilidad_laboral: Antigüedad + tipo empleo
+✓ riesgo_legal: Basado en número de demandas
+</pre></div>
+</div>
+</section>
+<section id="interacciones">
+<h3>Interacciones<a class="headerlink" href="#interacciones" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>✓ educacion_x_salario: nivel_educacion * salario
+✓ edad_x_antiguedad: edad * antiguedad_empleo
+✓ ltv_x_puntaje: ltv * (900 - puntaje_datacredito)
+</pre></div>
+</div>
+</section>
+</section>
+<section id="transformaciones">
+<h2>Transformaciones<a class="headerlink" href="#transformaciones" title="Link to this heading"></a></h2>
+<section id="transformaciones-numericas">
+<h3>Transformaciones Numéricas<a class="headerlink" href="#transformaciones-numericas" title="Link to this heading"></a></h3>
+<p><strong>1. Logarítmica</strong></p>
+<p>Para variables con distribución sesgada:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Variables a transformar:
+☑ salario_mensual
+☑ valor_inmueble
+☑ patrimonio_total
+
+Transformación: log(x + 1)
+
+[🔄 Aplicar Transformación Log]
+</pre></div>
+</div>
+<p><strong>Resultado:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>salario_mensual_log creada
+Asimetría antes: 1.23 → después: 0.15
+Distribución más normal ✓
+</pre></div>
+</div>
+<p><strong>2. Raíz Cuadrada</strong></p>
+<p>Para reducir impacto de outliers:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Variables: monto_credito, cuota_mensual
+Transformación: sqrt(x)
+</pre></div>
+</div>
+<p><strong>3. Box-Cox</strong></p>
+<p>Transformación automática óptima:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[🎯 Aplicar Box-Cox Automático]
+
+Lambda óptimo encontrado: 0.23
+Transformación aplicada ✓
+</pre></div>
+</div>
+</section>
+<section id="transformaciones-polinomiales">
+<h3>Transformaciones Polinomiales<a class="headerlink" href="#transformaciones-polinomiales" title="Link to this heading"></a></h3>
+<p>Crear términos cuadráticos y cúbicos:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Variable: edad
+
+☑ edad²
+☑ edad³
+
+[📐 Generar Polinomios]
+</pre></div>
+</div>
+<p><strong>Uso:</strong> Capturar relaciones no lineales.</p>
+</section>
+</section>
+<section id="codificacion-de-variables">
+<h2>Codificación de Variables<a class="headerlink" href="#codificacion-de-variables" title="Link to this heading"></a></h2>
+<section id="variables-categoricas">
+<h3>Variables Categóricas<a class="headerlink" href="#variables-categoricas" title="Link to this heading"></a></h3>
+<p><strong>1. One-Hot Encoding</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Variable: tipo_empleo
+
+Resultado:
+✓ tipo_empleo_Formal
+✓ tipo_empleo_Informal
+✓ tipo_empleo_Independiente
+</pre></div>
+</div>
+<p><strong>2. Label Encoding</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Variable: nivel_educacion
+
+Mapeo:
+Bachiller → 1
+Técnico → 2
+Profesional → 3
+Posgrado → 4
+</pre></div>
+</div>
+<p><strong>3. Target Encoding</strong></p>
+<p>Codifica basado en la media del target:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Variable: ciudad
+Target: nivel_riesgo
+
+Bogotá → 0.58 (% riesgo alto)
+Medellín → 0.62
+Cali → 0.65
+...
+</pre></div>
+</div>
+</section>
+<section id="variables-ordinales">
+<h3>Variables Ordinales<a class="headerlink" href="#variables-ordinales" title="Link to this heading"></a></h3>
+<p>Para variables con orden natural:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Variable: estrato_socioeconomico
+Ya es ordinal: 1, 2, 3, 4, 5, 6 ✓
+
+Variable: nivel_dti
+Mapeo:
+Excelente → 1
+Bueno → 2
+Aceptable → 3
+Límite → 4
+Alto → 5
+Crítico → 6
+</pre></div>
+</div>
+</section>
+</section>
+<section id="normalizacion-y-escalado">
+<h2>Normalización y Escalado<a class="headerlink" href="#normalizacion-y-escalado" title="Link to this heading"></a></h2>
+<section id="metodos-de-escalado">
+<h3>Métodos de Escalado<a class="headerlink" href="#metodos-de-escalado" title="Link to this heading"></a></h3>
+<p><strong>1. StandardScaler (Z-Score)</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Fórmula: (x - μ) / σ
+
+Resultado: Media = 0, Desv. Est. = 1
+
+Uso: Algoritmos sensibles a escala (SVM, KNN, RBM)
+</pre></div>
+</div>
+<p><strong>2. MinMaxScaler</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Fórmula: (x - min) / (max - min)
+
+Resultado: Rango [0, 1]
+
+Uso: Redes neuronales, algoritmos de distancia
+</pre></div>
+</div>
+<p><strong>3. RobustScaler</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Fórmula: (x - mediana) / IQR
+
+Resultado: Robusto a outliers
+
+Uso: Datos con muchos outliers
+</pre></div>
+</div>
+</section>
+<section id="aplicar-escalado">
+<h3>Aplicar Escalado<a class="headerlink" href="#aplicar-escalado" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Método de escalado: StandardScaler
+
+Variables a escalar:
+☑ salario_mensual
+☑ valor_inmueble
+☑ puntaje_datacredito
+☑ dti
+☑ ltv
+
+[⚖️ Aplicar Escalado]
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Advertencia</p>
+<p>Guarda los parámetros del scaler para aplicar a datos nuevos.</p>
+</div>
+</section>
+</section>
+<section id="binning-y-discretizacion">
+<h2>Binning y Discretización<a class="headerlink" href="#binning-y-discretizacion" title="Link to this heading"></a></h2>
+<section id="crear-rangos">
+<h3>Crear Rangos<a class="headerlink" href="#crear-rangos" title="Link to this heading"></a></h3>
+<p><strong>Binning Equidistante:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Variable: edad
+Número de bins: 4
+
+Resultado:
+[22-32): Joven
+[32-42): Adulto Joven
+[42-52): Adulto
+[52-65]: Adulto Mayor
+</pre></div>
+</div>
+<p><strong>Binning por Cuantiles:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Variable: salario_mensual
+Cuantiles: 5 (quintiles)
+
+Resultado:
+Q1: Muy Bajo ($1M - $2M)
+Q2: Bajo ($2M - $3.5M)
+Q3: Medio ($3.5M - $5M)
+Q4: Medio-Alto ($5M - $8M)
+Q5: Alto ($8M+)
+</pre></div>
+</div>
+<p><strong>Binning Personalizado:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Variable: puntaje_datacredito
+
+Rangos personalizados:
+[150-400): Crítico
+[400-500): Muy Malo
+[500-600): Malo
+[600-700): Regular
+[700-800): Bueno
+[800-850): Muy Bueno
+[850-950]: Excelente
+</pre></div>
+</div>
+</section>
+</section>
+<section id="seleccion-de-caracteristicas">
+<h2>Selección de Características<a class="headerlink" href="#seleccion-de-caracteristicas" title="Link to this heading"></a></h2>
+<section id="metodos-automaticos">
+<h3>Métodos Automáticos<a class="headerlink" href="#metodos-automaticos" title="Link to this heading"></a></h3>
+<p><strong>1. Correlación con Target</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[🎯 Calcular Importancia por Correlación]
+
+Top 10 Features:
+1. dti: 0.68
+2. puntaje_datacredito: -0.54
+3. capacidad_residual: -0.48
+4. ltv: 0.42
+5. score_estabilidad: -0.38
+...
+</pre></div>
+</div>
+<p><strong>2. Mutual Information</strong></p>
+<p>Captura relaciones no lineales:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[📊 Calcular Mutual Information]
+
+Top features por MI:
+1. dti: 0.42
+2. capacidad_residual: 0.38
+3. puntaje_datacredito: 0.35
+...
+</pre></div>
+</div>
+<p><strong>3. Feature Importance (Tree-based)</strong></p>
+<p>Usa Random Forest para calcular importancia:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[🌳 Calcular Feature Importance]
+
+Importancia por Random Forest:
+1. dti: 0.18
+2. puntaje_datacredito: 0.15
+3. capacidad_residual: 0.12
+...
+</pre></div>
+</div>
+</section>
+<section id="eliminar-features-redundantes">
+<h3>Eliminar Features Redundantes<a class="headerlink" href="#eliminar-features-redundantes" title="Link to this heading"></a></h3>
+<p><strong>Multicolinealidad:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[🔍 Detectar Multicolinealidad]
+
+VIF (Variance Inflation Factor):
+
+salario_mensual: 2.3 ✓
+patrimonio_total: 8.5 ⚠️ (alta correlación)
+capacidad_ahorro: 12.3 ⚠️ (alta correlación)
+
+Recomendación: Eliminar capacidad_ahorro
+</pre></div>
+</div>
+<p><strong>Correlación Alta:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Pares con correlación &gt; 0.9:
+
+valor_inmueble ↔ monto_credito: 0.95
+Acción: Mantener solo monto_credito
+</pre></div>
+</div>
+</section>
+</section>
+<section id="casos-de-uso">
+<h2>Casos de Uso<a class="headerlink" href="#casos-de-uso" title="Link to this heading"></a></h2>
+<p><strong>Caso 1: Preparar para RBM</strong></p>
+<p>Objetivo: Crear features para entrenamiento de RBM.</p>
+<p>Pasos:
+1. Generar variables derivadas automáticas
+2. Normalizar con StandardScaler
+3. Seleccionar top 20 features
+4. Guardar transformaciones</p>
+<p><strong>Caso 2: Mejorar Modelo Supervisado</strong></p>
+<p>Objetivo: Aumentar precisión de clasificadores.</p>
+<p>Pasos:
+1. Crear interacciones polinomiales
+2. Aplicar transformaciones log
+3. Codificar categóricas (one-hot)
+4. Seleccionar por importancia</p>
+<p><strong>Caso 3: Reducir Dimensionalidad</strong></p>
+<p>Objetivo: Eliminar features redundantes.</p>
+<p>Pasos:
+1. Calcular VIF
+2. Eliminar alta multicolinealidad
+3. Seleccionar por mutual information
+4. Validar con modelo baseline</p>
+</section>
+<section id="tips-y-mejores-practicas">
+<h2>Tips y Mejores Prácticas<a class="headerlink" href="#tips-y-mejores-practicas" title="Link to this heading"></a></h2>
+<p>✅ <strong>Haz:</strong></p>
+<ul class="simple">
+<li><p>Crea features basadas en domain knowledge</p></li>
+<li><p>Normaliza antes de RBM y redes neuronales</p></li>
+<li><p>Guarda transformaciones para producción</p></li>
+<li><p>Valida features con modelos simples</p></li>
+</ul>
+<p>❌ <strong>Evita:</strong></p>
+<ul class="simple">
+<li><p>Crear demasiadas features (curse of dimensionality)</p></li>
+<li><p>Aplicar transformaciones sin entender el impacto</p></li>
+<li><p>Olvidar escalar datos de test</p></li>
+<li><p>Usar target encoding sin validación cruzada</p></li>
+</ul>
+</section>
+<section id="guardar-transformaciones">
+<h2>Guardar Transformaciones<a class="headerlink" href="#guardar-transformaciones" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[💾 Guardar Pipeline de Transformaciones]
+
+Guardado:
+✓ Scaler (StandardScaler)
+✓ Encoders (OneHot, Label)
+✓ Feature names
+✓ Parámetros de transformación
+
+Archivo: feature_pipeline.pkl
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Importante</p>
+<p>Usa el mismo pipeline en producción para consistencia.</p>
+</div>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<p><strong>Problema: Transformación log falla</strong></p>
+<p>Solución: Verifica que no haya valores negativos o cero.</p>
+<p><strong>Problema: Scaler produce NaN</strong></p>
+<p>Solución: Elimina valores faltantes antes de escalar.</p>
+<p><strong>Problema: Demasiadas features después de one-hot</strong></p>
+<p>Solución: Usa target encoding o agrupa categorías raras.</p>
+</section>
+<section id="proximos-pasos">
+<h2>Próximos Pasos<a class="headerlink" href="#proximos-pasos" title="Link to this heading"></a></h2>
+<p>Con tus features creadas:</p>
+<ol class="arabic simple">
+<li><p><strong>Segmentar</strong>: <a class="reference internal" href="06_clustering.html"><span class="doc">6. Clustering y Segmentación</span></a></p></li>
+<li><p><strong>Entrenar RBM</strong>: <a class="reference internal" href="07_rbm.html"><span class="doc">7. Máquina de Boltzmann Restringida (RBM)</span></a></p></li>
+<li><p><strong>Modelos supervisados</strong>: <a class="reference internal" href="08_modelos_supervisados.html"><span class="doc">8. Modelos Supervisados</span></a></p></li>
+</ol>
+<p>¡Features listas para modelado! 🔧</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="04_analisis_descriptivo.html" class="btn btn-neutral float-left" title="4. Análisis Descriptivo" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="06_clustering.html" class="btn btn-neutral float-right" title="6. Clustering y Segmentación" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, Andrés Fernando Gómez Rojas &amp; Carlos Andrés Gómez Vasco. Software Libre bajo Licencia MIT.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

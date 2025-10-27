@@ -1,0 +1,620 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>feature_engineering &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Módulos del Sistema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Código de módulo</a></li>
+      <li class="breadcrumb-item active">feature_engineering</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código fuente para feature_engineering</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">============================================================================</span>
+<span class="sd">MÓDULO DE INGENIERÍA DE CARACTERÍSTICAS</span>
+<span class="sd">============================================================================</span>
+
+<span class="sd">Creación automática de variables derivadas para mejorar el poder predictivo</span>
+<span class="sd">de los modelos de riesgo crediticio.</span>
+
+<span class="sd">Autor: Sistema de Física</span>
+<span class="sd">Versión: 1.0.0</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.express</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">px</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plotly.subplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_subplots</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">LabelEncoder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.feature_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">mutual_info_classif</span><span class="p">,</span> <span class="n">SelectKBest</span><span class="p">,</span> <span class="n">f_classif</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">FeatureEngineer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ingeniero de características para datos de crédito hipotecario&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicializa el ingeniero de características</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: DataFrame con datos originales</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original_columns</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_importance</span> <span class="o">=</span> <span class="p">{}</span>
+        
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_financial_ratios</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Crea ratios financieros fundamentales&quot;&quot;&quot;</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        
+        <span class="c1"># 1. Loan-to-Value (LTV) - Ya existe pero verificamos</span>
+        <span class="k">if</span> <span class="s1">&#39;valor_inmueble&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s1">&#39;monto_credito&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;ltv_ratio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;monto_credito&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;valor_inmueble&#39;</span><span class="p">])</span> <span class="o">*</span> <span class="mi">100</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;ltv_ratio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Ratio Préstamo/Valor del inmueble (%)&quot;</span>
+        
+        <span class="c1"># 2. Debt-to-Income (DTI) - Ya existe pero verificamos</span>
+        <span class="k">if</span> <span class="s1">&#39;cuota_mensual&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s1">&#39;salario_mensual&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;dti_ratio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;cuota_mensual&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;salario_mensual&#39;</span><span class="p">])</span> <span class="o">*</span> <span class="mi">100</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;dti_ratio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Ratio Deuda/Ingreso (%)&quot;</span>
+        
+        <span class="c1"># 3. Capacidad de ahorro</span>
+        <span class="k">if</span> <span class="s1">&#39;salario_mensual&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s1">&#39;egresos_mensuales&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;capacidad_ahorro_nueva&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;salario_mensual&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;egresos_mensuales&#39;</span><span class="p">]</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;ratio_ahorro_salario&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;capacidad_ahorro_nueva&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;salario_mensual&#39;</span><span class="p">])</span> <span class="o">*</span> <span class="mi">100</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;capacidad_ahorro_nueva&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Capacidad de ahorro mensual (COP)&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;ratio_ahorro_salario&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Ratio Ahorro/Salario (%)&quot;</span>
+        
+        <span class="c1"># 4. Ratio patrimonio/deuda</span>
+        <span class="k">if</span> <span class="s1">&#39;patrimonio_total&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s1">&#39;monto_credito&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;ratio_patrimonio_deuda&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;patrimonio_total&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;monto_credito&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;ratio_patrimonio_deuda&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Ratio Patrimonio/Deuda&quot;</span>
+        
+        <span class="c1"># 5. Saldo relativo</span>
+        <span class="k">if</span> <span class="s1">&#39;saldo_promedio_banco&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s1">&#39;salario_mensual&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;saldo_relativo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;saldo_promedio_banco&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;salario_mensual&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;saldo_relativo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Saldo banco relativo al salario&quot;</span>
+        
+        <span class="c1"># 6. Meses de colchón financiero</span>
+        <span class="k">if</span> <span class="s1">&#39;saldo_promedio_banco&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s1">&#39;cuota_mensual&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;meses_colchon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;saldo_promedio_banco&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;cuota_mensual&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;meses_colchon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Meses de colchón financiero&quot;</span>
+        
+        <span class="c1"># 7. Ratio cuota inicial</span>
+        <span class="k">if</span> <span class="s1">&#39;valor_cuota_inicial&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s1">&#39;valor_inmueble&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;ratio_cuota_inicial&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;valor_cuota_inicial&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;valor_inmueble&#39;</span><span class="p">])</span> <span class="o">*</span> <span class="mi">100</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;ratio_cuota_inicial&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Ratio Cuota Inicial (%)&quot;</span>
+        
+        <span class="k">return</span> <span class="n">df</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_risk_indicators</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Crea indicadores de riesgo específicos&quot;&quot;&quot;</span>
+        
+        <span class="c1"># 1. Score de edad (penalización por edades extremas)</span>
+        <span class="k">if</span> <span class="s1">&#39;edad&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;score_edad&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;edad&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_calculate_age_score</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;score_edad&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Score de riesgo por edad&quot;</span>
+        
+        <span class="c1"># 2. Indicador de sobreendeudamiento</span>
+        <span class="k">if</span> <span class="s1">&#39;dti_ratio&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;flag_sobreendeudamiento&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;dti_ratio&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">40</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;nivel_sobreendeudamiento&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+                <span class="n">df</span><span class="p">[</span><span class="s1">&#39;dti_ratio&#39;</span><span class="p">],</span>
+                <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+                <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Bajo&#39;</span><span class="p">,</span> <span class="s1">&#39;Moderado&#39;</span><span class="p">,</span> <span class="s1">&#39;Alto&#39;</span><span class="p">,</span> <span class="s1">&#39;Crítico&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;flag_sobreendeudamiento&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Flag sobreendeudamiento (DTI &gt; 40%)&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;nivel_sobreendeudamiento&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Nivel de sobreendeudamiento&quot;</span>
+        
+        <span class="c1"># 3. Score de estabilidad laboral</span>
+        <span class="k">if</span> <span class="s1">&#39;antiguedad_empleo&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s1">&#39;tipo_empleo&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;score_estabilidad&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_calculate_stability_score</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;score_estabilidad&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Score de estabilidad laboral&quot;</span>
+        
+        <span class="c1"># 4. Riesgo legal (función exponencial de demandas)</span>
+        <span class="k">if</span> <span class="s1">&#39;numero_demandas&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;riesgo_legal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;numero_demandas&#39;</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;riesgo_legal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Riesgo legal (% basado en demandas)&quot;</span>
+        
+        <span class="c1"># 5. Score de educación (ordinal)</span>
+        <span class="k">if</span> <span class="s1">&#39;nivel_educacion&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">education_map</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;Bachiller&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s1">&#39;Técnico&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s1">&#39;Profesional&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s1">&#39;Posgrado&#39;</span><span class="p">:</span> <span class="mi">4</span>
+            <span class="p">}</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;score_educacion&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;nivel_educacion&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">education_map</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;score_educacion&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Score ordinal de educación&quot;</span>
+        
+        <span class="c1"># 6. Indicador de alta liquidez</span>
+        <span class="k">if</span> <span class="s1">&#39;saldo_promedio_banco&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s1">&#39;salario_mensual&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;flag_alta_liquidez&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;saldo_promedio_banco&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;salario_mensual&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;flag_alta_liquidez&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Flag alta liquidez (saldo &gt; 3 salarios)&quot;</span>
+        
+        <span class="k">return</span> <span class="n">df</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_interaction_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Crea variables de interacción&quot;&quot;&quot;</span>
+        
+        <span class="c1"># 1. Educación × Salario</span>
+        <span class="k">if</span> <span class="s1">&#39;score_educacion&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s1">&#39;salario_mensual&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;educacion_x_salario&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;score_educacion&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;salario_mensual&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000000</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;educacion_x_salario&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Interacción Educación × Salario&quot;</span>
+        
+        <span class="c1"># 2. Propiedades × Patrimonio</span>
+        <span class="k">if</span> <span class="s1">&#39;numero_propiedades&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s1">&#39;patrimonio_total&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;propiedades_x_patrimonio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;numero_propiedades&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;patrimonio_total&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;propiedades_x_patrimonio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Interacción Propiedades × Log(Patrimonio)&quot;</span>
+        
+        <span class="c1"># 3. Edad × Empleo</span>
+        <span class="k">if</span> <span class="s1">&#39;edad&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s1">&#39;antiguedad_empleo&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;edad_x_empleo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;edad&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;antiguedad_empleo&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;edad_x_empleo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Interacción Edad × Antigüedad Empleo&quot;</span>
+        
+        <span class="c1"># 4. LTV × Puntaje DataCrédito</span>
+        <span class="k">if</span> <span class="s1">&#39;ltv_ratio&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s1">&#39;puntaje_datacredito&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;ltv_x_puntaje&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;ltv_ratio&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">900</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;puntaje_datacredito&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;ltv_x_puntaje&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Interacción LTV × (900 - Puntaje DataCrédito)&quot;</span>
+        
+        <span class="k">return</span> <span class="n">df</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_binned_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Crea variables discretizadas/binned&quot;&quot;&quot;</span>
+        
+        <span class="c1"># 1. Grupos de edad</span>
+        <span class="k">if</span> <span class="s1">&#39;edad&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;grupo_edad&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+                <span class="n">df</span><span class="p">[</span><span class="s1">&#39;edad&#39;</span><span class="p">],</span>
+                <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+                <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Joven&#39;</span><span class="p">,</span> <span class="s1">&#39;Adulto_Joven&#39;</span><span class="p">,</span> <span class="s1">&#39;Adulto&#39;</span><span class="p">,</span> <span class="s1">&#39;Adulto_Mayor&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;grupo_edad&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Grupo etario&quot;</span>
+        
+        <span class="c1"># 2. Rangos salariales</span>
+        <span class="k">if</span> <span class="s1">&#39;salario_mensual&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;rango_salarial&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+                <span class="n">df</span><span class="p">[</span><span class="s1">&#39;salario_mensual&#39;</span><span class="p">],</span>
+                <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2000000</span><span class="p">,</span> <span class="mi">3500000</span><span class="p">,</span> <span class="mi">5000000</span><span class="p">,</span> <span class="mi">8000000</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">],</span>
+                <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Muy_Bajo&#39;</span><span class="p">,</span> <span class="s1">&#39;Bajo&#39;</span><span class="p">,</span> <span class="s1">&#39;Medio&#39;</span><span class="p">,</span> <span class="s1">&#39;Alto&#39;</span><span class="p">,</span> <span class="s1">&#39;Muy_Alto&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;rango_salarial&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Rango salarial&quot;</span>
+        
+        <span class="c1"># 3. Categorías de puntaje DataCrédito</span>
+        <span class="k">if</span> <span class="s1">&#39;puntaje_datacredito&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;categoria_puntaje&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+                <span class="n">df</span><span class="p">[</span><span class="s1">&#39;puntaje_datacredito&#39;</span><span class="p">],</span>
+                <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">700</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">950</span><span class="p">],</span>
+                <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Malo&#39;</span><span class="p">,</span> <span class="s1">&#39;Regular&#39;</span><span class="p">,</span> <span class="s1">&#39;Bueno&#39;</span><span class="p">,</span> <span class="s1">&#39;Muy_Bueno&#39;</span><span class="p">,</span> <span class="s1">&#39;Excelente&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;categoria_puntaje&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Categoría puntaje DataCrédito&quot;</span>
+        
+        <span class="c1"># 4. Niveles de LTV</span>
+        <span class="k">if</span> <span class="s1">&#39;ltv_ratio&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;nivel_ltv&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+                <span class="n">df</span><span class="p">[</span><span class="s1">&#39;ltv_ratio&#39;</span><span class="p">],</span>
+                <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+                <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Muy_Bajo&#39;</span><span class="p">,</span> <span class="s1">&#39;Bajo&#39;</span><span class="p">,</span> <span class="s1">&#39;Medio&#39;</span><span class="p">,</span> <span class="s1">&#39;Alto&#39;</span><span class="p">,</span> <span class="s1">&#39;Muy_Alto&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;nivel_ltv&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Nivel de LTV&quot;</span>
+        
+        <span class="k">return</span> <span class="n">df</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transformed_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Crea variables transformadas matemáticamente&quot;&quot;&quot;</span>
+        
+        <span class="c1"># Variables con distribución sesgada para transformar con log</span>
+        <span class="n">skewed_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;salario_mensual&#39;</span><span class="p">,</span> <span class="s1">&#39;patrimonio_total&#39;</span><span class="p">,</span> <span class="s1">&#39;valor_inmueble&#39;</span><span class="p">,</span> <span class="s1">&#39;saldo_promedio_banco&#39;</span><span class="p">]</span>
+        
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">skewed_vars</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="c1"># Log transformation</span>
+                <span class="n">df</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">_log&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">_log&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Log(</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2">)&quot;</span>
+                
+                <span class="c1"># Square root transformation</span>
+                <span class="n">df</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">_sqrt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">var</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">_sqrt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Raíz(</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2">)&quot;</span>
+        
+        <span class="c1"># Transformaciones específicas</span>
+        <span class="k">if</span> <span class="s1">&#39;dti_ratio&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;dti_cuadrado&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;dti_ratio&#39;</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;dti_cuadrado&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;DTI al cuadrado&quot;</span>
+        
+        <span class="k">if</span> <span class="s1">&#39;edad&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;edad_cuadrado&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;edad&#39;</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new_features</span><span class="p">[</span><span class="s1">&#39;edad_cuadrado&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Edad al cuadrado&quot;</span>
+        
+        <span class="k">return</span> <span class="n">df</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_age_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calcula score de riesgo por edad&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">age</span> <span class="o">&lt;</span> <span class="mi">25</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">30</span>  <span class="c1"># Penalización por juventud</span>
+        <span class="k">elif</span> <span class="n">age</span> <span class="o">&lt;</span> <span class="mi">30</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">10</span>
+        <span class="k">elif</span> <span class="n">age</span> <span class="o">&lt;=</span> <span class="mi">55</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">40</span>   <span class="c1"># Edad óptima</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span> <span class="o">*</span> <span class="p">(</span><span class="n">age</span> <span class="o">-</span> <span class="mi">55</span><span class="p">))</span>  <span class="c1"># Penalización por edad avanzada</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_stability_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calcula score de estabilidad laboral&quot;&quot;&quot;</span>
+        <span class="n">antiguedad</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;antiguedad_empleo&#39;</span><span class="p">]</span>
+        <span class="n">tipo_empleo</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;tipo_empleo&#39;</span><span class="p">]</span>
+        
+        <span class="c1"># Score base por antigüedad</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">antiguedad</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
+        
+        <span class="c1"># Ajuste por tipo de empleo</span>
+        <span class="k">if</span> <span class="n">tipo_empleo</span> <span class="o">==</span> <span class="s2">&quot;Formal&quot;</span><span class="p">:</span>
+            <span class="n">score</span> <span class="o">+=</span> <span class="mi">25</span>
+        <span class="k">elif</span> <span class="n">tipo_empleo</span> <span class="o">==</span> <span class="s2">&quot;Independiente&quot;</span><span class="p">:</span>
+            <span class="n">score</span> <span class="o">+=</span> <span class="mi">10</span>
+        <span class="c1"># Informal no suma puntos</span>
+        
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mi">125</span><span class="p">,</span> <span class="n">score</span><span class="p">))</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_feature_importance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">target_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;nivel_riesgo&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calcula importancia de características usando mutual information</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            df: DataFrame con características</span>
+<span class="sd">            target_col: Variable objetivo</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Diccionario con importancias</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">target_col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{}</span>
+        
+        <span class="c1"># Preparar datos</span>
+        <span class="n">numeric_features</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">target_col</span> <span class="ow">in</span> <span class="n">numeric_features</span><span class="p">:</span>
+            <span class="n">numeric_features</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">target_col</span><span class="p">)</span>
+        
+        <span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">numeric_features</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="c1"># Codificar target si es categórico</span>
+        <span class="k">if</span> <span class="n">df</span><span class="p">[</span><span class="n">target_col</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">:</span>
+            <span class="n">le</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">target_col</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;Unknown&#39;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">target_col</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="c1"># Calcular mutual information</span>
+        <span class="n">mi_scores</span> <span class="o">=</span> <span class="n">mutual_info_classif</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+        
+        <span class="c1"># Crear diccionario de importancias</span>
+        <span class="n">importance_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">numeric_features</span><span class="p">,</span> <span class="n">mi_scores</span><span class="p">))</span>
+        
+        <span class="c1"># Ordenar por importancia</span>
+        <span class="n">sorted_importance</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">importance_dict</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        
+        <span class="k">return</span> <span class="n">sorted_importance</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_all_features</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Genera todas las características derivadas&quot;&quot;&quot;</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔧 INICIANDO INGENIERÍA DE CARACTERÍSTICAS&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+        
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">initial_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        
+        <span class="c1"># 1. Ratios financieros</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;💰 Creando ratios financieros...&quot;</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_financial_ratios</span><span class="p">()</span>
+        
+        <span class="c1"># 2. Indicadores de riesgo</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️ Creando indicadores de riesgo...&quot;</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_risk_indicators</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        
+        <span class="c1"># 3. Variables de interacción</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔗 Creando variables de interacción...&quot;</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_interaction_features</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        
+        <span class="c1"># 4. Variables discretizadas</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📊 Creando variables discretizadas...&quot;</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_binned_features</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        
+        <span class="c1"># 5. Transformaciones matemáticas</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📐 Aplicando transformaciones matemáticas...&quot;</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_transformed_features</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        
+        <span class="n">final_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="n">new_features_count</span> <span class="o">=</span> <span class="n">final_features</span> <span class="o">-</span> <span class="n">initial_features</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Ingeniería completada:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Características originales: </span><span class="si">{</span><span class="n">initial_features</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Características nuevas: </span><span class="si">{</span><span class="n">new_features_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Total características: </span><span class="si">{</span><span class="n">final_features</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">df</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">render_feature_engineering</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Renderiza el módulo de ingeniería de características en Streamlit&quot;&quot;&quot;</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;🔧 Ingeniería de Características&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### *Creación automática de variables derivadas*&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Verificar datos</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;data/processed/datos_credito_hipotecario_realista.csv&quot;</span><span class="p">):</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;❌ No hay datos disponibles. Ve a &#39;Generar Datos&#39; primero.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="c1"># Cargar datos</span>
+    <span class="nd">@st</span><span class="o">.</span><span class="n">cache_data</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_data</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/processed/datos_credito_hipotecario_realista.csv&quot;</span><span class="p">)</span>
+    
+    <span class="n">df</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">()</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Datos cargados: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> registros, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> variables originales&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Información sobre características a crear</span>
+    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">expander</span><span class="p">(</span><span class="s2">&quot;📋 Características que se van a crear&quot;</span><span class="p">,</span> <span class="n">expanded</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        ### 💰 Ratios Financieros:</span>
+<span class="s2">        - `ltv_ratio`: Loan-to-Value ratio (%)</span>
+<span class="s2">        - `dti_ratio`: Debt-to-Income ratio (%)</span>
+<span class="s2">        - `ratio_ahorro_salario`: Capacidad ahorro/salario (%)</span>
+<span class="s2">        - `ratio_patrimonio_deuda`: Patrimonio/Deuda</span>
+<span class="s2">        - `saldo_relativo`: Saldo banco/salario</span>
+<span class="s2">        - `meses_colchon`: Meses de colchón financiero</span>
+<span class="s2">        </span>
+<span class="s2">        ### ⚠️ Indicadores de Riesgo:</span>
+<span class="s2">        - `score_edad`: Penalización por edades extremas</span>
+<span class="s2">        - `flag_sobreendeudamiento`: DTI &gt; 40%</span>
+<span class="s2">        - `score_estabilidad`: Estabilidad laboral</span>
+<span class="s2">        - `riesgo_legal`: Función exponencial de demandas</span>
+<span class="s2">        - `score_educacion`: Codificación ordinal educación</span>
+<span class="s2">        </span>
+<span class="s2">        ### 🔗 Variables de Interacción:</span>
+<span class="s2">        - `educacion_x_salario`: Educación × Salario</span>
+<span class="s2">        - `propiedades_x_patrimonio`: Propiedades × Log(Patrimonio)</span>
+<span class="s2">        - `edad_x_empleo`: Edad × Antigüedad empleo</span>
+<span class="s2">        </span>
+<span class="s2">        ### 📊 Variables Discretizadas:</span>
+<span class="s2">        - `grupo_edad`: Joven/Adulto/Mayor</span>
+<span class="s2">        - `rango_salarial`: Bajo/Medio/Alto</span>
+<span class="s2">        - `categoria_puntaje`: Malo/Regular/Bueno/Excelente</span>
+<span class="s2">        </span>
+<span class="s2">        ### 📐 Transformaciones:</span>
+<span class="s2">        - Variables log y raíz cuadrada para distribuciones sesgadas</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Botón para generar características</span>
+    <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;🚀 Generar Características&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;🔧 Creando características derivadas...&quot;</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Crear ingeniero</span>
+                <span class="n">engineer</span> <span class="o">=</span> <span class="n">FeatureEngineer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+                
+                <span class="c1"># Generar todas las características</span>
+                <span class="n">df_enhanced</span> <span class="o">=</span> <span class="n">engineer</span><span class="o">.</span><span class="n">generate_all_features</span><span class="p">()</span>
+                
+                <span class="c1"># Calcular importancia de características</span>
+                <span class="k">if</span> <span class="s1">&#39;nivel_riesgo&#39;</span> <span class="ow">in</span> <span class="n">df_enhanced</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                    <span class="n">importance_scores</span> <span class="o">=</span> <span class="n">engineer</span><span class="o">.</span><span class="n">calculate_feature_importance</span><span class="p">(</span><span class="n">df_enhanced</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">importance_scores</span> <span class="o">=</span> <span class="p">{}</span>
+                
+                <span class="c1"># Guardar dataset enriquecido</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s2">&quot;data/processed&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">enhanced_path</span> <span class="o">=</span> <span class="s2">&quot;data/processed/datos_con_caracteristicas.csv&quot;</span>
+                <span class="n">df_enhanced</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">enhanced_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                
+                <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Características creadas exitosamente!&quot;</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;💾 Dataset enriquecido guardado: </span><span class="si">{</span><span class="n">enhanced_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+                <span class="c1"># Mostrar estadísticas</span>
+                <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+                
+                <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Características Originales&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+                
+                <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+                    <span class="n">new_features_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_enhanced</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Características Nuevas&quot;</span><span class="p">,</span> <span class="n">new_features_count</span><span class="p">)</span>
+                
+                <span class="k">with</span> <span class="n">col3</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Total Características&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_enhanced</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+                
+                <span class="c1"># Mostrar nuevas características creadas</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📋 Nuevas Características Creadas&quot;</span><span class="p">)</span>
+                
+                <span class="n">new_features_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+                    <span class="p">[</span><span class="n">feature</span><span class="p">,</span> <span class="n">description</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">feature</span><span class="p">,</span> <span class="n">description</span> <span class="ow">in</span> <span class="n">engineer</span><span class="o">.</span><span class="n">new_features</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Característica&quot;</span><span class="p">,</span> <span class="s2">&quot;Descripción&quot;</span><span class="p">])</span>
+                
+                <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">new_features_df</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hide_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                
+                <span class="c1"># Mostrar importancia de características</span>
+                <span class="k">if</span> <span class="n">importance_scores</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📊 Importancia de Características&quot;</span><span class="p">)</span>
+                    
+                    <span class="c1"># Top 20 características más importantes</span>
+                    <span class="n">top_features</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">importance_scores</span><span class="o">.</span><span class="n">items</span><span class="p">())[:</span><span class="mi">20</span><span class="p">]</span>
+                    
+                    <span class="k">if</span> <span class="n">top_features</span><span class="p">:</span>
+                        <span class="n">features_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">top_features</span><span class="p">]</span>
+                        <span class="n">importance_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">top_features</span><span class="p">]</span>
+                        
+                        <span class="n">fig_importance</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+                            <span class="n">x</span><span class="o">=</span><span class="n">importance_values</span><span class="p">,</span>
+                            <span class="n">y</span><span class="o">=</span><span class="n">features_names</span><span class="p">,</span>
+                            <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span>
+                            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Top 20 Características Más Importantes&quot;</span><span class="p">,</span>
+                            <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="s1">&#39;Importancia (Mutual Information)&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="s1">&#39;Características&#39;</span><span class="p">}</span>
+                        <span class="p">)</span>
+                        
+                        <span class="n">fig_importance</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                            <span class="n">template</span><span class="o">=</span><span class="s2">&quot;plotly_white&quot;</span><span class="p">,</span>
+                            <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
+                            <span class="n">yaxis</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;categoryorder&#39;</span><span class="p">:</span> <span class="s1">&#39;total ascending&#39;</span><span class="p">}</span>
+                        <span class="p">)</span>
+                        
+                        <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">fig_importance</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                
+                <span class="c1"># Mostrar muestra del dataset enriquecido</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;👀 Vista Previa del Dataset Enriquecido&quot;</span><span class="p">)</span>
+                
+                <span class="c1"># Mostrar solo algunas columnas nuevas para no saturar</span>
+                <span class="n">new_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">engineer</span><span class="o">.</span><span class="n">new_features</span><span class="o">.</span><span class="n">keys</span><span class="p">())[:</span><span class="mi">10</span><span class="p">]</span>
+                <span class="n">display_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;edad&#39;</span><span class="p">,</span> <span class="s1">&#39;salario_mensual&#39;</span><span class="p">,</span> <span class="s1">&#39;puntaje_datacredito&#39;</span><span class="p">,</span> <span class="s1">&#39;nivel_riesgo&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">new_cols</span>
+                <span class="n">display_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">display_cols</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df_enhanced</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+                
+                <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span>
+                    <span class="n">df_enhanced</span><span class="p">[</span><span class="n">display_cols</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+                    <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span>
+                <span class="p">)</span>
+                
+                <span class="c1"># Botón de descarga</span>
+                <span class="n">csv</span> <span class="o">=</span> <span class="n">df_enhanced</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">download_button</span><span class="p">(</span>
+                    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;📥 Descargar Dataset Enriquecido&quot;</span><span class="p">,</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">csv</span><span class="p">,</span>
+                    <span class="n">file_name</span><span class="o">=</span><span class="s2">&quot;datos_con_caracteristicas.csv&quot;</span><span class="p">,</span>
+                    <span class="n">mime</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span><span class="p">,</span>
+                    <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span>
+                <span class="p">)</span>
+                
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Error creando características: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+    
+    <span class="c1"># Mostrar características existentes si ya fueron creadas</span>
+    <span class="n">enhanced_path</span> <span class="o">=</span> <span class="s2">&quot;data/processed/datos_con_caracteristicas.csv&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">enhanced_path</span><span class="p">):</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">divider</span><span class="p">()</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📊 Dataset Enriquecido Existente&quot;</span><span class="p">)</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">df_existing</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">enhanced_path</span><span class="p">)</span>
+            
+            <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Total Registros&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_existing</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Total Características&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_existing</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+            <span class="k">with</span> <span class="n">col3</span><span class="p">:</span>
+                <span class="n">nuevas</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_existing</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Características Añadidas&quot;</span><span class="p">,</span> <span class="n">nuevas</span><span class="p">)</span>
+            
+            <span class="c1"># Mostrar muestra</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">df_existing</span><span class="o">.</span><span class="n">head</span><span class="p">(),</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error cargando dataset enriquecido: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="render_feature_engineering_module">
+<a class="viewcode-back" href="../api_reference.html#feature_engineering.render_feature_engineering_module">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">render_feature_engineering_module</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Función principal para renderizar el módulo de ingeniería&quot;&quot;&quot;</span>
+    <span class="n">render_feature_engineering</span><span class="p">()</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Módulo de ingeniería de características cargado correctamente&quot;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2024, Andrés Fernando Gómez Rojas.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

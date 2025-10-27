@@ -1,0 +1,886 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>educational_rag &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="retraining" href="retraining.html" />
+    <link rel="prev" title="prediction" href="prediction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Módulos del Sistema</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#modulos-principales">Módulos Principales</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../modules.html#referencia-completa-de-la-api">Referencia Completa de la API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="generar_datos.html">generar_datos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_processor.html">data_processor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="univariate_analysis.html">univariate_analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bivariate_analysis.html">bivariate_analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature_engineering.html">feature_engineering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clustering.html">clustering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbm_model.html">rbm_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="supervised_models.html">supervised_models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="prediction.html">prediction</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">educational_rag</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#descripcion-general">Descripción General</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#clases-principales">Clases Principales</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-de-inicializacion">Métodos de Inicialización</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-de-gestion-de-papers">Métodos de Gestión de Papers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-de-busqueda">Métodos de Búsqueda</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-de-generacion">Métodos de Generación</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#funciones-de-renderizado">Funciones de Renderizado</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#preguntas-sugeridas">Preguntas Sugeridas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ejemplo-completo-de-uso">Ejemplo Completo de Uso</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gestion-de-papers-personalizados">Gestión de Papers Personalizados</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#arquitectura-del-sistema-rag">Arquitectura del Sistema RAG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Métodos de Búsqueda</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Métodos de Generación</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">Funciones de Renderizado</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#papers-cientificos-incluidos">Papers Científicos Incluidos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ejemplo-de-sesion-educativa">Ejemplo de Sesión Educativa</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configuracion-avanzada">Configuración Avanzada</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dependencias-requeridas">Dependencias Requeridas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ver-tambien">Ver también</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="retraining.html">retraining</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#arquitectura-del-sistema">Arquitectura del Sistema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#flujo-de-datos">Flujo de Datos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#descripcion-de-modulos">Descripción de Módulos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#configuracion-avanzada">Configuración Avanzada</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#integracion-con-otros-sistemas">Integración con Otros Sistemas</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">Módulos del Sistema</a></li>
+      <li class="breadcrumb-item active">educational_rag</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/educational_rag.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="educational-rag">
+<h1>educational_rag<a class="headerlink" href="#educational-rag" title="Link to this heading"></a></h1>
+<section id="descripcion-general">
+<h2>Descripción General<a class="headerlink" href="#descripcion-general" title="Link to this heading"></a></h2>
+<p>Sistema RAG (Retrieval-Augmented Generation) educativo para aprender sobre Máquinas de Boltzmann Restringidas usando papers científicos y Groq AI. Combina búsqueda semántica con generación de respuestas.</p>
+</section>
+<section id="clases-principales">
+<h2>Clases Principales<a class="headerlink" href="#clases-principales" title="Link to this heading"></a></h2>
+<section id="educationalrag">
+<h3>EducationalRAG<a class="headerlink" href="#educationalrag" title="Link to this heading"></a></h3>
+</section>
+</section>
+<section id="metodos-de-inicializacion">
+<h2>Métodos de Inicialización<a class="headerlink" href="#metodos-de-inicializacion" title="Link to this heading"></a></h2>
+<section id="init-groq">
+<h3>_init_groq<a class="headerlink" href="#init-groq" title="Link to this heading"></a></h3>
+<p>Inicializa el cliente de Groq AI.</p>
+<dl class="simple">
+<dt><strong>Configuración:</strong></dt><dd><ul class="simple">
+<li><p>Busca API key en <code class="docutils literal notranslate"><span class="pre">st.secrets['GROQ_API_KEY']</span></code></p></li>
+<li><p>O en variable de entorno <code class="docutils literal notranslate"><span class="pre">GROQ_API_KEY</span></code></p></li>
+<li><p>Modelo: Llama 3.3 70B Versatile</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Configurar API key:</strong></p>
+<p>En <code class="docutils literal notranslate"><span class="pre">.streamlit/secrets.toml</span></code>:</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">GROQ_API_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;gsk_...&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="init-chromadb">
+<h3>_init_chromadb<a class="headerlink" href="#init-chromadb" title="Link to this heading"></a></h3>
+<p>Inicializa ChromaDB para almacenamiento vectorial.</p>
+<dl class="simple">
+<dt><strong>Configuración:</strong></dt><dd><ul class="simple">
+<li><p>Directorio: <code class="docutils literal notranslate"><span class="pre">chroma_rbm_db/</span></code></p></li>
+<li><p>Colección: <code class="docutils literal notranslate"><span class="pre">rbm_papers</span></code></p></li>
+<li><p>Modo: Persistente</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</section>
+<section id="metodos-de-gestion-de-papers">
+<h2>Métodos de Gestión de Papers<a class="headerlink" href="#metodos-de-gestion-de-papers" title="Link to this heading"></a></h2>
+<section id="get-available-papers">
+<h3>get_available_papers<a class="headerlink" href="#get-available-papers" title="Link to this heading"></a></h3>
+<p>Obtiene lista de papers PDF disponibles.</p>
+<dl class="simple">
+<dt><strong>Returns:</strong></dt><dd><p>Lista de nombres de archivos PDF</p>
+</dd>
+</dl>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">papers</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">get_available_papers</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Papers disponibles: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">papers</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">paper</span> <span class="ow">in</span> <span class="n">papers</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="n">paper</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="get-paper-references">
+<h3>get_paper_references<a class="headerlink" href="#get-paper-references" title="Link to this heading"></a></h3>
+<p>Carga referencias bibliográficas desde JSON.</p>
+<dl class="simple">
+<dt><strong>Returns:</strong></dt><dd><p>Diccionario con referencias completas</p>
+</dd>
+</dl>
+<p><strong>Estructura de referencias:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;Hinton_2010_Practical_Guide.pdf&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;A Practical Guide to Training RBMs&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;authors&quot;</span><span class="p">:</span> <span class="s2">&quot;Geoffrey E. Hinton&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2010</span><span class="p">,</span>
+        <span class="s2">&quot;publication&quot;</span><span class="p">:</span> <span class="s2">&quot;Technical Report UTML TR 2010-003&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;citation&quot;</span><span class="p">:</span> <span class="s2">&quot;Hinton, G. E. (2010). A Practical Guide...&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="load-papers-to-db">
+<h3>load_papers_to_db<a class="headerlink" href="#load-papers-to-db" title="Link to this heading"></a></h3>
+<p>Carga papers a ChromaDB si no están cargados.</p>
+<dl class="simple">
+<dt><strong>Returns:</strong></dt><dd><p>True si exitoso</p>
+</dd>
+</dl>
+<p><strong>Proceso:</strong></p>
+<ol class="arabic simple">
+<li><p>Verificar si ya hay documentos en la colección</p></li>
+<li><p>Si no hay PDFs, crear base de conocimiento básica</p></li>
+<li><p>Indexar documentos con embeddings</p></li>
+</ol>
+</section>
+<section id="create-basic-knowledge">
+<h3>_create_basic_knowledge<a class="headerlink" href="#create-basic-knowledge" title="Link to this heading"></a></h3>
+<p>Crea base de conocimiento básica sobre RBMs.</p>
+<p><strong>Temas cubiertos:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Introducción:</strong> Qué es una RBM</p></li>
+<li><p><strong>Arquitectura:</strong> Estructura bipartita</p></li>
+<li><p><strong>Contrastive Divergence:</strong> Algoritmo de entrenamiento</p></li>
+<li><p><strong>Función de energía:</strong> Definición matemática</p></li>
+<li><p><strong>Aplicaciones:</strong> Usos prácticos</p></li>
+<li><p><strong>Comparación:</strong> RBM vs redes neuronales</p></li>
+<li><p><strong>Proceso de entrenamiento:</strong> Pasos detallados</p></li>
+<li><p><strong>Limitaciones:</strong> Desventajas conocidas</p></li>
+<li><p><strong>Deep Belief Networks:</strong> Apilamiento de RBMs</p></li>
+<li><p><strong>PCD:</strong> Persistent Contrastive Divergence</p></li>
+</ol>
+</section>
+</section>
+<section id="metodos-de-busqueda">
+<h2>Métodos de Búsqueda<a class="headerlink" href="#metodos-de-busqueda" title="Link to this heading"></a></h2>
+<section id="query-papers">
+<h3>query_papers<a class="headerlink" href="#query-papers" title="Link to this heading"></a></h3>
+<p>Busca información relevante en los papers usando similitud coseno.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">question</span></code> (str): Pregunta del usuario</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_results</span></code> (int): Número de fragmentos a retornar (default: 3)</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Lista de diccionarios con fragmentos relevantes</p>
+</dd>
+<dt><strong>Métrica de similitud:</strong></dt><dd><ul class="simple">
+<li><p><strong>Similitud Coseno:</strong> Mide ángulo entre vectores de embeddings</p></li>
+<li><p>Rango: [0, 1] donde 1 = idéntico</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Buscar información</span>
+<span class="n">question</span> <span class="o">=</span> <span class="s2">&quot;¿Cómo funciona Contrastive Divergence?&quot;</span>
+<span class="n">context</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">query_papers</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">n_results</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Ver resultados</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">doc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Fragmento </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Similitud: </span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;similarity&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Fuente: </span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">][</span><span class="s1">&#39;source&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Autor: </span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">][</span><span class="s1">&#39;author&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Contenido: </span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">][:</span><span class="mi">200</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="metodos-de-generacion">
+<h2>Métodos de Generación<a class="headerlink" href="#metodos-de-generacion" title="Link to this heading"></a></h2>
+<section id="generate-response">
+<h3>generate_response<a class="headerlink" href="#generate-response" title="Link to this heading"></a></h3>
+<p>Genera respuesta usando Groq AI basada en el contexto recuperado.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">question</span></code> (str): Pregunta del usuario</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">context</span></code> (List[Dict]): Fragmentos relevantes de papers</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Respuesta generada en lenguaje natural</p>
+</dd>
+<dt><strong>Configuración del LLM:</strong></dt><dd><ul class="simple">
+<li><p>Modelo: Llama 3.3 70B Versatile</p></li>
+<li><p>Temperature: 0.7 (balance creatividad/precisión)</p></li>
+<li><p>Max tokens: 2000</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Buscar contexto</span>
+<span class="n">context</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">query_papers</span><span class="p">(</span><span class="s2">&quot;¿Qué es la función de energía en RBMs?&quot;</span><span class="p">,</span> <span class="n">n_results</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Generar respuesta</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">generate_response</span><span class="p">(</span>
+    <span class="n">question</span><span class="o">=</span><span class="s2">&quot;¿Qué es la función de energía en RBMs?&quot;</span><span class="p">,</span>
+    <span class="n">context</span><span class="o">=</span><span class="n">context</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="get-reference-mapping">
+<h3>_get_reference_mapping<a class="headerlink" href="#get-reference-mapping" title="Link to this heading"></a></h3>
+<p>Obtiene mapeo de referencias bibliográficas.</p>
+<dl class="simple">
+<dt><strong>Returns:</strong></dt><dd><p>Diccionario con información de citación</p>
+</dd>
+</dl>
+<p><strong>Papers incluidos:</strong></p>
+<ul class="simple">
+<li><p>Hinton (2010): Practical Guide to Training RBMs</p></li>
+<li><p>Hinton (2002): Contrastive Divergence</p></li>
+<li><p>Hinton &amp; Salakhutdinov (2006): Reducing Dimensionality</p></li>
+<li><p>Salakhutdinov et al. (2007): Collaborative Filtering</p></li>
+<li><p>Bengio (2013): Deep Learning of Representations</p></li>
+<li><p>Tieleman (2008): Persistent Contrastive Divergence</p></li>
+</ul>
+</section>
+</section>
+<section id="funciones-de-renderizado">
+<h2>Funciones de Renderizado<a class="headerlink" href="#funciones-de-renderizado" title="Link to this heading"></a></h2>
+<section id="render-educational-rag-module">
+<h3>render_educational_rag_module<a class="headerlink" href="#render-educational-rag-module" title="Link to this heading"></a></h3>
+<p>Renderiza la interfaz completa del sistema RAG en Streamlit.</p>
+<p><strong>Funcionalidades:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Gestión de papers:</strong></p>
+<ul class="simple">
+<li><p>Ver lista de papers disponibles</p></li>
+<li><p>Descargar papers desde URL</p></li>
+<li><p>Editar referencias bibliográficas</p></li>
+<li><p>Eliminar papers</p></li>
+</ul>
+</li>
+<li><p><strong>Interfaz de chat:</strong></p>
+<ul class="simple">
+<li><p>Preguntas sugeridas (Básico/Intermedio/Avanzado)</p></li>
+<li><p>Campo de texto para preguntas personalizadas</p></li>
+<li><p>Búsqueda con similitud coseno</p></li>
+<li><p>Visualización de fragmentos relevantes</p></li>
+<li><p>Respuestas generadas con IA</p></li>
+</ul>
+</li>
+<li><p><strong>Historial:</strong></p>
+<ul class="simple">
+<li><p>Últimas 5 conversaciones</p></li>
+<li><p>Preguntas y respuestas guardadas</p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+<section id="preguntas-sugeridas">
+<h2>Preguntas Sugeridas<a class="headerlink" href="#preguntas-sugeridas" title="Link to this heading"></a></h2>
+<section id="nivel-basico">
+<h3>Nivel Básico<a class="headerlink" href="#nivel-basico" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>¿Qué es una Máquina de Boltzmann Restringida?</p></li>
+<li><p>¿Cuál es la diferencia entre RBM y una red neuronal tradicional?</p></li>
+<li><p>¿Para qué se usan las RBMs?</p></li>
+</ul>
+</section>
+<section id="nivel-intermedio">
+<h3>Nivel Intermedio<a class="headerlink" href="#nivel-intermedio" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>¿Cómo funciona el algoritmo Contrastive Divergence?</p></li>
+<li><p>¿Qué son las unidades visibles y ocultas en una RBM?</p></li>
+<li><p>¿Cómo se entrenan las RBMs?</p></li>
+</ul>
+</section>
+<section id="nivel-avanzado">
+<h3>Nivel Avanzado<a class="headerlink" href="#nivel-avanzado" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>¿Cuáles son las limitaciones de las RBMs?</p></li>
+<li><p>¿Cómo se apilan RBMs para crear Deep Belief Networks?</p></li>
+<li><p>¿Qué es Persistent Contrastive Divergence?</p></li>
+</ul>
+</section>
+</section>
+<section id="ejemplo-completo-de-uso">
+<h2>Ejemplo Completo de Uso<a class="headerlink" href="#ejemplo-completo-de-uso" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.educational_rag</span><span class="w"> </span><span class="kn">import</span> <span class="n">EducationalRAG</span>
+
+<span class="c1"># Inicializar sistema</span>
+<span class="n">rag</span> <span class="o">=</span> <span class="n">EducationalRAG</span><span class="p">()</span>
+
+<span class="c1"># Verificar configuración</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">rag</span><span class="o">.</span><span class="n">groq_client</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Configura GROQ_API_KEY&quot;</span><span class="p">)</span>
+    <span class="n">exit</span><span class="p">()</span>
+
+<span class="c1"># Cargar papers</span>
+<span class="n">success</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">load_papers_to_db</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Base de conocimiento lista&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Documentos: </span><span class="si">{</span><span class="n">rag</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Lista de preguntas</span>
+<span class="n">questions</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;¿Qué es una RBM?&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;¿Cómo funciona Contrastive Divergence?&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;¿Cuáles son las aplicaciones de las RBMs?&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;¿Qué es la función de energía?&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;¿Cómo se apilan RBMs en DBNs?&quot;</span>
+<span class="p">]</span>
+
+<span class="c1"># Procesar cada pregunta</span>
+<span class="k">for</span> <span class="n">question</span> <span class="ow">in</span> <span class="n">questions</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">60</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❓ </span><span class="si">{</span><span class="n">question</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">60</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Buscar contexto</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">query_papers</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">n_results</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📚 Fragmentos encontrados: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">context</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">doc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  Fragmento </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Similitud: </span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;similarity&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Fuente: </span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">][</span><span class="s1">&#39;source&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Autor: </span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">][</span><span class="s1">&#39;author&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">][</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Generar respuesta</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">generate_response</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">💡 Respuesta:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">60</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="gestion-de-papers-personalizados">
+<h2>Gestión de Papers Personalizados<a class="headerlink" href="#gestion-de-papers-personalizados" title="Link to this heading"></a></h2>
+<section id="agregar-paper-desde-url">
+<h3>Agregar Paper desde URL<a class="headerlink" href="#agregar-paper-desde-url" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># Descargar paper</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://ejemplo.com/paper.pdf&quot;</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+<span class="c1"># Guardar</span>
+<span class="n">papers_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;articles&quot;</span><span class="p">)</span>
+<span class="n">papers_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">filepath</span> <span class="o">=</span> <span class="n">papers_dir</span> <span class="o">/</span> <span class="s2">&quot;nuevo_paper.pdf&quot;</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Paper descargado: </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="editar-referencias">
+<h3>Editar Referencias<a class="headerlink" href="#editar-referencias" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># Cargar referencias existentes</span>
+<span class="n">ref_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;articles/papers_references.json&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">ref_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ref_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">references</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">references</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1"># Agregar nueva referencia</span>
+<span class="n">references</span><span class="p">[</span><span class="s2">&quot;nuevo_paper.pdf&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Título del Paper&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;authors&quot;</span><span class="p">:</span> <span class="s2">&quot;Autor et al.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2024</span><span class="p">,</span>
+    <span class="s2">&quot;publication&quot;</span><span class="p">:</span> <span class="s2">&quot;Journal Name, Vol(Issue), Pages&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;citation&quot;</span><span class="p">:</span> <span class="s2">&quot;Autor et al. (2024). Título del Paper. Journal Name.&quot;</span>
+<span class="p">}</span>
+
+<span class="c1"># Guardar</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ref_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">references</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Referencia agregada&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="arquitectura-del-sistema-rag">
+<h2>Arquitectura del Sistema RAG<a class="headerlink" href="#arquitectura-del-sistema-rag" title="Link to this heading"></a></h2>
+<section id="flujo-de-procesamiento">
+<h3>Flujo de Procesamiento<a class="headerlink" href="#flujo-de-procesamiento" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>┌─────────────────┐
+│  Pregunta del   │
+│     Usuario     │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│   ChromaDB      │
+│  Búsqueda de    │
+│   Similitud     │
+│   Coseno        │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  Top-K Papers   │
+│   Relevantes    │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│   Groq AI       │
+│  (Llama 3.3)    │
+│  Generación     │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│   Respuesta     │
+│   Educativa     │
+└─────────────────┘
+</pre></div>
+</div>
+</section>
+<section id="embeddings-y-similitud">
+<h3>Embeddings y Similitud<a class="headerlink" href="#embeddings-y-similitud" title="Link to this heading"></a></h3>
+<p>ChromaDB usa embeddings para representar documentos:</p>
+<ol class="arabic simple">
+<li><p><strong>Embedding:</strong> Convierte texto a vector denso</p></li>
+<li><p><strong>Similitud Coseno:</strong> Mide ángulo entre vectores</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\text{Similitud}(A, B) = \frac{A \cdot B}{||A|| \times ||B||}\]</div>
+<ul class="simple">
+<li><p>Rango: [-1, 1], normalizado a [0, 1]</p></li>
+<li><p>1.0 = Idéntico</p></li>
+<li><p>0.0 = Completamente diferente</p></li>
+</ul>
+</section>
+</section>
+<section id="id1">
+<h2>Métodos de Búsqueda<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<section id="id2">
+<h3>query_papers<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p>Busca fragmentos relevantes usando similitud vectorial.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">question</span></code> (str): Pregunta del usuario</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_results</span></code> (int): Número de fragmentos (default: 3)</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Lista de diccionarios con:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">content</span></code>: Texto del fragmento</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metadata</span></code>: Información del paper (source, author, year, topic)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">distance</span></code>: Distancia L2</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">similarity</span></code>: Similitud coseno (1 - distance)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Buscar información sobre CD</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">query_papers</span><span class="p">(</span>
+    <span class="s2">&quot;Explica el algoritmo Contrastive Divergence&quot;</span><span class="p">,</span>
+    <span class="n">n_results</span><span class="o">=</span><span class="mi">5</span>
+<span class="p">)</span>
+
+<span class="c1"># Analizar resultados</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resultado </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Similitud: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;similarity&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Fuente: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">][</span><span class="s1">&#39;source&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Tema: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">][</span><span class="s1">&#39;topic&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Contenido: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">][:</span><span class="mi">150</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id3">
+<h2>Métodos de Generación<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<section id="id4">
+<h3>generate_response<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<p>Genera respuesta educativa usando Groq AI.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">question</span></code> (str): Pregunta del usuario</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">context</span></code> (List[Dict]): Fragmentos relevantes</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Respuesta generada</p>
+</dd>
+</dl>
+<p><strong>Configuración del prompt:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">system_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Eres un asistente educativo experto en</span>
+<span class="s2">Máquinas de Boltzmann Restringidas (RBMs) y Deep Learning.</span>
+<span class="s2">Tu objetivo es explicar conceptos de manera clara y pedagógica,</span>
+<span class="s2">usando los papers científicos como referencia.&quot;&quot;&quot;</span>
+
+<span class="n">user_prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Basándote en los siguientes fragmentos de</span>
+<span class="s2">papers científicos, responde la pregunta:</span>
+
+<span class="s2">CONTEXTO:</span>
+<span class="si">{</span><span class="n">context_text</span><span class="si">}</span>
+
+<span class="s2">PREGUNTA: </span><span class="si">{</span><span class="n">question</span><span class="si">}</span>
+
+<span class="s2">Por favor proporciona una respuesta clara, detallada y educativa.&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pregunta compleja</span>
+<span class="n">question</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;¿Cuál es la diferencia entre Contrastive Divergence</span>
+<span class="s2">y Persistent Contrastive Divergence?&quot;&quot;&quot;</span>
+
+<span class="c1"># Buscar contexto</span>
+<span class="n">context</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">query_papers</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">n_results</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1"># Generar respuesta</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">generate_response</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pregunta: </span><span class="si">{</span><span class="n">question</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Respuesta:</span><span class="se">\n</span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id5">
+<h2>Funciones de Renderizado<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<section id="id6">
+<h3>render_educational_rag_module<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<p>Renderiza la interfaz completa del sistema RAG en Streamlit.</p>
+<p><strong>Componentes de la interfaz:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Información de papers:</strong></p>
+<ul class="simple">
+<li><p>Lista de papers disponibles</p></li>
+<li><p>Referencias bibliográficas completas</p></li>
+<li><p>Estadísticas de la base de datos</p></li>
+</ul>
+</li>
+<li><p><strong>Gestión de papers:</strong></p>
+<ul class="simple">
+<li><p>Descargar desde URL</p></li>
+<li><p>Editar referencias</p></li>
+<li><p>Eliminar papers</p></li>
+</ul>
+</li>
+<li><p><strong>Preguntas sugeridas:</strong></p>
+<ul class="simple">
+<li><p>Nivel Básico (3 preguntas)</p></li>
+<li><p>Nivel Intermedio (3 preguntas)</p></li>
+<li><p>Nivel Avanzado (3 preguntas)</p></li>
+</ul>
+</li>
+<li><p><strong>Chat interactivo:</strong></p>
+<ul class="simple">
+<li><p>Campo de texto para preguntas</p></li>
+<li><p>Configuración de número de fragmentos</p></li>
+<li><p>Visualización de fragmentos encontrados</p></li>
+<li><p>Respuesta generada con IA</p></li>
+</ul>
+</li>
+<li><p><strong>Historial:</strong></p>
+<ul class="simple">
+<li><p>Últimas 5 conversaciones</p></li>
+<li><p>Preguntas y respuestas guardadas</p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+<section id="papers-cientificos-incluidos">
+<h2>Papers Científicos Incluidos<a class="headerlink" href="#papers-cientificos-incluidos" title="Link to this heading"></a></h2>
+<p>La base de conocimiento incluye información de:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 40.0%" />
+<col style="width: 30.0%" />
+<col style="width: 30.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Paper</p></th>
+<th class="head"><p>Autor</p></th>
+<th class="head"><p>Año</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>A Practical Guide to Training RBMs</p></td>
+<td><p>Geoffrey E. Hinton</p></td>
+<td><p>2010</p></td>
+</tr>
+<tr class="row-odd"><td><p>Training Products of Experts by Minimizing CD</p></td>
+<td><p>Geoffrey E. Hinton</p></td>
+<td><p>2002</p></td>
+</tr>
+<tr class="row-even"><td><p>Reducing Dimensionality with Neural Networks</p></td>
+<td><p>Hinton &amp; Salakhutdinov</p></td>
+<td><p>2006</p></td>
+</tr>
+<tr class="row-odd"><td><p>RBMs for Collaborative Filtering</p></td>
+<td><p>Salakhutdinov et al.</p></td>
+<td><p>2007</p></td>
+</tr>
+<tr class="row-even"><td><p>Deep Learning of Representations</p></td>
+<td><p>Yoshua Bengio</p></td>
+<td><p>2013</p></td>
+</tr>
+<tr class="row-odd"><td><p>A Fast Learning Algorithm for DBNs</p></td>
+<td><p>Hinton et al.</p></td>
+<td><p>2006</p></td>
+</tr>
+<tr class="row-even"><td><p>Training RBMs using PCD</p></td>
+<td><p>Tijmen Tieleman</p></td>
+<td><p>2008</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ejemplo-de-sesion-educativa">
+<h2>Ejemplo de Sesión Educativa<a class="headerlink" href="#ejemplo-de-sesion-educativa" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.educational_rag</span><span class="w"> </span><span class="kn">import</span> <span class="n">EducationalRAG</span>
+
+<span class="c1"># Inicializar</span>
+<span class="n">rag</span> <span class="o">=</span> <span class="n">EducationalRAG</span><span class="p">()</span>
+<span class="n">rag</span><span class="o">.</span><span class="n">load_papers_to_db</span><span class="p">()</span>
+
+<span class="c1"># Sesión de aprendizaje progresivo</span>
+<span class="n">learning_path</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c1"># Nivel 1: Fundamentos</span>
+    <span class="s2">&quot;¿Qué es una Máquina de Boltzmann Restringida?&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;¿Cuál es la arquitectura de una RBM?&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;¿Qué es la función de energía?&quot;</span><span class="p">,</span>
+
+    <span class="c1"># Nivel 2: Entrenamiento</span>
+    <span class="s2">&quot;¿Cómo se entrena una RBM?&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;¿Qué es Contrastive Divergence?&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;¿Cuáles son los hiperparámetros importantes?&quot;</span><span class="p">,</span>
+
+    <span class="c1"># Nivel 3: Aplicaciones</span>
+    <span class="s2">&quot;¿Para qué se usan las RBMs?&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;¿Qué son las Deep Belief Networks?&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;¿Cuáles son las limitaciones de las RBMs?&quot;</span>
+<span class="p">]</span>
+
+<span class="c1"># Procesar cada pregunta</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">question</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">learning_path</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">60</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pregunta </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">learning_path</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">60</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❓ </span><span class="si">{</span><span class="n">question</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Buscar y generar respuesta</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">query_papers</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">n_results</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">generate_response</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;💡 </span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Mostrar fuentes</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📚 Fuentes consultadas:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">context</span><span class="p">:</span>
+        <span class="n">meta</span> <span class="o">=</span> <span class="n">doc</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;author&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="configuracion-avanzada">
+<h2>Configuración Avanzada<a class="headerlink" href="#configuracion-avanzada" title="Link to this heading"></a></h2>
+<section id="personalizar-modelo-de-ia">
+<h3>Personalizar Modelo de IA<a class="headerlink" href="#personalizar-modelo-de-ia" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Modificar configuración de Groq</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">groq_client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama-3.3-70b-versatile&quot;</span><span class="p">,</span>  <span class="c1"># O &quot;mixtral-8x7b-32768&quot;</span>
+    <span class="n">messages</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">],</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>  <span class="c1"># Más determinístico</span>
+    <span class="n">max_tokens</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span>  <span class="c1"># Respuestas más largas</span>
+    <span class="n">top_p</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+    <span class="n">frequency_penalty</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">presence_penalty</span><span class="o">=</span><span class="mf">0.0</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="personalizar-busqueda">
+<h3>Personalizar Búsqueda<a class="headerlink" href="#personalizar-busqueda" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Búsqueda con filtros de metadata</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+    <span class="n">query_texts</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;pregunta&quot;</span><span class="p">],</span>
+    <span class="n">n_results</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">where</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Geoffrey E. Hinton&quot;</span><span class="p">},</span>  <span class="c1"># Filtrar por autor</span>
+    <span class="n">where_document</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;$contains&quot;</span><span class="p">:</span> <span class="s2">&quot;energy&quot;</span><span class="p">}</span>   <span class="c1"># Filtrar por contenido</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="dependencias-requeridas">
+<h2>Dependencias Requeridas<a class="headerlink" href="#dependencias-requeridas" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>chromadb<span class="w"> </span>groq
+</pre></div>
+</div>
+<dl class="simple">
+<dt><strong>ChromaDB:</strong></dt><dd><ul class="simple">
+<li><p>Base de datos vectorial</p></li>
+<li><p>Búsqueda por similitud</p></li>
+<li><p>Persistencia local</p></li>
+</ul>
+</dd>
+<dt><strong>Groq:</strong></dt><dd><ul class="simple">
+<li><p>API de LLMs rápidos</p></li>
+<li><p>Llama 3.3 70B</p></li>
+<li><p>Gratis con límites generosos</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<section id="error-chromadb-no-esta-instalado">
+<h3>Error: «ChromaDB no está instalado»<a class="headerlink" href="#error-chromadb-no-esta-instalado" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>chromadb
+</pre></div>
+</div>
+</section>
+<section id="error-groq-no-esta-instalado">
+<h3>Error: «Groq no está instalado»<a class="headerlink" href="#error-groq-no-esta-instalado" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>groq
+</pre></div>
+</div>
+</section>
+<section id="error-no-se-encontro-groq-api-key">
+<h3>Error: «No se encontró GROQ_API_KEY»<a class="headerlink" href="#error-no-se-encontro-groq-api-key" title="Link to this heading"></a></h3>
+<p>Crear archivo <code class="docutils literal notranslate"><span class="pre">.streamlit/secrets.toml</span></code>:</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">GROQ_API_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;gsk_tu_api_key_aqui&quot;</span>
+</pre></div>
+</div>
+<p>Obtener API key gratis: <a class="reference external" href="https://console.groq.com">https://console.groq.com</a></p>
+</section>
+</section>
+<section id="ver-tambien">
+<h2>Ver también<a class="headerlink" href="#ver-tambien" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="rbm_model.html"><span class="doc">rbm_model</span></a> - Implementación de RBM</p></li>
+<li><p>Papers científicos en <code class="docutils literal notranslate"><span class="pre">articles/</span></code></p></li>
+<li><p><a class="reference external" href="https://console.groq.com">Groq Console</a></p></li>
+<li><p><a class="reference external" href="https://docs.trychroma.com">ChromaDB Documentation</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="prediction.html" class="btn btn-neutral float-left" title="prediction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="retraining.html" class="btn btn-neutral float-right" title="retraining" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, Andrés Fernando Gómez Rojas &amp; Carlos Andrés Gómez Vasco. Software Libre bajo Licencia MIT.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,375 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>data_processor &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="univariate_analysis" href="univariate_analysis.html" />
+    <link rel="prev" title="generar_datos" href="generar_datos.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Módulos del Sistema</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#modulos-principales">Módulos Principales</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../modules.html#referencia-completa-de-la-api">Referencia Completa de la API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="generar_datos.html">generar_datos</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">data_processor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#descripcion-general">Descripción General</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#clases-principales">Clases Principales</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-principales">Métodos Principales</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#funciones-de-renderizado">Funciones de Renderizado</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rangos-de-validacion">Rangos de Validación</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#estructura-del-reporte-de-validacion">Estructura del Reporte de Validación</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ejemplo-completo">Ejemplo Completo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ver-tambien">Ver también</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="univariate_analysis.html">univariate_analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bivariate_analysis.html">bivariate_analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature_engineering.html">feature_engineering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clustering.html">clustering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbm_model.html">rbm_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="supervised_models.html">supervised_models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="prediction.html">prediction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="educational_rag.html">educational_rag</a></li>
+<li class="toctree-l3"><a class="reference internal" href="retraining.html">retraining</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#arquitectura-del-sistema">Arquitectura del Sistema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#flujo-de-datos">Flujo de Datos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#descripcion-de-modulos">Descripción de Módulos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#configuracion-avanzada">Configuración Avanzada</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#integracion-con-otros-sistemas">Integración con Otros Sistemas</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">Módulos del Sistema</a></li>
+      <li class="breadcrumb-item active">data_processor</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/data_processor.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data-processor">
+<h1>data_processor<a class="headerlink" href="#data-processor" title="Link to this heading"></a></h1>
+<section id="descripcion-general">
+<h2>Descripción General<a class="headerlink" href="#descripcion-general" title="Link to this heading"></a></h2>
+<p>Módulo de procesamiento, validación y limpieza de datos de crédito hipotecario. Incluye validaciones automáticas, detección de outliers y generación de reportes de calidad.</p>
+</section>
+<section id="clases-principales">
+<h2>Clases Principales<a class="headerlink" href="#clases-principales" title="Link to this heading"></a></h2>
+<section id="dataprocessor">
+<h3>DataProcessor<a class="headerlink" href="#dataprocessor" title="Link to this heading"></a></h3>
+</section>
+</section>
+<section id="metodos-principales">
+<h2>Métodos Principales<a class="headerlink" href="#metodos-principales" title="Link to this heading"></a></h2>
+<section id="load-data">
+<h3>load_data<a class="headerlink" href="#load-data" title="Link to this heading"></a></h3>
+<p>Carga datos desde archivo o upload de Streamlit.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">file_path</span></code> (str, optional): Ruta al archivo</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">uploaded_file</span></code> (optional): Archivo subido en Streamlit</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>DataFrame cargado o None si hay error</p>
+</dd>
+<dt><strong>Formatos soportados:</strong></dt><dd><ul class="simple">
+<li><p>CSV (.csv)</p></li>
+<li><p>Excel (.xlsx, .xls)</p></li>
+<li><p>Parquet (.parquet)</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="validate-data">
+<h3>validate_data<a class="headerlink" href="#validate-data" title="Link to this heading"></a></h3>
+<p>Valida la calidad y consistencia de los datos.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">df</span></code> (DataFrame): DataFrame a validar</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Diccionario con reporte de validación</p>
+</dd>
+</dl>
+<p><strong>Validaciones realizadas:</strong></p>
+<ol class="arabic simple">
+<li><p>Verificación de columnas requeridas</p></li>
+<li><p>Análisis de valores faltantes</p></li>
+<li><p>Verificación de rangos lógicos</p></li>
+<li><p>Detección de inconsistencias</p></li>
+<li><p>Identificación de duplicados</p></li>
+<li><p>Detección de outliers extremos</p></li>
+</ol>
+</section>
+<section id="clean-data">
+<h3>clean_data<a class="headerlink" href="#clean-data" title="Link to this heading"></a></h3>
+<p>Limpia y procesa los datos según configuración.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">df</span></code> (DataFrame): DataFrame a procesar</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">remove_duplicates</span></code> (bool): Si eliminar duplicados (default: True)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">handle_missing</span></code> (str): Estrategia para valores faltantes (“drop”, “impute”, “keep”)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">handle_outliers</span></code> (str): Estrategia para outliers (“remove”, “cap”, “keep”)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">normalize_numeric</span></code> (bool): Si normalizar variables numéricas (default: False)</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>DataFrame procesado</p>
+</dd>
+<dt><strong>Estrategias de imputación:</strong></dt><dd><ul class="simple">
+<li><p>Numéricas: Mediana</p></li>
+<li><p>Categóricas: Moda</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="create-quality-report-visualizations">
+<h3>create_quality_report_visualizations<a class="headerlink" href="#create-quality-report-visualizations" title="Link to this heading"></a></h3>
+<p>Crea visualizaciones del reporte de calidad.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">df</span></code> (DataFrame): DataFrame a analizar</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Diccionario con figuras de Plotly</p>
+</dd>
+<dt><strong>Visualizaciones generadas:</strong></dt><dd><ul class="simple">
+<li><p>Heatmap de valores faltantes</p></li>
+<li><p>Gráfico de barras de valores faltantes</p></li>
+<li><p>Distribución de tipos de datos</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</section>
+<section id="funciones-de-renderizado">
+<h2>Funciones de Renderizado<a class="headerlink" href="#funciones-de-renderizado" title="Link to this heading"></a></h2>
+<section id="render-data-loader">
+<h3>render_data_loader<a class="headerlink" href="#render-data-loader" title="Link to this heading"></a></h3>
+<p>Renderiza el módulo de carga de datos en Streamlit.</p>
+<dl class="simple">
+<dt><strong>Funcionalidades:</strong></dt><dd><ul class="simple">
+<li><p>Carga de archivos (CSV, Excel, Parquet)</p></li>
+<li><p>Vista previa de datos</p></li>
+<li><p>Validación automática de calidad</p></li>
+<li><p>Procesamiento interactivo</p></li>
+<li><p>Descarga de datos procesados</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="render-data-processor-module">
+<h3>render_data_processor_module<a class="headerlink" href="#render-data-processor-module" title="Link to this heading"></a></h3>
+<p>Función principal para renderizar el módulo completo de procesamiento.</p>
+</section>
+</section>
+<section id="rangos-de-validacion">
+<h2>Rangos de Validación<a class="headerlink" href="#rangos-de-validacion" title="Link to this heading"></a></h2>
+<p>El procesador valida los siguientes rangos:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 42.9%" />
+<col style="width: 28.6%" />
+<col style="width: 28.6%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable</p></th>
+<th class="head"><p>Mínimo</p></th>
+<th class="head"><p>Máximo</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>edad</p></td>
+<td><p>18</p></td>
+<td><p>80</p></td>
+</tr>
+<tr class="row-odd"><td><p>salario_mensual</p></td>
+<td><p>1,000,000</p></td>
+<td><p>50,000,000</p></td>
+</tr>
+<tr class="row-even"><td><p>puntaje_datacredito</p></td>
+<td><p>150</p></td>
+<td><p>950</p></td>
+</tr>
+<tr class="row-odd"><td><p>valor_inmueble</p></td>
+<td><p>20,000,000</p></td>
+<td><p>2,000,000,000</p></td>
+</tr>
+<tr class="row-even"><td><p>tasa_interes_anual</p></td>
+<td><p>5.0</p></td>
+<td><p>25.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>plazo_credito</p></td>
+<td><p>5</p></td>
+<td><p>30</p></td>
+</tr>
+<tr class="row-even"><td><p>dti</p></td>
+<td><p>0</p></td>
+<td><p>60</p></td>
+</tr>
+<tr class="row-odd"><td><p>ltv</p></td>
+<td><p>0</p></td>
+<td><p>100</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="estructura-del-reporte-de-validacion">
+<h2>Estructura del Reporte de Validación<a class="headerlink" href="#estructura-del-reporte-de-validacion" title="Link to this heading"></a></h2>
+<p>El reporte de validación incluye:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="s1">&#39;2024-01-01T12:00:00&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;total_rows&#39;</span><span class="p">:</span> <span class="mi">10000</span><span class="p">,</span>
+    <span class="s1">&#39;total_columns&#39;</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span>
+    <span class="s1">&#39;warnings&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;Columnas con &gt;20% valores faltantes: [...]&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Outliers detectados en: [...]&#39;</span>
+    <span class="p">],</span>
+    <span class="s1">&#39;errors&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;Columnas faltantes: [...]&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Inconsistencias: monto_credito &gt; valor_inmueble&#39;</span>
+    <span class="p">],</span>
+    <span class="s1">&#39;suggestions&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;✅ Todas las columnas requeridas presentes&#39;</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="ejemplo-completo">
+<h2>Ejemplo Completo<a class="headerlink" href="#ejemplo-completo" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.data_processor</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataProcessor</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Inicializar procesador</span>
+<span class="n">processor</span> <span class="o">=</span> <span class="n">DataProcessor</span><span class="p">()</span>
+
+<span class="c1"># Cargar datos</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;datos_credito.csv&quot;</span><span class="p">)</span>
+
+<span class="c1"># Validar</span>
+<span class="n">validation_report</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">validate_data</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Errores: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">validation_report</span><span class="p">[</span><span class="s1">&#39;errors&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Advertencias: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">validation_report</span><span class="p">[</span><span class="s1">&#39;warnings&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Limpiar</span>
+<span class="n">df_clean</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">clean_data</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">,</span>
+    <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">handle_missing</span><span class="o">=</span><span class="s1">&#39;impute&#39;</span><span class="p">,</span>
+    <span class="n">handle_outliers</span><span class="o">=</span><span class="s1">&#39;cap&#39;</span><span class="p">,</span>
+    <span class="n">normalize_numeric</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+
+<span class="c1"># Crear visualizaciones</span>
+<span class="n">figures</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">create_quality_report_visualizations</span><span class="p">(</span><span class="n">df_clean</span><span class="p">)</span>
+
+<span class="c1"># Guardar datos limpios</span>
+<span class="n">df_clean</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;datos_procesados.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Procesamiento completado: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_clean</span><span class="p">)</span><span class="si">}</span><span class="s2"> registros&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="ver-tambien">
+<h2>Ver también<a class="headerlink" href="#ver-tambien" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="generar_datos.html"><span class="doc">generar_datos</span></a> - Generación de datos sintéticos</p></li>
+<li><p><a class="reference internal" href="univariate_analysis.html"><span class="doc">univariate_analysis</span></a> - Análisis univariado</p></li>
+<li><p><a class="reference internal" href="feature_engineering.html"><span class="doc">feature_engineering</span></a> - Ingeniería de características</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="generar_datos.html" class="btn btn-neutral float-left" title="generar_datos" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="univariate_analysis.html" class="btn btn-neutral float-right" title="univariate_analysis" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, Andrés Fernando Gómez Rojas &amp; Carlos Andrés Gómez Vasco. Software Libre bajo Licencia MIT.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,989 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2. Generar Datos Sintéticos &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="3. Cargar Datos Externos" href="03_cargar_datos.html" />
+    <link rel="prev" title="1. Página de Inicio y Navegación" href="01_inicio.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#introduccion">Introducción</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#flujo-de-trabajo-recomendado">Flujo de Trabajo Recomendado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#requisitos-previos">Requisitos Previos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#convenciones-de-este-manual">Convenciones de este Manual</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../user_guide.html#estructura-del-manual">Estructura del Manual</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="01_inicio.html">1. Página de Inicio y Navegación</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">2. Generar Datos Sintéticos</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#por-que-usar-datos-sinteticos">¿Por Qué Usar Datos Sintéticos?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#acceso-al-modulo">Acceso al Módulo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configuracion-del-generador">Configuración del Generador</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proceso-de-generacion">Proceso de Generación</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interpretacion-de-resultados">Interpretación de Resultados</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#variables-generadas">Variables Generadas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#casos-de-uso-comunes">Casos de Uso Comunes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#descargar-datos">Descargar Datos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tips-y-mejores-practicas">Tips y Mejores Prácticas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#preguntas-frecuentes">Preguntas Frecuentes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="03_cargar_datos.html">3. Cargar Datos Externos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04_analisis_descriptivo.html">4. Análisis Descriptivo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05_ingenieria_caracteristicas.html">5. Ingeniería de Características</a></li>
+<li class="toctree-l3"><a class="reference internal" href="06_clustering.html">6. Clustering y Segmentación</a></li>
+<li class="toctree-l3"><a class="reference internal" href="07_rbm.html">7. Máquina de Boltzmann Restringida (RBM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="08_modelos_supervisados.html">8. Modelos Supervisados</a></li>
+<li class="toctree-l3"><a class="reference internal" href="09_prediccion.html">9. Predicción de Riesgo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="10_reentrenamiento.html">10. Reentrenamiento de Modelos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="11_rag_educativo.html">11. Sistema RAG Educativo</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#acceso-rapido">Acceso Rápido</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#soporte-y-recursos">Soporte y Recursos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Módulos del Sistema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../user_guide.html">Manual de Usuario</a></li>
+      <li class="breadcrumb-item active">2. Generar Datos Sintéticos</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/02_generar_datos.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="generar-datos-sinteticos">
+<h1>2. Generar Datos Sintéticos<a class="headerlink" href="#generar-datos-sinteticos" title="Link to this heading"></a></h1>
+<p>Esta guía te enseñará a generar datasets sintéticos realistas de crédito hipotecario colombiano para entrenar y probar modelos de Machine Learning.</p>
+<section id="objetivo-del-modulo">
+<h2>Objetivo del Módulo<a class="headerlink" href="#objetivo-del-modulo" title="Link to this heading"></a></h2>
+<p>El generador de datos sintéticos te permite:</p>
+<ul class="simple">
+<li><p>📊 <strong>Crear datasets realistas</strong> sin necesidad de datos reales</p></li>
+<li><p>🎲 <strong>Controlar la reproducibilidad</strong> con semillas aleatorias</p></li>
+<li><p>📈 <strong>Ajustar el tamaño</strong> del dataset (1,000 - 50,000 registros)</p></li>
+<li><p>🎯 <strong>Obtener distribuciones realistas</strong> de riesgo crediticio</p></li>
+<li><p>🔧 <strong>Experimentar sin restricciones</strong> de privacidad de datos</p></li>
+<li><p>📚 <strong>Aprender sobre variables</strong> financieras y crediticias</p></li>
+</ul>
+</section>
+<section id="por-que-usar-datos-sinteticos">
+<h2>¿Por Qué Usar Datos Sintéticos?<a class="headerlink" href="#por-que-usar-datos-sinteticos" title="Link to this heading"></a></h2>
+<section id="ventajas">
+<h3>Ventajas<a class="headerlink" href="#ventajas" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>✅ <strong>Sin restricciones de privacidad</strong></dt><dd><p>Los datos son completamente artificiales, no hay información personal real.</p>
+</dd>
+<dt>✅ <strong>Distribuciones controladas</strong></dt><dd><p>Puedes generar exactamente la distribución de riesgo que necesitas.</p>
+</dd>
+<dt>✅ <strong>Reproducibilidad perfecta</strong></dt><dd><p>Usando la misma semilla, obtendrás exactamente los mismos datos.</p>
+</dd>
+<dt>✅ <strong>Escalabilidad</strong></dt><dd><p>Genera desde 1,000 hasta 50,000 registros en segundos.</p>
+</dd>
+<dt>✅ <strong>Correlaciones realistas</strong></dt><dd><p>Las variables mantienen relaciones lógicas del mundo real.</p>
+</dd>
+<dt>✅ <strong>Ideal para aprendizaje</strong></dt><dd><p>Experimenta sin riesgo de dañar datos reales.</p>
+</dd>
+</dl>
+</section>
+<section id="limitaciones">
+<h3>Limitaciones<a class="headerlink" href="#limitaciones" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>⚠️ <strong>No reemplazan datos reales</strong></dt><dd><p>Para producción, siempre valida con datos reales.</p>
+</dd>
+<dt>⚠️ <strong>Simplificaciones</strong></dt><dd><p>Algunas relaciones complejas del mundo real están simplificadas.</p>
+</dd>
+<dt>⚠️ <strong>Sesgos del generador</strong></dt><dd><p>Los datos reflejan los supuestos programados en el generador.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="acceso-al-modulo">
+<h2>Acceso al Módulo<a class="headerlink" href="#acceso-al-modulo" title="Link to this heading"></a></h2>
+<p><strong>Paso 1: Navegar al módulo</strong></p>
+<p>En el sidebar, click en:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>📊 Gestión de Datos → 📊 Generar Datos
+</pre></div>
+</div>
+<p><strong>Paso 2: Interfaz del generador</strong></p>
+<p>Verás la pantalla principal con:</p>
+<ul class="simple">
+<li><p>Título: <strong>«Generador de Datos Sintéticos»</strong></p></li>
+<li><p>Descripción del módulo</p></li>
+<li><p>Panel de configuración</p></li>
+<li><p>Botón de generación</p></li>
+<li><p>Área de resultados</p></li>
+</ul>
+</section>
+<section id="configuracion-del-generador">
+<h2>Configuración del Generador<a class="headerlink" href="#configuracion-del-generador" title="Link to this heading"></a></h2>
+<section id="parametros-principales">
+<h3>Parámetros Principales<a class="headerlink" href="#parametros-principales" title="Link to this heading"></a></h3>
+<p><strong>1. Número de Registros</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Número de registros a generar: [10000]
+Rango: 1,000 - 50,000
+</pre></div>
+</div>
+<p><strong>¿Qué significa?</strong></p>
+<p>El número total de solicitudes de crédito que se generarán.</p>
+<p><strong>Recomendaciones:</strong></p>
+<ul class="simple">
+<li><p><strong>1,000 - 5,000</strong>: Pruebas rápidas y exploración inicial</p></li>
+<li><p><strong>10,000</strong>: Valor por defecto, balance entre velocidad y representatividad</p></li>
+<li><p><strong>20,000 - 30,000</strong>: Entrenamiento de modelos robustos</p></li>
+<li><p><strong>50,000</strong>: Datasets grandes para modelos complejos</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Truco</p>
+<p>Para tu primer uso, mantén el valor por defecto de 10,000 registros.</p>
+</div>
+<p><strong>2. Semilla Aleatoria</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Semilla aleatoria: [42]
+Rango: 1 - 9999
+</pre></div>
+</div>
+<p><strong>¿Qué significa?</strong></p>
+<p>Un número que controla la generación aleatoria. La misma semilla produce exactamente los mismos datos.</p>
+<p><strong>Casos de uso:</strong></p>
+<ul class="simple">
+<li><p><strong>Reproducibilidad</strong>: Usa la misma semilla para obtener datos idénticos</p></li>
+<li><p><strong>Comparación</strong>: Diferentes semillas generan datasets distintos</p></li>
+<li><p><strong>Debugging</strong>: Semilla fija facilita encontrar problemas</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p>La semilla por defecto es 42 (referencia a «La Guía del Autoestopista Galáctico»).</p>
+</div>
+<p><strong>Ejemplo práctico:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Estos dos comandos generan EXACTAMENTE los mismos datos</span>
+<span class="n">df1</span> <span class="o">=</span> <span class="n">generar_datos</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">semilla</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">generar_datos</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">semilla</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Estos generan datos DIFERENTES</span>
+<span class="n">df3</span> <span class="o">=</span> <span class="n">generar_datos</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">semilla</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="parametros-avanzados">
+<h3>Parámetros Avanzados<a class="headerlink" href="#parametros-avanzados" title="Link to this heading"></a></h3>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p>Los parámetros avanzados están preconfigurados con valores óptimos. Solo modifícalos si tienes necesidades específicas.</p>
+</div>
+<p><strong>Expandir «Configuración Avanzada»</strong> para ver:</p>
+<p><strong>1. Distribución de Riesgo Objetivo</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Riesgo Bajo:  60% ━━━━━━━━━━━━━━━━━━━━━━━━
+Riesgo Medio: 25% ━━━━━━━━━━
+Riesgo Alto:  15% ━━━━━━
+</pre></div>
+</div>
+<p>Esta es la distribución objetivo que el generador intentará alcanzar.</p>
+<p><strong>2. Rangos de Variables</strong></p>
+<p>Puedes ajustar los rangos de:</p>
+<ul class="simple">
+<li><p>Edad: 22-65 años (por defecto)</p></li>
+<li><p>Salario: Según educación y ciudad</p></li>
+<li><p>Puntaje DataCrédito: 350-850 (por defecto)</p></li>
+<li><p>Valor inmueble: Según ciudad y estrato</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Advertencia</p>
+<p>Modificar estos rangos puede generar datos poco realistas. Solo hazlo si entiendes las implicaciones.</p>
+</div>
+</section>
+</section>
+<section id="proceso-de-generacion">
+<h2>Proceso de Generación<a class="headerlink" href="#proceso-de-generacion" title="Link to this heading"></a></h2>
+<section id="paso-a-paso">
+<h3>Paso a Paso<a class="headerlink" href="#paso-a-paso" title="Link to this heading"></a></h3>
+<p><strong>Paso 1: Configurar parámetros</strong></p>
+<ol class="arabic simple">
+<li><p>Ajusta el número de registros (ej: 10,000)</p></li>
+<li><p>Establece la semilla aleatoria (ej: 42)</p></li>
+<li><p>Revisa configuración avanzada (opcional)</p></li>
+</ol>
+<p><strong>Paso 2: Iniciar generación</strong></p>
+<p>Click en el botón:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[🎯 Generar Dataset]
+</pre></div>
+</div>
+<p><strong>Paso 3: Observar progreso</strong></p>
+<p>Verás un spinner con el mensaje:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>⏳ Generando 10,000 registros...
+
+[FASE 1/6] Generando variables demográficas...
+✓ Fase 1 completada
+
+[FASE 2/6] Generando variables laborales...
+✓ Fase 2 completada
+
+[FASE 3/6] Generando variables financieras...
+✓ Fase 3 completada
+
+[FASE 4/6] Generando variables del crédito...
+✓ Fase 4 completada
+
+[FASE 5/6] Generando características derivadas...
+✓ Fase 5 completada
+
+[FASE 6/6] Calculando nivel de riesgo REALISTA...
+✓ Fase 6 completada
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Truco</p>
+<p>La generación de 10,000 registros toma aproximadamente 5-10 segundos.</p>
+</div>
+<p><strong>Paso 4: Revisar resultados</strong></p>
+<p>Una vez completado, verás:</p>
+<ul class="simple">
+<li><p>✅ Mensaje de éxito</p></li>
+<li><p>📊 Resumen estadístico</p></li>
+<li><p>📈 Visualizaciones de distribución</p></li>
+<li><p>💾 Opciones de descarga</p></li>
+</ul>
+</section>
+<section id="fases-de-generacion">
+<h3>Fases de Generación<a class="headerlink" href="#fases-de-generacion" title="Link to this heading"></a></h3>
+<p>El generador trabaja en 6 fases secuenciales:</p>
+<p><strong>Fase 1: Variables Demográficas</strong></p>
+<p>Genera:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">edad</span></code>: Edad del solicitante (22-65 años)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ciudad</span></code>: Ciudad de residencia (15 ciudades colombianas)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">estrato_socioeconomico</span></code>: Estrato 1-6</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nivel_educacion</span></code>: Bachiller, Técnico, Profesional, Posgrado</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">estado_civil</span></code>: Soltero, Casado, Unión Libre, Divorciado, Viudo</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">personas_a_cargo</span></code>: Número de dependientes (0-5)</p></li>
+</ul>
+<p><strong>Fase 2: Variables Laborales</strong></p>
+<p>Genera:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tipo_empleo</span></code>: Formal, Informal, Independiente</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">antiguedad_empleo</span></code>: Años en el empleo actual</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">salario_mensual</span></code>: Ingreso mensual en COP</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">egresos_mensuales</span></code>: Gastos mensuales totales</p></li>
+</ul>
+<p><strong>Fase 3: Variables Financieras</strong></p>
+<p>Genera:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">numero_demandas</span></code>: Demandas legales por dinero (0-3)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">puntaje_datacredito</span></code>: Score crediticio (350-850)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numero_propiedades</span></code>: Propiedades que posee (0-3)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">patrimonio_total</span></code>: Patrimonio neto en COP</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">saldo_promedio_banco</span></code>: Saldo promedio últimos 6 meses</p></li>
+</ul>
+<p><strong>Fase 4: Variables del Crédito</strong></p>
+<p>Genera:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">valor_inmueble</span></code>: Valor comercial de la propiedad</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">anos_inmueble</span></code>: Antigüedad del inmueble</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">porcentaje_cuota_inicial</span></code>: Porcentaje de cuota inicial (10-40%)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">valor_cuota_inicial</span></code>: Valor en COP de la cuota inicial</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">monto_credito</span></code>: Monto solicitado del préstamo</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plazo_credito</span></code>: Plazo en años (10-30)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tasa_interes_anual</span></code>: Tasa de interés anual (8.5-16%)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cuota_mensual</span></code>: Cuota mensual del crédito</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ltv</span></code>: Loan-to-Value ratio (%)</p></li>
+</ul>
+<p><strong>Fase 5: Características Derivadas</strong></p>
+<p>Calcula:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dti</span></code>: Debt-to-Income ratio (%)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">capacidad_ahorro</span></code>: Salario - Egresos</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">capacidad_residual</span></code>: Capacidad de ahorro - Cuota</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ratio_patrimonio_deuda</span></code>: Patrimonio / Deuda</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">meses_colchon</span></code>: Meses de reserva</p></li>
+<li><p>Y 15+ características adicionales</p></li>
+</ul>
+<p><strong>Fase 6: Nivel de Riesgo</strong></p>
+<p>Calcula el nivel de riesgo final:</p>
+<ul class="simple">
+<li><p><strong>Bajo</strong>: 60% de los registros (bajo riesgo de default)</p></li>
+<li><p><strong>Medio</strong>: 25% de los registros (riesgo moderado)</p></li>
+<li><p><strong>Alto</strong>: 15% de los registros (alto riesgo de default)</p></li>
+</ul>
+</section>
+</section>
+<section id="interpretacion-de-resultados">
+<h2>Interpretación de Resultados<a class="headerlink" href="#interpretacion-de-resultados" title="Link to this heading"></a></h2>
+<section id="resumen-estadistico">
+<h3>Resumen Estadístico<a class="headerlink" href="#resumen-estadistico" title="Link to this heading"></a></h3>
+<p>Después de la generación, verás un panel con:</p>
+<p><strong>Información General:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>✓✓✓ GENERACIÓN COMPLETADA
+
+Total de registros: 10,000
+Total de columnas: 47
+Tiempo de generación: 8.3 segundos
+</pre></div>
+</div>
+<p><strong>Distribución de Riesgo:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Distribución de Nivel de Riesgo:
+
+Bajo:  6,074 (60.7%) ████████████████████████
+Medio: 2,943 (29.4%) ████████████
+Alto:    983 ( 9.8%) ████
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p>La distribución real puede variar ligeramente del objetivo (60/25/15) debido a la aleatoriedad y las reglas de negocio.</p>
+</div>
+<p><strong>Estadísticas Clave:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Estadísticas Principales:
+
+Edad promedio:              38.2 años
+Salario promedio:           $4,235,000 COP
+Puntaje DataCrédito:        720 puntos
+DTI promedio:               27.3%
+Capacidad residual:         $1,245,000 COP
+Valor inmueble promedio:    $185,000,000 COP
+</pre></div>
+</div>
+</section>
+<section id="visualizaciones">
+<h3>Visualizaciones<a class="headerlink" href="#visualizaciones" title="Link to this heading"></a></h3>
+<p>El módulo genera automáticamente:</p>
+<p><strong>1. Distribución de Riesgo (Gráfico de Barras)</strong></p>
+<p>Muestra la proporción de cada nivel de riesgo.</p>
+<p><strong>2. Distribución de Variables Clave (Histogramas)</strong></p>
+<ul class="simple">
+<li><p>Edad</p></li>
+<li><p>Salario mensual</p></li>
+<li><p>Puntaje DataCrédito</p></li>
+<li><p>DTI (Debt-to-Income)</p></li>
+<li><p>Valor del inmueble</p></li>
+</ul>
+<p><strong>3. Matriz de Correlación</strong></p>
+<p>Muestra las correlaciones entre variables numéricas principales.</p>
+<div class="admonition tip">
+<p class="admonition-title">Truco</p>
+<p>Usa el botón de descarga en cada gráfico para guardar las visualizaciones.</p>
+</div>
+</section>
+<section id="validaciones-automaticas">
+<h3>Validaciones Automáticas<a class="headerlink" href="#validaciones-automaticas" title="Link to this heading"></a></h3>
+<p>El generador valida automáticamente:</p>
+<dl class="simple">
+<dt>✅ <strong>Restricción 1: Salario &gt; Egresos</strong></dt><dd><p>Todos los registros tienen capacidad de ahorro positiva.</p>
+</dd>
+<dt>✅ <strong>Restricción 2: DTI ≤ 40%</strong></dt><dd><p>Ningún registro excede el 40% de endeudamiento.</p>
+</dd>
+<dt>✅ <strong>Restricción 3: Capacidad Residual ≥ 0</strong></dt><dd><p>Todos pueden pagar la cuota y mantener gastos básicos.</p>
+</dd>
+<dt>✅ <strong>Restricción 4: Edad + Plazo ≤ 80</strong></dt><dd><p>El crédito termina antes de los 80 años.</p>
+</dd>
+<dt>✅ <strong>Correlaciones Realistas</strong></dt><dd><p>Las variables mantienen relaciones lógicas.</p>
+</dd>
+</dl>
+<p>Si alguna validación falla, verás advertencias específicas.</p>
+</section>
+</section>
+<section id="variables-generadas">
+<h2>Variables Generadas<a class="headerlink" href="#variables-generadas" title="Link to this heading"></a></h2>
+<p>El dataset incluye 47 variables organizadas en categorías:</p>
+<section id="variables-demograficas-6">
+<h3>Variables Demográficas (6)<a class="headerlink" href="#variables-demograficas-6" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable</p></th>
+<th class="head"><p>Descripción</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">edad</span></code></p></td>
+<td><p>Edad del solicitante (22-65 años)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ciudad</span></code></p></td>
+<td><p>Ciudad de residencia (15 ciudades colombianas)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">estrato_socioeconomico</span></code></p></td>
+<td><p>Estrato socioeconómico (1-6)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">nivel_educacion</span></code></p></td>
+<td><p>Nivel educativo alcanzado</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">estado_civil</span></code></p></td>
+<td><p>Estado civil actual</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">personas_a_cargo</span></code></p></td>
+<td><p>Número de dependientes económicos</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="variables-laborales-4">
+<h3>Variables Laborales (4)<a class="headerlink" href="#variables-laborales-4" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable</p></th>
+<th class="head"><p>Descripción</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tipo_empleo</span></code></p></td>
+<td><p>Formal, Informal o Independiente</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">antiguedad_empleo</span></code></p></td>
+<td><p>Años en el empleo actual</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">salario_mensual</span></code></p></td>
+<td><p>Ingreso mensual en COP</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">egresos_mensuales</span></code></p></td>
+<td><p>Gastos mensuales totales en COP</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="variables-financieras-5">
+<h3>Variables Financieras (5)<a class="headerlink" href="#variables-financieras-5" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable</p></th>
+<th class="head"><p>Descripción</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">numero_demandas</span></code></p></td>
+<td><p>Demandas legales por dinero (0-3)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">puntaje_datacredito</span></code></p></td>
+<td><p>Score crediticio (350-850)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">numero_propiedades</span></code></p></td>
+<td><p>Propiedades que posee (0-3)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">patrimonio_total</span></code></p></td>
+<td><p>Patrimonio neto en COP</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">saldo_promedio_banco</span></code></p></td>
+<td><p>Saldo promedio últimos 6 meses</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="variables-del-credito-10">
+<h3>Variables del Crédito (10)<a class="headerlink" href="#variables-del-credito-10" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable</p></th>
+<th class="head"><p>Descripción</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">valor_inmueble</span></code></p></td>
+<td><p>Valor comercial de la propiedad</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">anos_inmueble</span></code></p></td>
+<td><p>Antigüedad del inmueble</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">porcentaje_cuota_inicial</span></code></p></td>
+<td><p>Porcentaje de cuota inicial (10-40%)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">valor_cuota_inicial</span></code></p></td>
+<td><p>Valor en COP de la cuota inicial</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monto_credito</span></code></p></td>
+<td><p>Monto solicitado del préstamo</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plazo_credito</span></code></p></td>
+<td><p>Plazo en años (10-30)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tasa_interes_anual</span></code></p></td>
+<td><p>Tasa de interés anual (%)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cuota_mensual</span></code></p></td>
+<td><p>Cuota mensual del crédito</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ltv</span></code></p></td>
+<td><p>Loan-to-Value ratio (%)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">dti</span></code></p></td>
+<td><p>Debt-to-Income ratio (%)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="caracteristicas-derivadas-15">
+<h3>Características Derivadas (15+)<a class="headerlink" href="#caracteristicas-derivadas-15" title="Link to this heading"></a></h3>
+<p>Variables calculadas automáticamente:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">capacidad_ahorro</span></code>: Salario - Egresos</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">capacidad_residual</span></code>: Capacidad ahorro - Cuota</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ratio_patrimonio_deuda</span></code>: Patrimonio / Deuda</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">meses_colchon</span></code>: Reservas en meses</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">score_edad</span></code>: Score basado en edad</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">flag_sobreendeudamiento</span></code>: Indicador de sobreendeudamiento</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">score_estabilidad_laboral</span></code>: Score de estabilidad</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">riesgo_legal</span></code>: Score de riesgo legal</p></li>
+<li><p>Y más…</p></li>
+</ul>
+</section>
+<section id="variable-objetivo-1">
+<h3>Variable Objetivo (1)<a class="headerlink" href="#variable-objetivo-1" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable</p></th>
+<th class="head"><p>Descripción</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">nivel_riesgo</span></code></p></td>
+<td><p><strong>Bajo</strong> / <strong>Medio</strong> / <strong>Alto</strong></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="casos-de-uso-comunes">
+<h2>Casos de Uso Comunes<a class="headerlink" href="#casos-de-uso-comunes" title="Link to this heading"></a></h2>
+<section id="caso-1-generar-dataset-para-entrenamiento">
+<h3>Caso 1: Generar Dataset para Entrenamiento<a class="headerlink" href="#caso-1-generar-dataset-para-entrenamiento" title="Link to this heading"></a></h3>
+<p><strong>Objetivo</strong>: Crear un dataset balanceado para entrenar modelos de ML.</p>
+<p><strong>Pasos:</strong></p>
+<ol class="arabic simple">
+<li><p>Configura 20,000 registros</p></li>
+<li><p>Usa semilla 42 para reproducibilidad</p></li>
+<li><p>Genera el dataset</p></li>
+<li><p>Descarga como CSV</p></li>
+<li><p>Usa en módulo de modelos supervisados</p></li>
+</ol>
+<p><strong>Resultado esperado:</strong></p>
+<ul class="simple">
+<li><p>20,000 registros</p></li>
+<li><p>~60% Bajo, ~25% Medio, ~15% Alto</p></li>
+<li><p>Listo para entrenamiento</p></li>
+</ul>
+</section>
+<section id="caso-2-experimentar-con-diferentes-distribuciones">
+<h3>Caso 2: Experimentar con Diferentes Distribuciones<a class="headerlink" href="#caso-2-experimentar-con-diferentes-distribuciones" title="Link to this heading"></a></h3>
+<p><strong>Objetivo</strong>: Ver cómo cambian los datos con diferentes semillas.</p>
+<p><strong>Pasos:</strong></p>
+<ol class="arabic simple">
+<li><p>Genera con semilla 42 → Observa distribución</p></li>
+<li><p>Genera con semilla 123 → Compara diferencias</p></li>
+<li><p>Genera con semilla 999 → Analiza variaciones</p></li>
+</ol>
+<p><strong>Aprendizaje:</strong></p>
+<ul class="simple">
+<li><p>Diferentes semillas = diferentes distribuciones</p></li>
+<li><p>Algunas semillas pueden dar distribuciones más extremas</p></li>
+<li><p>Útil para validar robustez de modelos</p></li>
+</ul>
+</section>
+<section id="caso-3-dataset-pequeno-para-pruebas-rapidas">
+<h3>Caso 3: Dataset Pequeño para Pruebas Rápidas<a class="headerlink" href="#caso-3-dataset-pequeno-para-pruebas-rapidas" title="Link to this heading"></a></h3>
+<p><strong>Objetivo</strong>: Probar funcionalidades sin esperar.</p>
+<p><strong>Pasos:</strong></p>
+<ol class="arabic simple">
+<li><p>Configura 1,000 registros</p></li>
+<li><p>Genera en &lt;2 segundos</p></li>
+<li><p>Prueba análisis descriptivo</p></li>
+<li><p>Experimenta con visualizaciones</p></li>
+</ol>
+<p><strong>Ventaja:</strong></p>
+<ul class="simple">
+<li><p>Iteración rápida</p></li>
+<li><p>Ideal para debugging</p></li>
+<li><p>Bajo consumo de memoria</p></li>
+</ul>
+</section>
+<section id="caso-4-dataset-grande-para-produccion">
+<h3>Caso 4: Dataset Grande para Producción<a class="headerlink" href="#caso-4-dataset-grande-para-produccion" title="Link to this heading"></a></h3>
+<p><strong>Objetivo</strong>: Entrenar modelos robustos para producción.</p>
+<p><strong>Pasos:</strong></p>
+<ol class="arabic simple">
+<li><p>Configura 50,000 registros</p></li>
+<li><p>Usa semilla fija para reproducibilidad</p></li>
+<li><p>Genera (toma ~30-40 segundos)</p></li>
+<li><p>Valida calidad exhaustivamente</p></li>
+<li><p>Entrena modelos finales</p></li>
+</ol>
+<p><strong>Consideraciones:</strong></p>
+<ul class="simple">
+<li><p>Mayor tiempo de generación</p></li>
+<li><p>Mayor consumo de memoria</p></li>
+<li><p>Mejor representatividad estadística</p></li>
+</ul>
+</section>
+</section>
+<section id="descargar-datos">
+<h2>Descargar Datos<a class="headerlink" href="#descargar-datos" title="Link to this heading"></a></h2>
+<section id="formatos-disponibles">
+<h3>Formatos Disponibles<a class="headerlink" href="#formatos-disponibles" title="Link to this heading"></a></h3>
+<p><strong>1. CSV (Recomendado)</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[💾 Descargar CSV]
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Formato universal</p></li>
+<li><p>Compatible con Excel, Python, R</p></li>
+<li><p>Tamaño: ~5-10 MB por 10,000 registros</p></li>
+</ul>
+<p><strong>2. Excel</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[📊 Descargar Excel]
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Formato .xlsx</p></li>
+<li><p>Incluye formato y estilos</p></li>
+<li><p>Ideal para presentaciones</p></li>
+</ul>
+<p><strong>3. Parquet</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[⚡ Descargar Parquet]
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Formato columnar comprimido</p></li>
+<li><p>Más rápido para datasets grandes</p></li>
+<li><p>Ideal para análisis con Pandas/Spark</p></li>
+</ul>
+<p><strong>4. JSON</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[📋 Descargar JSON]
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Formato estructurado</p></li>
+<li><p>Útil para APIs</p></li>
+<li><p>Incluye metadata</p></li>
+</ul>
+</section>
+<section id="metadata-del-dataset">
+<h3>Metadata del Dataset<a class="headerlink" href="#metadata-del-dataset" title="Link to this heading"></a></h3>
+<p>Junto con los datos, se genera un archivo de metadata:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;fecha_generacion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-01-15 10:30:00&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;numero_registros&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;semilla_aleatoria&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.3 - REALISTA&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;distribucion_objetivo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;60% Bajo, 25% Medio, 15% Alto&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;columnas&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">...</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;distribucion_riesgo&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;Bajo&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6074</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;Medio&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2943</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;Alto&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">983</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;estadisticas_clave&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;salario_promedio&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4235000</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;edad_promedio&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">38.2</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;puntaje_datacredito_promedio&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">720</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;dti_promedio&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">27.3</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Truco</p>
+<p>Guarda siempre la metadata junto con los datos para trazabilidad.</p>
+</div>
+</section>
+</section>
+<section id="tips-y-mejores-practicas">
+<h2>Tips y Mejores Prácticas<a class="headerlink" href="#tips-y-mejores-practicas" title="Link to this heading"></a></h2>
+<section id="seleccion-de-parametros">
+<h3>Selección de Parámetros<a class="headerlink" href="#seleccion-de-parametros" title="Link to this heading"></a></h3>
+<p>✅ <strong>Haz:</strong></p>
+<ul class="simple">
+<li><p>Usa semillas fijas para experimentos reproducibles</p></li>
+<li><p>Comienza con 10,000 registros (balance velocidad/calidad)</p></li>
+<li><p>Genera múltiples datasets con diferentes semillas para validación</p></li>
+<li><p>Documenta la semilla usada en cada experimento</p></li>
+</ul>
+<p>❌ <strong>Evita:</strong></p>
+<ul class="simple">
+<li><p>Cambiar semilla constantemente sin documentar</p></li>
+<li><p>Generar datasets muy pequeños (&lt;1,000) para entrenamiento</p></li>
+<li><p>Usar datasets muy grandes (&gt;50,000) sin necesidad</p></li>
+<li><p>Modificar parámetros avanzados sin entender el impacto</p></li>
+</ul>
+</section>
+<section id="calidad-de-datos">
+<h3>Calidad de Datos<a class="headerlink" href="#calidad-de-datos" title="Link to this heading"></a></h3>
+<p><strong>Siempre valida:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Distribución de riesgo</strong>: ¿Está cerca del objetivo?</p></li>
+<li><p><strong>Rangos de variables</strong>: ¿Son realistas?</p></li>
+<li><p><strong>Correlaciones</strong>: ¿Tienen sentido lógico?</p></li>
+<li><p><strong>Valores faltantes</strong>: No debería haber ninguno</p></li>
+<li><p><strong>Outliers</strong>: Deben ser razonables</p></li>
+</ol>
+<p><strong>Checklist de calidad:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>☑ Distribución de riesgo: 55-65% Bajo, 20-30% Medio, 10-20% Alto
+☑ DTI promedio: 25-30%
+☑ Capacidad residual: 100% positiva
+☑ Puntaje DataCrédito: 650-750 promedio
+☑ Sin valores faltantes
+☑ Sin duplicados
+</pre></div>
+</div>
+</section>
+<section id="reproducibilidad">
+<h3>Reproducibilidad<a class="headerlink" href="#reproducibilidad" title="Link to this heading"></a></h3>
+<p><strong>Para garantizar reproducibilidad:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Documenta la semilla</strong>: Anota siempre qué semilla usaste</p></li>
+<li><p><strong>Versiona los datos</strong>: Guarda fecha y versión del generador</p></li>
+<li><p><strong>Exporta metadata</strong>: Incluye toda la configuración usada</p></li>
+<li><p><strong>Usa control de versiones</strong>: Git para scripts de generación</p></li>
+</ol>
+<p><strong>Ejemplo de documentación:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Dataset: credito_hipotecario_train.csv
+Fecha: 2024-01-15
+Registros: 20,000
+Semilla: 42
+Versión generador: 1.3
+Distribución: 60.7% Bajo, 29.4% Medio, 9.8% Alto
+Propósito: Entrenamiento modelo RBM + Random Forest
+</pre></div>
+</div>
+</section>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<section id="problemas-comunes">
+<h3>Problemas Comunes<a class="headerlink" href="#problemas-comunes" title="Link to this heading"></a></h3>
+<p><strong>Problema 1: Generación muy lenta</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Síntoma: Toma más de 1 minuto para 10,000 registros
+</pre></div>
+</div>
+<p><strong>Causas posibles:</strong></p>
+<ul class="simple">
+<li><p>Número de registros muy alto (&gt;50,000)</p></li>
+<li><p>Computadora con recursos limitados</p></li>
+<li><p>Otros procesos consumiendo CPU</p></li>
+</ul>
+<p><strong>Soluciones:</strong></p>
+<ol class="arabic simple">
+<li><p>Reduce el número de registros</p></li>
+<li><p>Cierra otras aplicaciones</p></li>
+<li><p>Espera a que termine (no interrumpas)</p></li>
+<li><p>Considera generar en lotes más pequeños</p></li>
+</ol>
+<p>—</p>
+<p><strong>Problema 2: Distribución de riesgo muy desbalanceada</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Síntoma: 80% Bajo, 15% Medio, 5% Alto (muy diferente del objetivo)
+</pre></div>
+</div>
+<p><strong>Causas posibles:</strong></p>
+<ul class="simple">
+<li><p>Semilla aleatoria particular</p></li>
+<li><p>Número de registros muy pequeño (&lt;5,000)</p></li>
+</ul>
+<p><strong>Soluciones:</strong></p>
+<ol class="arabic simple">
+<li><p>Prueba con otra semilla</p></li>
+<li><p>Aumenta el número de registros</p></li>
+<li><p>Genera múltiples datasets y combínalos</p></li>
+<li><p>Usa técnicas de balanceo posterior (SMOTE, undersampling)</p></li>
+</ol>
+<p>—</p>
+<p><strong>Problema 3: Error al descargar</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Error: &quot;Failed to download file&quot;
+</pre></div>
+</div>
+<p><strong>Soluciones:</strong></p>
+<ol class="arabic simple">
+<li><p>Verifica espacio en disco</p></li>
+<li><p>Intenta otro formato (CSV en lugar de Excel)</p></li>
+<li><p>Reduce el tamaño del dataset</p></li>
+<li><p>Recarga la página y genera nuevamente</p></li>
+</ol>
+<p>—</p>
+<p><strong>Problema 4: Valores poco realistas</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Síntoma: Salarios de $100M o DTI de 80%
+</pre></div>
+</div>
+<p><strong>Causas posibles:</strong></p>
+<ul class="simple">
+<li><p>Parámetros avanzados modificados incorrectamente</p></li>
+<li><p>Bug en versión específica</p></li>
+</ul>
+<p><strong>Soluciones:</strong></p>
+<ol class="arabic simple">
+<li><p>Restaura configuración por defecto</p></li>
+<li><p>Verifica que no hayas modificado parámetros avanzados</p></li>
+<li><p>Reporta el problema con la semilla usada</p></li>
+<li><p>Usa una semilla diferente temporalmente</p></li>
+</ol>
+</section>
+<section id="errores-tecnicos">
+<h3>Errores Técnicos<a class="headerlink" href="#errores-tecnicos" title="Link to this heading"></a></h3>
+<p><strong>Error: «Memory Error»</strong></p>
+<p><strong>Causa</strong>: Dataset demasiado grande para la RAM disponible.</p>
+<p><strong>Solución</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Genera en lotes más pequeños</span>
+<span class="c1"># Lote 1: semilla 42, 25,000 registros</span>
+<span class="c1"># Lote 2: semilla 43, 25,000 registros</span>
+<span class="c1"># Combina después</span>
+</pre></div>
+</div>
+<p>—</p>
+<p><strong>Error: «Invalid seed value»</strong></p>
+<p><strong>Causa</strong>: Semilla fuera del rango 1-9999.</p>
+<p><strong>Solución</strong>: Usa un valor entre 1 y 9999.</p>
+<p>—</p>
+<p><strong>Error: «Generation failed»</strong></p>
+<p><strong>Causa</strong>: Error interno del generador.</p>
+<p><strong>Solución</strong>:</p>
+<ol class="arabic simple">
+<li><p>Recarga la página</p></li>
+<li><p>Intenta con configuración por defecto</p></li>
+<li><p>Reporta el error con detalles</p></li>
+</ol>
+</section>
+</section>
+<section id="preguntas-frecuentes">
+<h2>Preguntas Frecuentes<a class="headerlink" href="#preguntas-frecuentes" title="Link to this heading"></a></h2>
+<p><strong>P: ¿Cuántos registros debo generar?</strong></p>
+<p>R: Depende del uso:</p>
+<ul class="simple">
+<li><p>Exploración: 5,000-10,000</p></li>
+<li><p>Entrenamiento: 20,000-30,000</p></li>
+<li><p>Producción: 30,000-50,000</p></li>
+</ul>
+<p><strong>P: ¿Los datos son completamente aleatorios?</strong></p>
+<p>R: No, mantienen correlaciones y restricciones realistas del mundo real.</p>
+<p><strong>P: ¿Puedo usar estos datos en producción?</strong></p>
+<p>R: Son ideales para desarrollo y pruebas. Para producción, valida con datos reales.</p>
+<p><strong>P: ¿Qué semilla debo usar?</strong></p>
+<p>R: Cualquiera entre 1-9999. La semilla 42 es el valor por defecto recomendado.</p>
+<p><strong>P: ¿Por qué la distribución no es exactamente 60/25/15?</strong></p>
+<p>R: Es un objetivo, no una garantía. La aleatoriedad y las reglas de negocio causan variaciones naturales.</p>
+<p><strong>P: ¿Puedo modificar las reglas de generación?</strong></p>
+<p>R: Los parámetros avanzados permiten algunos ajustes. Para cambios mayores, necesitarías modificar el código fuente.</p>
+<p><strong>P: ¿Los datos incluyen valores faltantes?</strong></p>
+<p>R: No, todos los registros están completos. Si necesitas simular valores faltantes, puedes eliminarlos manualmente después.</p>
+</section>
+<section id="proximos-pasos">
+<h2>Próximos Pasos<a class="headerlink" href="#proximos-pasos" title="Link to this heading"></a></h2>
+<p>Ahora que has generado tu dataset, puedes:</p>
+<ol class="arabic simple">
+<li><p><strong>Explorar los datos</strong>: <a class="reference internal" href="04_analisis_descriptivo.html"><span class="doc">4. Análisis Descriptivo</span></a></p></li>
+<li><p><strong>Cargar datos externos</strong>: <a class="reference internal" href="03_cargar_datos.html"><span class="doc">3. Cargar Datos Externos</span></a></p></li>
+<li><p><strong>Crear características</strong>: <a class="reference internal" href="05_ingenieria_caracteristicas.html"><span class="doc">5. Ingeniería de Características</span></a></p></li>
+<li><p><strong>Entrenar RBM</strong>: <a class="reference internal" href="07_rbm.html"><span class="doc">7. Máquina de Boltzmann Restringida (RBM)</span></a></p></li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Truco</p>
+<p>Te recomendamos explorar el dataset generado con el módulo de análisis descriptivo antes de entrenar modelos.</p>
+</div>
+<p>¡Felicitaciones! Has aprendido a generar datos sintéticos realistas. 🎉</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="01_inicio.html" class="btn btn-neutral float-left" title="1. Página de Inicio y Navegación" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="03_cargar_datos.html" class="btn btn-neutral float-right" title="3. Cargar Datos Externos" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, Andrés Fernando Gómez Rojas &amp; Carlos Andrés Gómez Vasco. Software Libre bajo Licencia MIT.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

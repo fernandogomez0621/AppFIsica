@@ -1,0 +1,611 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>retraining &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Módulos del Sistema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Código de módulo</a></li>
+      <li class="breadcrumb-item active">retraining</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código fuente para retraining</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">============================================================================</span>
+<span class="sd">MÓDULO DE RE-ENTRENAMIENTO</span>
+<span class="sd">============================================================================</span>
+
+<span class="sd">Sistema de re-entrenamiento automático de modelos con detección de data drift</span>
+<span class="sd">y versionado de modelos.</span>
+
+<span class="sd">Autor: Sistema de Física</span>
+<span class="sd">Versión: 1.0.0</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.express</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">px</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plotly.subplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_subplots</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ModelRetrainer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sistema de re-entrenamiento de modelos&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Inicializa el sistema de re-entrenamiento&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">models_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;models/supervised&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">versions_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;models/versions&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">versions_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_available_models</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Obtiene lista de modelos disponibles&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">models_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        
+        <span class="n">model_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">stem</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_model&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">models_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*_model.pkl&#39;</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">model_files</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_model_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Carga información del modelo&quot;&quot;&quot;</span>
+        <span class="n">model_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">models_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_key</span><span class="si">}</span><span class="s2">_model.pkl&quot;</span>
+        <span class="n">metrics_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">models_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_key</span><span class="si">}</span><span class="s2">_metrics.json&quot;</span>
+        
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="k">if</span> <span class="n">model_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">model_data</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                <span class="n">info</span><span class="p">[</span><span class="s1">&#39;model_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_data</span>
+                <span class="n">info</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timestamp&#39;</span><span class="p">,</span> <span class="s1">&#39;Desconocido&#39;</span><span class="p">)</span>
+                <span class="n">info</span><span class="p">[</span><span class="s1">&#39;feature_names&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;feature_names&#39;</span><span class="p">,</span> <span class="p">[])</span>
+        
+        <span class="k">if</span> <span class="n">metrics_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">metrics_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">info</span><span class="p">[</span><span class="s1">&#39;metrics&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">info</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">detect_data_drift</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">new_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                         <span class="n">feature_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Detecta data drift entre datasets usando tests estadísticos</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            original_data: Dataset original</span>
+<span class="sd">            new_data: Dataset nuevo</span>
+<span class="sd">            feature_names: Características a comparar</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Resultados del análisis de drift</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">drift_results</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;features_with_drift&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;drift_scores&#39;</span><span class="p">:</span> <span class="p">{},</span>
+            <span class="s1">&#39;statistical_tests&#39;</span><span class="p">:</span> <span class="p">{}</span>
+        <span class="p">}</span>
+        
+        <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">feature_names</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">feature</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">original_data</span><span class="o">.</span><span class="n">columns</span> <span class="ow">or</span> <span class="n">feature</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="k">continue</span>
+            
+            <span class="c1"># Test de Kolmogorov-Smirnov</span>
+            <span class="n">ks_stat</span><span class="p">,</span> <span class="n">ks_pvalue</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">ks_2samp</span><span class="p">(</span>
+                <span class="n">original_data</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span>
+                <span class="n">new_data</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+            <span class="p">)</span>
+            
+            <span class="c1"># Test de Mann-Whitney U (para distribuciones)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">mw_stat</span><span class="p">,</span> <span class="n">mw_pvalue</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">mannwhitneyu</span><span class="p">(</span>
+                    <span class="n">original_data</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span>
+                    <span class="n">new_data</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+                <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">mw_pvalue</span> <span class="o">=</span> <span class="mf">1.0</span>
+            
+            <span class="c1"># Calcular diferencia en medias y desviaciones</span>
+            <span class="n">mean_diff</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">new_data</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">original_data</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+            <span class="n">std_diff</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">new_data</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">-</span> <span class="n">original_data</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
+            
+            <span class="c1"># Determinar si hay drift (p-value &lt; 0.05)</span>
+            <span class="n">has_drift</span> <span class="o">=</span> <span class="n">ks_pvalue</span> <span class="o">&lt;</span> <span class="mf">0.05</span> <span class="ow">or</span> <span class="n">mw_pvalue</span> <span class="o">&lt;</span> <span class="mf">0.05</span>
+            
+            <span class="n">drift_results</span><span class="p">[</span><span class="s1">&#39;drift_scores&#39;</span><span class="p">][</span><span class="n">feature</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;ks_statistic&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">ks_stat</span><span class="p">),</span>
+                <span class="s1">&#39;ks_pvalue&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">ks_pvalue</span><span class="p">),</span>
+                <span class="s1">&#39;mw_pvalue&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">mw_pvalue</span><span class="p">),</span>
+                <span class="s1">&#39;mean_diff&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">mean_diff</span><span class="p">),</span>
+                <span class="s1">&#39;std_diff&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">std_diff</span><span class="p">),</span>
+                <span class="s1">&#39;has_drift&#39;</span><span class="p">:</span> <span class="n">has_drift</span>
+            <span class="p">}</span>
+            
+            <span class="k">if</span> <span class="n">has_drift</span><span class="p">:</span>
+                <span class="n">drift_results</span><span class="p">[</span><span class="s1">&#39;features_with_drift&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">drift_results</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_version_backup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Crea backup versionado del modelo actual&quot;&quot;&quot;</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+        <span class="n">version_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_key</span><span class="si">}</span><span class="s2">_v</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">&quot;</span>
+        
+        <span class="c1"># Copiar modelo</span>
+        <span class="n">model_src</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">models_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_key</span><span class="si">}</span><span class="s2">_model.pkl&quot;</span>
+        <span class="n">model_dst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">versions_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">version_name</span><span class="si">}</span><span class="s2">_model.pkl&quot;</span>
+        
+        <span class="k">if</span> <span class="n">model_src</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">model_src</span><span class="p">,</span> <span class="n">model_dst</span><span class="p">)</span>
+        
+        <span class="c1"># Copiar métricas</span>
+        <span class="n">metrics_src</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">models_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_key</span><span class="si">}</span><span class="s2">_metrics.json&quot;</span>
+        <span class="n">metrics_dst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">versions_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">version_name</span><span class="si">}</span><span class="s2">_metrics.json&quot;</span>
+        
+        <span class="k">if</span> <span class="n">metrics_src</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">metrics_src</span><span class="p">,</span> <span class="n">metrics_dst</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">version_name</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">retrain_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">new_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                     <span class="n">target_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;nivel_riesgo&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Re-entrena un modelo con nuevos datos</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            model_key: Clave del modelo a re-entrenar</span>
+<span class="sd">            new_data: Nuevos datos para entrenamiento</span>
+<span class="sd">            target_col: Variable objetivo</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Resultados del re-entrenamiento</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">src.supervised_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">SupervisedModelTrainer</span>
+        
+        <span class="c1"># Crear entrenador</span>
+        <span class="n">trainer</span> <span class="o">=</span> <span class="n">SupervisedModelTrainer</span><span class="p">()</span>
+        
+        <span class="c1"># Preparar datos</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">trainer</span><span class="o">.</span><span class="n">prepare_data</span><span class="p">(</span><span class="n">new_data</span><span class="p">,</span> <span class="n">target_col</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Error preparando datos&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Re-entrenar modelo</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train_model</span><span class="p">(</span><span class="n">model_key</span><span class="p">,</span> <span class="n">use_grid_search</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">results</span>
+
+
+<div class="viewcode-block" id="render_retraining_module">
+<a class="viewcode-back" href="../api_reference.html#retraining.render_retraining_module">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">render_retraining_module</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Renderiza el módulo de re-entrenamiento&quot;&quot;&quot;</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;🔄 Re-entrenamiento de Modelos&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### *Actualización automática con detección de data drift*&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Crear retrainer</span>
+    <span class="n">retrainer</span> <span class="o">=</span> <span class="n">ModelRetrainer</span><span class="p">()</span>
+    
+    <span class="c1"># Verificar modelos disponibles</span>
+    <span class="n">available_models</span> <span class="o">=</span> <span class="n">retrainer</span><span class="o">.</span><span class="n">get_available_models</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">available_models</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;❌ No hay modelos entrenados. Ve a &#39;Modelos Supervisados&#39; primero.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="c1"># Selección de modelo</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;🤖 Selección de Modelo&quot;</span><span class="p">)</span>
+    
+    <span class="n">selected_model</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+        <span class="s2">&quot;Selecciona el modelo a re-entrenar:&quot;</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">available_models</span><span class="p">,</span>
+        <span class="n">format_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
+    <span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">selected_model</span><span class="p">:</span>
+        <span class="c1"># Cargar información del modelo</span>
+        <span class="n">model_info</span> <span class="o">=</span> <span class="n">retrainer</span><span class="o">.</span><span class="n">load_model_info</span><span class="p">(</span><span class="n">selected_model</span><span class="p">)</span>
+        
+        <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Modelo&quot;</span><span class="p">,</span> <span class="n">selected_model</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">())</span>
+        
+        <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;metrics&#39;</span> <span class="ow">in</span> <span class="n">model_info</span><span class="p">:</span>
+                <span class="n">accuracy</span> <span class="o">=</span> <span class="n">model_info</span><span class="p">[</span><span class="s1">&#39;metrics&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;accuracy&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Accuracy Actual&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">accuracy</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col3</span><span class="p">:</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="n">model_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timestamp&#39;</span><span class="p">,</span> <span class="s1">&#39;Desconocido&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">timestamp</span> <span class="o">!=</span> <span class="s1">&#39;Desconocido&#39;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Última Actualización&quot;</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">))</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Última Actualización&quot;</span><span class="p">,</span> <span class="s2">&quot;Desconocido&quot;</span><span class="p">)</span>
+    
+    <span class="n">st</span><span class="o">.</span><span class="n">divider</span><span class="p">()</span>
+    
+    <span class="c1"># Carga de nuevos datos</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📊 Nuevos Datos para Re-entrenamiento&quot;</span><span class="p">)</span>
+    
+    <span class="n">tab1</span><span class="p">,</span> <span class="n">tab2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span><span class="s2">&quot;📁 Cargar Archivo&quot;</span><span class="p">,</span> <span class="s2">&quot;🔍 Detectar Drift&quot;</span><span class="p">])</span>
+    
+    <span class="k">with</span> <span class="n">tab1</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;**Opciones de datos:**&quot;</span><span class="p">)</span>
+        
+        <span class="n">data_option</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">radio</span><span class="p">(</span>
+            <span class="s2">&quot;Selecciona la fuente de datos:&quot;</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">[</span>
+                <span class="s2">&quot;Usar datos actuales (mismo dataset)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Cargar archivo nuevo (CSV/Excel)&quot;</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        
+        <span class="n">new_df</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        <span class="k">if</span> <span class="n">data_option</span> <span class="o">==</span> <span class="s2">&quot;Usar datos actuales (mismo dataset)&quot;</span><span class="p">:</span>
+            <span class="c1"># Usar datos existentes</span>
+            <span class="n">data_paths</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s2">&quot;data/processed/datos_con_rbm.csv&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;data/processed/datos_con_caracteristicas.csv&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;data/processed/datos_credito_hipotecario_realista.csv&quot;</span>
+            <span class="p">]</span>
+            
+            <span class="n">available_datasets</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">data_paths</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">p</span><span class="p">)]</span>
+            
+            <span class="k">if</span> <span class="n">available_datasets</span><span class="p">:</span>
+                <span class="n">selected_dataset</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+                    <span class="s2">&quot;Dataset:&quot;</span><span class="p">,</span>
+                    <span class="n">options</span><span class="o">=</span><span class="n">available_datasets</span><span class="p">,</span>
+                    <span class="n">format_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="p">)</span>
+                
+                <span class="n">new_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">selected_dataset</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Dataset cargado: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">new_df</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> registros&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;❌ No hay datasets disponibles&quot;</span><span class="p">)</span>
+        
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Cargar archivo nuevo</span>
+            <span class="n">uploaded_file</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">file_uploader</span><span class="p">(</span>
+                <span class="s2">&quot;Sube un archivo CSV o Excel:&quot;</span><span class="p">,</span>
+                <span class="nb">type</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;csv&#39;</span><span class="p">,</span> <span class="s1">&#39;xlsx&#39;</span><span class="p">,</span> <span class="s1">&#39;xls&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">uploaded_file</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">uploaded_file</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.csv&#39;</span><span class="p">):</span>
+                        <span class="n">new_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">uploaded_file</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">new_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">uploaded_file</span><span class="p">)</span>
+                    
+                    <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Archivo cargado: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">new_df</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> registros, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> variables&quot;</span><span class="p">)</span>
+                    
+                    <span class="c1"># Mostrar muestra</span>
+                    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">expander</span><span class="p">(</span><span class="s2">&quot;Ver muestra de datos&quot;</span><span class="p">):</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">new_df</span><span class="o">.</span><span class="n">head</span><span class="p">(),</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Error cargando archivo: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">with</span> <span class="n">tab2</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">new_df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">&#39;feature_names&#39;</span> <span class="ow">in</span> <span class="n">model_info</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;**Análisis de Data Drift:**&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Cargar datos originales</span>
+            <span class="n">original_data_path</span> <span class="o">=</span> <span class="s2">&quot;data/processed/datos_credito_hipotecario_realista.csv&quot;</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">original_data_path</span><span class="p">):</span>
+                <span class="n">original_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">original_data_path</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;🔍 Detectar Data Drift&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">):</span>
+                    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;🔍 Analizando diferencias en distribuciones...&quot;</span><span class="p">):</span>
+                        <span class="n">drift_results</span> <span class="o">=</span> <span class="n">retrainer</span><span class="o">.</span><span class="n">detect_data_drift</span><span class="p">(</span>
+                            <span class="n">original_df</span><span class="p">,</span>
+                            <span class="n">new_df</span><span class="p">,</span>
+                            <span class="n">model_info</span><span class="p">[</span><span class="s1">&#39;feature_names&#39;</span><span class="p">]</span>
+                        <span class="p">)</span>
+                        
+                        <span class="c1"># Mostrar resultados</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📊 Resultados del Análisis de Drift&quot;</span><span class="p">)</span>
+                        
+                        <span class="n">n_features_with_drift</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">drift_results</span><span class="p">[</span><span class="s1">&#39;features_with_drift&#39;</span><span class="p">])</span>
+                        <span class="n">total_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">model_info</span><span class="p">[</span><span class="s1">&#39;feature_names&#39;</span><span class="p">])</span>
+                        
+                        <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+                        
+                        <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Características Analizadas&quot;</span><span class="p">,</span> <span class="n">total_features</span><span class="p">)</span>
+                        
+                        <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Con Drift Detectado&quot;</span><span class="p">,</span> <span class="n">n_features_with_drift</span><span class="p">)</span>
+                        
+                        <span class="k">with</span> <span class="n">col3</span><span class="p">:</span>
+                            <span class="n">drift_percentage</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_features_with_drift</span> <span class="o">/</span> <span class="n">total_features</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">% c</span><span class="s2">on Drift&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">drift_percentage</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+                        
+                        <span class="c1"># Tabla de características con drift</span>
+                        <span class="k">if</span> <span class="n">drift_results</span><span class="p">[</span><span class="s1">&#39;features_with_drift&#39;</span><span class="p">]:</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Se detectó drift en </span><span class="si">{</span><span class="n">n_features_with_drift</span><span class="si">}</span><span class="s2"> características&quot;</span><span class="p">)</span>
+                            
+                            <span class="n">drift_data</span> <span class="o">=</span> <span class="p">[]</span>
+                            <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">drift_results</span><span class="p">[</span><span class="s1">&#39;features_with_drift&#39;</span><span class="p">]:</span>
+                                <span class="n">scores</span> <span class="o">=</span> <span class="n">drift_results</span><span class="p">[</span><span class="s1">&#39;drift_scores&#39;</span><span class="p">][</span><span class="n">feature</span><span class="p">]</span>
+                                <span class="n">drift_data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                                    <span class="s1">&#39;Característica&#39;</span><span class="p">:</span> <span class="n">feature</span><span class="p">,</span>
+                                    <span class="s1">&#39;KS p-value&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scores</span><span class="p">[</span><span class="s1">&#39;ks_pvalue&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                                    <span class="s1">&#39;Diff Media&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scores</span><span class="p">[</span><span class="s1">&#39;mean_diff&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                                    <span class="s1">&#39;Diff Std&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scores</span><span class="p">[</span><span class="s1">&#39;std_diff&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+                                <span class="p">})</span>
+                            
+                            <span class="n">drift_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">drift_data</span><span class="p">)</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">drift_df</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hide_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                            
+                            <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;💡 **Recomendación:** Re-entrenar el modelo con los nuevos datos&quot;</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;✅ No se detectó drift significativo en las características&quot;</span><span class="p">)</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ℹ️ El modelo actual debería seguir funcionando bien&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;⚠️ No se encontraron datos originales para comparar&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ℹ️ Carga datos nuevos primero para analizar drift&quot;</span><span class="p">)</span>
+    
+    <span class="n">st</span><span class="o">.</span><span class="n">divider</span><span class="p">()</span>
+    
+    <span class="c1"># Re-entrenamiento</span>
+    <span class="k">if</span> <span class="n">new_df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;🚀 Re-entrenamiento&quot;</span><span class="p">)</span>
+        
+        <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+            <span class="n">create_backup</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">checkbox</span><span class="p">(</span>
+                <span class="s2">&quot;Crear backup del modelo actual&quot;</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Guarda una versión del modelo antes de re-entrenar&quot;</span>
+            <span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+            <span class="n">use_grid_search</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">checkbox</span><span class="p">(</span>
+                <span class="s2">&quot;Optimizar hiperparámetros&quot;</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Buscar mejores hiperparámetros (más lento)&quot;</span>
+            <span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;🔄 RE-ENTRENAR MODELO&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;🔄 Re-entrenando modelo...&quot;</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c1"># Crear backup si se solicita</span>
+                    <span class="k">if</span> <span class="n">create_backup</span><span class="p">:</span>
+                        <span class="n">version_name</span> <span class="o">=</span> <span class="n">retrainer</span><span class="o">.</span><span class="n">create_version_backup</span><span class="p">(</span><span class="n">selected_model</span><span class="p">)</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;💾 Backup creado: </span><span class="si">{</span><span class="n">version_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    
+                    <span class="c1"># Re-entrenar</span>
+                    <span class="n">results</span> <span class="o">=</span> <span class="n">retrainer</span><span class="o">.</span><span class="n">retrain_model</span><span class="p">(</span><span class="n">selected_model</span><span class="p">,</span> <span class="n">new_df</span><span class="p">)</span>
+                    
+                    <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;✅ Modelo re-entrenado exitosamente!&quot;</span><span class="p">)</span>
+                    
+                    <span class="c1"># Comparar métricas</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📊 Comparación de Rendimiento&quot;</span><span class="p">)</span>
+                    
+                    <span class="n">old_metrics</span> <span class="o">=</span> <span class="n">model_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;metrics&#39;</span><span class="p">,</span> <span class="p">{})</span>
+                    <span class="n">new_metrics</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;metrics&#39;</span><span class="p">]</span>
+                    
+                    <span class="n">comparison_data</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">metrics_to_compare</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">,</span> <span class="s1">&#39;f1_weighted&#39;</span><span class="p">,</span> <span class="s1">&#39;precision_weighted&#39;</span><span class="p">,</span> <span class="s1">&#39;recall_weighted&#39;</span><span class="p">]</span>
+                    
+                    <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics_to_compare</span><span class="p">:</span>
+                        <span class="n">old_value</span> <span class="o">=</span> <span class="n">old_metrics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                        <span class="n">new_value</span> <span class="o">=</span> <span class="n">new_metrics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                        <span class="n">diff</span> <span class="o">=</span> <span class="n">new_value</span> <span class="o">-</span> <span class="n">old_value</span>
+                        
+                        <span class="n">comparison_data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                            <span class="s1">&#39;Métrica&#39;</span><span class="p">:</span> <span class="n">metric</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">(),</span>
+                            <span class="s1">&#39;Modelo Anterior&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">old_value</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="s1">&#39;Modelo Nuevo&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_value</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="s1">&#39;Diferencia&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">diff</span><span class="si">:</span><span class="s2">+.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="s1">&#39;Mejora&#39;</span><span class="p">:</span> <span class="s1">&#39;✅&#39;</span> <span class="k">if</span> <span class="n">diff</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="s1">&#39;⚠️&#39;</span> <span class="k">if</span> <span class="n">diff</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.01</span> <span class="k">else</span> <span class="s1">&#39;➖&#39;</span><span class="p">)</span>
+                        <span class="p">})</span>
+                    
+                    <span class="n">comparison_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">comparison_data</span><span class="p">)</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">comparison_df</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hide_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    
+                    <span class="c1"># Gráfico de comparación</span>
+                    <span class="n">fig_comparison</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
+                    
+                    <span class="n">metrics_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;Métrica&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">comparison_data</span><span class="p">]</span>
+                    <span class="n">old_values</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;Modelo Anterior&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">comparison_data</span><span class="p">]</span>
+                    <span class="n">new_values</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;Modelo Nuevo&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">comparison_data</span><span class="p">]</span>
+                    
+                    <span class="n">fig_comparison</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span>
+                        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Modelo Anterior&#39;</span><span class="p">,</span>
+                        <span class="n">x</span><span class="o">=</span><span class="n">metrics_names</span><span class="p">,</span>
+                        <span class="n">y</span><span class="o">=</span><span class="n">old_values</span><span class="p">,</span>
+                        <span class="n">marker_color</span><span class="o">=</span><span class="s1">&#39;#95a5a6&#39;</span>
+                    <span class="p">))</span>
+                    
+                    <span class="n">fig_comparison</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span>
+                        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Modelo Nuevo&#39;</span><span class="p">,</span>
+                        <span class="n">x</span><span class="o">=</span><span class="n">metrics_names</span><span class="p">,</span>
+                        <span class="n">y</span><span class="o">=</span><span class="n">new_values</span><span class="p">,</span>
+                        <span class="n">marker_color</span><span class="o">=</span><span class="s1">&#39;#3498db&#39;</span>
+                    <span class="p">))</span>
+                    
+                    <span class="n">fig_comparison</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Comparación: Modelo Anterior vs Nuevo&quot;</span><span class="p">,</span>
+                        <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Métricas&quot;</span><span class="p">,</span>
+                        <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Valor&quot;</span><span class="p">,</span>
+                        <span class="n">barmode</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span>
+                        <span class="n">template</span><span class="o">=</span><span class="s2">&quot;plotly_white&quot;</span><span class="p">,</span>
+                        <span class="n">height</span><span class="o">=</span><span class="mi">400</span>
+                    <span class="p">)</span>
+                    
+                    <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">fig_comparison</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    
+                    <span class="c1"># Recomendación</span>
+                    <span class="n">avg_improvement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;Diferencia&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">comparison_data</span><span class="p">])</span>
+                    
+                    <span class="k">if</span> <span class="n">avg_improvement</span> <span class="o">&gt;</span> <span class="mf">0.01</span><span class="p">:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;✅ **Recomendación:** El nuevo modelo es significativamente mejor. Se recomienda usarlo.&quot;</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">avg_improvement</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;❌ **Recomendación:** El nuevo modelo es peor. Considera usar el backup.&quot;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ℹ️ **Recomendación:** Rendimiento similar. Puedes usar cualquiera.&quot;</span><span class="p">)</span>
+                
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Error durante re-entrenamiento: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+    
+    <span class="c1"># Gestión de versiones</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">divider</span><span class="p">()</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📦 Versiones de Modelos&quot;</span><span class="p">)</span>
+    
+    <span class="n">version_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">retrainer</span><span class="o">.</span><span class="n">versions_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*_model.pkl&quot;</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="n">version_files</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">version_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> versiones guardadas&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">expander</span><span class="p">(</span><span class="s2">&quot;Ver versiones disponibles&quot;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">version_file</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">version_files</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                <span class="n">version_name</span> <span class="o">=</span> <span class="n">version_file</span><span class="o">.</span><span class="n">stem</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_model&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                
+                <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+                
+                <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📦 </span><span class="si">{</span><span class="n">version_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+                <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;🔙 Restaurar&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;restore_</span><span class="si">{</span><span class="n">version_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+                            <span class="c1"># Restaurar modelo</span>
+                            <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span>
+                                <span class="n">version_file</span><span class="p">,</span>
+                                <span class="n">retrainer</span><span class="o">.</span><span class="n">models_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">selected_model</span><span class="si">}</span><span class="s2">_model.pkl&quot;</span>
+                            <span class="p">)</span>
+                            
+                            <span class="c1"># Restaurar métricas si existen</span>
+                            <span class="n">metrics_file</span> <span class="o">=</span> <span class="n">version_file</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">version_name</span><span class="si">}</span><span class="s2">_metrics.json&quot;</span>
+                            <span class="k">if</span> <span class="n">metrics_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                                <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span>
+                                    <span class="n">metrics_file</span><span class="p">,</span>
+                                    <span class="n">retrainer</span><span class="o">.</span><span class="n">models_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">selected_model</span><span class="si">}</span><span class="s2">_metrics.json&quot;</span>
+                                <span class="p">)</span>
+                            
+                            <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Modelo restaurado desde: </span><span class="si">{</span><span class="n">version_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">rerun</span><span class="p">()</span>
+                        
+                        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Error restaurando: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ℹ️ No hay versiones guardadas aún&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Módulo de re-entrenamiento cargado correctamente&quot;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2024, Andrés Fernando Gómez Rojas.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1046 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rbm_model &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Módulos del Sistema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Código de módulo</a></li>
+      <li class="breadcrumb-item active">rbm_model</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código fuente para rbm_model</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">============================================================================</span>
+<span class="sd">MÓDULO RBM - Máquina de Boltzmann Restringida</span>
+<span class="sd">============================================================================</span>
+
+<span class="sd">Implementación completa de Restricted Boltzmann Machine (RBM) para </span>
+<span class="sd">extracción de características latentes en datos de riesgo crediticio.</span>
+
+<span class="sd">Características:</span>
+<span class="sd">- Implementación desde cero del algoritmo RBM</span>
+<span class="sd">- Contrastive Divergence (CD-k) para entrenamiento</span>
+<span class="sd">- Métricas de evaluación completas</span>
+<span class="sd">- Visualizaciones de diagnóstico</span>
+<span class="sd">- Interfaz interactiva con Streamlit</span>
+
+<span class="sd">Autor: Sistema de Física</span>
+<span class="sd">Versión: 1.0.0</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.express</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">px</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plotly.subplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_subplots</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">MinMaxScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean_squared_error</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">RestrictedBoltzmannMachine</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementación completa de Máquina de Boltzmann Restringida (RBM)</span>
+<span class="sd">    </span>
+<span class="sd">    La RBM es un modelo generativo no supervisado que aprende representaciones</span>
+<span class="sd">    latentes de los datos mediante una arquitectura de dos capas:</span>
+<span class="sd">    - Capa visible: datos de entrada</span>
+<span class="sd">    - Capa oculta: características latentes</span>
+<span class="sd">    </span>
+<span class="sd">    Entrenamiento mediante Contrastive Divergence (CD-k)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">n_visible</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">n_hidden</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+                 <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
+                 <span class="n">n_epochs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+                 <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+                 <span class="n">k_cd</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicializa la RBM</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            n_visible: Número de unidades visibles (dimensión de entrada)</span>
+<span class="sd">            n_hidden: Número de unidades ocultas</span>
+<span class="sd">            learning_rate: Tasa de aprendizaje</span>
+<span class="sd">            n_epochs: Número de épocas de entrenamiento</span>
+<span class="sd">            batch_size: Tamaño del batch</span>
+<span class="sd">            k_cd: Número de pasos de Gibbs sampling en CD</span>
+<span class="sd">            random_state: Semilla aleatoria</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_visible</span> <span class="o">=</span> <span class="n">n_visible</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_hidden</span> <span class="o">=</span> <span class="n">n_hidden</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="n">learning_rate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_epochs</span> <span class="o">=</span> <span class="n">n_epochs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_cd</span> <span class="o">=</span> <span class="n">k_cd</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="n">random_state</span>
+        
+        <span class="c1"># Inicializar generador aleatorio</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+        
+        <span class="c1"># Inicializar parámetros</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_parameters</span><span class="p">()</span>
+        
+        <span class="c1"># Métricas de entrenamiento</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">training_history</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;reconstruction_error&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;pseudo_log_likelihood&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;free_energy&#39;</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="p">}</span>
+        
+        <span class="c1"># Estado del modelo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_trained</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scaler</span> <span class="o">=</span> <span class="kc">None</span>
+        
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Inicializa pesos y sesgos de la RBM&quot;&quot;&quot;</span>
+        <span class="c1"># Pesos: inicialización Xavier/Glorot</span>
+        <span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_visible</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_hidden</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">W</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_visible</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_hidden</span><span class="p">))</span>
+        
+        <span class="c1"># Sesgos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">visible_bias</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_visible</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_bias</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_hidden</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Parámetros inicializados:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Pesos W: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">W</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Sesgo visible: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">visible_bias</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Sesgo oculto: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_bias</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Función sigmoide estable numéricamente&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> 
+                       <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">)),</span>
+                       <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_sample_hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">visible</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Muestrea unidades ocultas dado el estado visible</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            visible: Estado de las unidades visibles</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            hidden_probs: Probabilidades de activación de unidades ocultas</span>
+<span class="sd">            hidden_states: Estados binarios de unidades ocultas</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Calcular probabilidades: P(h_j = 1 | v)</span>
+        <span class="n">hidden_probs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sigmoid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">visible</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">W</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_bias</span><span class="p">)</span>
+        
+        <span class="c1"># Muestrear estados binarios</span>
+        <span class="n">hidden_states</span> <span class="o">=</span> <span class="p">(</span><span class="n">hidden_probs</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">hidden_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">hidden_probs</span><span class="p">,</span> <span class="n">hidden_states</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_sample_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidden</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Muestrea unidades visibles dado el estado oculto</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            hidden: Estado de las unidades ocultas</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            visible_probs: Probabilidades de activación de unidades visibles</span>
+<span class="sd">            visible_states: Estados de unidades visibles</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Calcular probabilidades: P(v_i = 1 | h)</span>
+        <span class="n">visible_probs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sigmoid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">hidden</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">W</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">visible_bias</span><span class="p">)</span>
+        
+        <span class="c1"># Para datos continuos, usar las probabilidades directamente</span>
+        <span class="c1"># Para datos binarios, muestrear estados binarios</span>
+        <span class="n">visible_states</span> <span class="o">=</span> <span class="n">visible_probs</span>  <span class="c1"># Asumiendo datos continuos normalizados</span>
+        
+        <span class="k">return</span> <span class="n">visible_probs</span><span class="p">,</span> <span class="n">visible_states</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_contrastive_divergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implementa el algoritmo Contrastive Divergence (CD-k)</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            batch: Batch de datos de entrenamiento</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Gradientes para actualizar parámetros</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="c1"># Fase positiva</span>
+        <span class="n">pos_hidden_probs</span><span class="p">,</span> <span class="n">pos_hidden_states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_hidden</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+        
+        <span class="c1"># Fase negativa: k pasos de Gibbs sampling</span>
+        <span class="n">neg_visible</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k_cd</span><span class="p">):</span>
+            <span class="n">neg_hidden_probs</span><span class="p">,</span> <span class="n">neg_hidden_states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_hidden</span><span class="p">(</span><span class="n">neg_visible</span><span class="p">)</span>
+            <span class="n">neg_visible_probs</span><span class="p">,</span> <span class="n">neg_visible</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_visible</span><span class="p">(</span><span class="n">neg_hidden_states</span><span class="p">)</span>
+        
+        <span class="c1"># Calcular gradientes</span>
+        <span class="n">pos_associations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">pos_hidden_probs</span><span class="p">)</span>
+        <span class="n">neg_associations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">neg_visible</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">neg_hidden_probs</span><span class="p">)</span>
+        
+        <span class="c1"># Gradientes</span>
+        <span class="n">dW</span> <span class="o">=</span> <span class="p">(</span><span class="n">pos_associations</span> <span class="o">-</span> <span class="n">neg_associations</span><span class="p">)</span> <span class="o">/</span> <span class="n">batch_size</span>
+        <span class="n">dv_bias</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">batch</span> <span class="o">-</span> <span class="n">neg_visible</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">dh_bias</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">pos_hidden_probs</span> <span class="o">-</span> <span class="n">neg_hidden_probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;dW&#39;</span><span class="p">:</span> <span class="n">dW</span><span class="p">,</span>
+            <span class="s1">&#39;dv_bias&#39;</span><span class="p">:</span> <span class="n">dv_bias</span><span class="p">,</span>
+            <span class="s1">&#39;dh_bias&#39;</span><span class="p">:</span> <span class="n">dh_bias</span><span class="p">,</span>
+            <span class="s1">&#39;reconstruction&#39;</span><span class="p">:</span> <span class="n">neg_visible</span>
+        <span class="p">}</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_reconstruction_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calcula el error de reconstrucción&quot;&quot;&quot;</span>
+        <span class="n">hidden_probs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_hidden</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">visible_probs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_visible</span><span class="p">(</span><span class="n">hidden_probs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">visible_probs</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_pseudo_log_likelihood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calcula pseudo log-likelihood como aproximación de la verosimilitud</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: Datos de evaluación</span>
+<span class="sd">            n_samples: Número de muestras para la estimación</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Pseudo log-likelihood promedio</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">n_samples</span><span class="p">:</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">sample_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sample_data</span> <span class="o">=</span> <span class="n">data</span>
+        
+        <span class="n">pll</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">sample_data</span><span class="p">:</span>
+            <span class="c1"># Calcular energía libre para el sample original</span>
+            <span class="n">fe_original</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_free_energy</span><span class="p">(</span><span class="n">sample</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+            
+            <span class="c1"># Para cada dimensión, calcular energía libre con bit flippeado</span>
+            <span class="n">fe_flipped</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)):</span>
+                <span class="n">sample_flipped</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">sample_flipped</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">sample_flipped</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>  <span class="c1"># Flip bit</span>
+                <span class="n">fe_flipped</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_free_energy</span><span class="p">(</span><span class="n">sample_flipped</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+            
+            <span class="c1"># Pseudo log-likelihood para este sample</span>
+            <span class="n">pll</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_visible</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sigmoid</span><span class="p">(</span><span class="n">fe_flipped</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">fe_original</span><span class="p">))</span>
+        
+        <span class="k">return</span> <span class="n">pll</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample_data</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_free_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">visible</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calcula la energía libre: F(v) = -log(sum_h exp(-E(v,h)))</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            visible: Estado visible</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Energía libre</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">wx_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">visible</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">W</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_bias</span>
+        <span class="n">vbias_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">visible</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">visible_bias</span><span class="p">)</span>
+        <span class="n">hidden_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">wx_b</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">hidden_term</span> <span class="o">-</span> <span class="n">vbias_term</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">validation_split</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Entrena la RBM usando Contrastive Divergence</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            X: Datos de entrenamiento</span>
+<span class="sd">            validation_split: Proporción de datos para validación</span>
+<span class="sd">            verbose: Si mostrar progreso</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Historia de entrenamiento</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🚀 INICIANDO ENTRENAMIENTO RBM&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">50</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Arquitectura: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_visible</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_hidden</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hiperparámetros:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Learning rate: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Epochs: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_epochs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Batch size: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - CD steps: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">k_cd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">50</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Normalizar datos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scaler</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span>
+        <span class="n">X_scaled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        
+        <span class="c1"># Split train/validation</span>
+        <span class="k">if</span> <span class="n">validation_split</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="n">validation_split</span><span class="p">,</span> 
+                                            <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">X_train</span> <span class="o">=</span> <span class="n">X_scaled</span>
+            <span class="n">X_val</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        <span class="n">n_batches</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span>
+        
+        <span class="c1"># Entrenamiento</span>
+        <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_epochs</span><span class="p">):</span>
+            <span class="n">epoch_error</span> <span class="o">=</span> <span class="mi">0</span>
+            
+            <span class="c1"># Shuffle datos</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">))</span>
+            <span class="n">X_train_shuffled</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+            
+            <span class="c1"># Procesar batches</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_batches</span><span class="p">):</span>
+                <span class="n">start_idx</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span>
+                <span class="n">end_idx</span> <span class="o">=</span> <span class="n">start_idx</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span>
+                <span class="n">batch</span> <span class="o">=</span> <span class="n">X_train_shuffled</span><span class="p">[</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">]</span>
+                
+                <span class="c1"># Contrastive Divergence</span>
+                <span class="n">gradients</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_contrastive_divergence</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+                
+                <span class="c1"># Actualizar parámetros</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">W</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="n">gradients</span><span class="p">[</span><span class="s1">&#39;dW&#39;</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">visible_bias</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="n">gradients</span><span class="p">[</span><span class="s1">&#39;dv_bias&#39;</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hidden_bias</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="n">gradients</span><span class="p">[</span><span class="s1">&#39;dh_bias&#39;</span><span class="p">]</span>
+                
+                <span class="c1"># Acumular error</span>
+                <span class="n">epoch_error</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_reconstruction_error</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+            
+            <span class="c1"># Métricas de época</span>
+            <span class="n">avg_error</span> <span class="o">=</span> <span class="n">epoch_error</span> <span class="o">/</span> <span class="n">n_batches</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">training_history</span><span class="p">[</span><span class="s1">&#39;reconstruction_error&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">avg_error</span><span class="p">)</span>
+            
+            <span class="c1"># Calcular métricas adicionales cada 10 épocas</span>
+            <span class="k">if</span> <span class="n">epoch</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">epoch</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_epochs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">X_val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">val_error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_reconstruction_error</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
+                    <span class="n">pll</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_pseudo_log_likelihood</span><span class="p">(</span><span class="n">X_val</span><span class="p">[:</span><span class="mi">100</span><span class="p">])</span>  <span class="c1"># Muestra pequeña</span>
+                    <span class="n">free_energy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_free_energy</span><span class="p">(</span><span class="n">X_val</span><span class="p">[:</span><span class="mi">100</span><span class="p">]))</span>
+                    
+                    <span class="bp">self</span><span class="o">.</span><span class="n">training_history</span><span class="p">[</span><span class="s1">&#39;pseudo_log_likelihood&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pll</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">training_history</span><span class="p">[</span><span class="s1">&#39;free_energy&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">free_energy</span><span class="p">)</span>
+                    
+                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Época </span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">:</span><span class="s2">3d</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_epochs</span><span class="si">}</span><span class="s2"> | &quot;</span>
+                              <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">avg_error</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> | &quot;</span>
+                              <span class="sa">f</span><span class="s2">&quot;Val Error: </span><span class="si">{</span><span class="n">val_error</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> | &quot;</span>
+                              <span class="sa">f</span><span class="s2">&quot;PLL: </span><span class="si">{</span><span class="n">pll</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Época </span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">:</span><span class="s2">3d</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_epochs</span><span class="si">}</span><span class="s2"> | &quot;</span>
+                              <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">avg_error</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_trained</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">✅ ENTRENAMIENTO COMPLETADO&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error final: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">training_history</span><span class="p">[</span><span class="s1">&#39;reconstruction_error&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_history</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extrae características de la capa oculta</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            X: Datos de entrada</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Activaciones de la capa oculta</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_trained</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;El modelo debe ser entrenado primero&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Normalizar usando el mismo scaler del entrenamiento</span>
+        <span class="n">X_scaled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        
+        <span class="c1"># Obtener activaciones ocultas</span>
+        <span class="n">hidden_probs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_hidden</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">hidden_probs</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">reconstruct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reconstruye datos desde la representación oculta</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            X: Datos de entrada</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Datos reconstruidos</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_trained</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;El modelo debe ser entrenado primero&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Normalizar</span>
+        <span class="n">X_scaled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        
+        <span class="c1"># Codificar y decodificar</span>
+        <span class="n">hidden_probs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_hidden</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">)</span>
+        <span class="n">visible_probs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_visible</span><span class="p">(</span><span class="n">hidden_probs</span><span class="p">)</span>
+        
+        <span class="c1"># Desnormalizar</span>
+        <span class="n">reconstructed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaler</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">visible_probs</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">reconstructed</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">n_gibbs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Genera muestras sintéticas usando Gibbs sampling</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            n_samples: Número de muestras a generar</span>
+<span class="sd">            n_gibbs: Número de pasos de Gibbs sampling</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Muestras generadas</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_trained</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;El modelo debe ser entrenado primero&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Inicializar con ruido aleatorio</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_visible</span><span class="p">))</span>
+        
+        <span class="c1"># Gibbs sampling</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_gibbs</span><span class="p">):</span>
+            <span class="n">hidden_probs</span><span class="p">,</span> <span class="n">hidden_states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_hidden</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+            <span class="n">visible_probs</span><span class="p">,</span> <span class="n">samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_visible</span><span class="p">(</span><span class="n">hidden_states</span><span class="p">)</span>
+        
+        <span class="c1"># Desnormalizar</span>
+        <span class="n">samples_denorm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaler</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">samples_denorm</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Guarda el modelo entrenado&quot;&quot;&quot;</span>
+        <span class="n">model_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;W&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">W</span><span class="p">,</span>
+            <span class="s1">&#39;visible_bias&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">visible_bias</span><span class="p">,</span>
+            <span class="s1">&#39;hidden_bias&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_bias</span><span class="p">,</span>
+            <span class="s1">&#39;n_visible&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_visible</span><span class="p">,</span>
+            <span class="s1">&#39;n_hidden&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_hidden</span><span class="p">,</span>
+            <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span><span class="p">,</span>
+            <span class="s1">&#39;n_epochs&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_epochs</span><span class="p">,</span>
+            <span class="s1">&#39;batch_size&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span>
+            <span class="s1">&#39;k_cd&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_cd</span><span class="p">,</span>
+            <span class="s1">&#39;random_state&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">,</span>
+            <span class="s1">&#39;training_history&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_history</span><span class="p">,</span>
+            <span class="s1">&#39;is_trained&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_trained</span><span class="p">,</span>
+            <span class="s1">&#39;scaler&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaler</span><span class="p">,</span>
+            <span class="s1">&#39;feature_names&#39;</span><span class="p">:</span> <span class="n">feature_names</span><span class="p">,</span>
+            <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="p">}</span>
+        
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filepath</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">model_data</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Modelo guardado en: </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_model</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Carga un modelo entrenado&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">model_data</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        
+        <span class="c1"># Crear instancia</span>
+        <span class="n">rbm</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">n_visible</span><span class="o">=</span><span class="n">model_data</span><span class="p">[</span><span class="s1">&#39;n_visible&#39;</span><span class="p">],</span>
+            <span class="n">n_hidden</span><span class="o">=</span><span class="n">model_data</span><span class="p">[</span><span class="s1">&#39;n_hidden&#39;</span><span class="p">],</span>
+            <span class="n">learning_rate</span><span class="o">=</span><span class="n">model_data</span><span class="p">[</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">],</span>
+            <span class="n">n_epochs</span><span class="o">=</span><span class="n">model_data</span><span class="p">[</span><span class="s1">&#39;n_epochs&#39;</span><span class="p">],</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="n">model_data</span><span class="p">[</span><span class="s1">&#39;batch_size&#39;</span><span class="p">],</span>
+            <span class="n">k_cd</span><span class="o">=</span><span class="n">model_data</span><span class="p">[</span><span class="s1">&#39;k_cd&#39;</span><span class="p">],</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="n">model_data</span><span class="p">[</span><span class="s1">&#39;random_state&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Restaurar parámetros</span>
+        <span class="n">rbm</span><span class="o">.</span><span class="n">W</span> <span class="o">=</span> <span class="n">model_data</span><span class="p">[</span><span class="s1">&#39;W&#39;</span><span class="p">]</span>
+        <span class="n">rbm</span><span class="o">.</span><span class="n">visible_bias</span> <span class="o">=</span> <span class="n">model_data</span><span class="p">[</span><span class="s1">&#39;visible_bias&#39;</span><span class="p">]</span>
+        <span class="n">rbm</span><span class="o">.</span><span class="n">hidden_bias</span> <span class="o">=</span> <span class="n">model_data</span><span class="p">[</span><span class="s1">&#39;hidden_bias&#39;</span><span class="p">]</span>
+        <span class="n">rbm</span><span class="o">.</span><span class="n">training_history</span> <span class="o">=</span> <span class="n">model_data</span><span class="p">[</span><span class="s1">&#39;training_history&#39;</span><span class="p">]</span>
+        <span class="n">rbm</span><span class="o">.</span><span class="n">is_trained</span> <span class="o">=</span> <span class="n">model_data</span><span class="p">[</span><span class="s1">&#39;is_trained&#39;</span><span class="p">]</span>
+        <span class="n">rbm</span><span class="o">.</span><span class="n">scaler</span> <span class="o">=</span> <span class="n">model_data</span><span class="p">[</span><span class="s1">&#39;scaler&#39;</span><span class="p">]</span>
+        <span class="n">rbm</span><span class="o">.</span><span class="n">feature_names</span> <span class="o">=</span> <span class="n">model_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;feature_names&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Modelo cargado desde: </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rbm</span><span class="o">.</span><span class="n">feature_names</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Características: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">rbm</span><span class="o">.</span><span class="n">feature_names</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rbm</span>
+
+<div class="viewcode-block" id="create_rbm_visualizations">
+<a class="viewcode-back" href="../api_reference.html#rbm_model.create_rbm_visualizations">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_rbm_visualizations</span><span class="p">(</span><span class="n">rbm</span><span class="p">:</span> <span class="n">RestrictedBoltzmannMachine</span><span class="p">,</span> 
+                            <span class="n">X_original</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                            <span class="n">feature_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Crea visualizaciones de diagnóstico para la RBM</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        rbm: Modelo RBM entrenado</span>
+<span class="sd">        X_original: Datos originales</span>
+<span class="sd">        feature_names: Nombres de las características</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Diccionario con figuras de Plotly</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">figures</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="c1"># 1. Curvas de aprendizaje</span>
+    <span class="k">if</span> <span class="n">rbm</span><span class="o">.</span><span class="n">training_history</span><span class="p">[</span><span class="s1">&#39;reconstruction_error&#39;</span><span class="p">]:</span>
+        <span class="n">fig_learning</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
+        
+        <span class="n">epochs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">rbm</span><span class="o">.</span><span class="n">training_history</span><span class="p">[</span><span class="s1">&#39;reconstruction_error&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">fig_learning</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">rbm</span><span class="o">.</span><span class="n">training_history</span><span class="p">[</span><span class="s1">&#39;reconstruction_error&#39;</span><span class="p">],</span>
+            <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;lines+markers&#39;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Error de Reconstrucción&#39;</span><span class="p">,</span>
+            <span class="n">line</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#e74c3c&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="p">))</span>
+        
+        <span class="n">fig_learning</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Curva de Aprendizaje - Error de Reconstrucción&quot;</span><span class="p">,</span>
+            <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Época&quot;</span><span class="p">,</span>
+            <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Error MSE&quot;</span><span class="p">,</span>
+            <span class="n">template</span><span class="o">=</span><span class="s2">&quot;plotly_white&quot;</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mi">400</span>
+        <span class="p">)</span>
+        
+        <span class="n">figures</span><span class="p">[</span><span class="s1">&#39;learning_curve&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fig_learning</span>
+    
+    <span class="c1"># 2. Heatmap de pesos</span>
+    <span class="n">fig_weights</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">go</span><span class="o">.</span><span class="n">Heatmap</span><span class="p">(</span>
+        <span class="n">z</span><span class="o">=</span><span class="n">rbm</span><span class="o">.</span><span class="n">W</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+        <span class="n">colorscale</span><span class="o">=</span><span class="s1">&#39;RdBu&#39;</span><span class="p">,</span>
+        <span class="n">zmid</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">showscale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">colorbar</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Peso&quot;</span><span class="p">)</span>
+    <span class="p">))</span>
+    
+    <span class="n">fig_weights</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Matriz de Pesos W (</span><span class="si">{</span><span class="n">rbm</span><span class="o">.</span><span class="n">n_visible</span><span class="si">}</span><span class="s2"> × </span><span class="si">{</span><span class="n">rbm</span><span class="o">.</span><span class="n">n_hidden</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+        <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Unidades Visibles&quot;</span><span class="p">,</span>
+        <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Unidades Ocultas&quot;</span><span class="p">,</span>
+        <span class="n">template</span><span class="o">=</span><span class="s2">&quot;plotly_white&quot;</span><span class="p">,</span>
+        <span class="n">height</span><span class="o">=</span><span class="mi">500</span>
+    <span class="p">)</span>
+    
+    <span class="n">figures</span><span class="p">[</span><span class="s1">&#39;weights_heatmap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fig_weights</span>
+    
+    <span class="c1"># 3. Distribución de activaciones ocultas</span>
+    <span class="k">if</span> <span class="n">rbm</span><span class="o">.</span><span class="n">is_trained</span><span class="p">:</span>
+        <span class="n">hidden_activations</span> <span class="o">=</span> <span class="n">rbm</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_original</span><span class="p">)</span>
+        
+        <span class="n">fig_activations</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
+        
+        <span class="c1"># Histograma de activaciones promedio por unidad oculta</span>
+        <span class="n">mean_activations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">hidden_activations</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="n">fig_activations</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Histogram</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">mean_activations</span><span class="p">,</span>
+            <span class="n">nbinsx</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Activaciones Promedio&#39;</span><span class="p">,</span>
+            <span class="n">marker_color</span><span class="o">=</span><span class="s1">&#39;#3498db&#39;</span><span class="p">,</span>
+            <span class="n">opacity</span><span class="o">=</span><span class="mf">0.7</span>
+        <span class="p">))</span>
+        
+        <span class="n">fig_activations</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Distribución de Activaciones de Unidades Ocultas&quot;</span><span class="p">,</span>
+            <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Activación Promedio&quot;</span><span class="p">,</span>
+            <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Frecuencia&quot;</span><span class="p">,</span>
+            <span class="n">template</span><span class="o">=</span><span class="s2">&quot;plotly_white&quot;</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mi">400</span>
+        <span class="p">)</span>
+        
+        <span class="n">figures</span><span class="p">[</span><span class="s1">&#39;activations_dist&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fig_activations</span>
+    
+    <span class="c1"># 4. Comparación Original vs Reconstruido</span>
+    <span class="k">if</span> <span class="n">rbm</span><span class="o">.</span><span class="n">is_trained</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_original</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Tomar una muestra pequeña para visualización</span>
+        <span class="n">sample_size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_original</span><span class="p">))</span>
+        <span class="n">sample_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_original</span><span class="p">),</span> <span class="n">sample_size</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">X_sample</span> <span class="o">=</span> <span class="n">X_original</span><span class="p">[</span><span class="n">sample_indices</span><span class="p">]</span>
+        
+        <span class="n">X_reconstructed</span> <span class="o">=</span> <span class="n">rbm</span><span class="o">.</span><span class="n">reconstruct</span><span class="p">(</span><span class="n">X_sample</span><span class="p">)</span>
+        
+        <span class="c1"># Crear subplots para comparar algunas características</span>
+        <span class="n">n_features_to_show</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">X_original</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">feature_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">X_original</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n_features_to_show</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        
+        <span class="n">fig_comparison</span> <span class="o">=</span> <span class="n">make_subplots</span><span class="p">(</span>
+            <span class="n">rows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">subplot_titles</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Característica </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">feature_indices</span><span class="p">],</span>
+            <span class="n">vertical_spacing</span><span class="o">=</span><span class="mf">0.1</span>
+        <span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">feat_idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">feature_indices</span><span class="p">):</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="p">(</span><span class="n">idx</span> <span class="o">//</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="p">(</span><span class="n">idx</span> <span class="o">%</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+            
+            <span class="c1"># Original</span>
+            <span class="n">fig_comparison</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+                <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                    <span class="n">x</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_sample</span><span class="p">))),</span>
+                    <span class="n">y</span><span class="o">=</span><span class="n">X_sample</span><span class="p">[:,</span> <span class="n">feat_idx</span><span class="p">],</span>
+                    <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;markers&#39;</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span><span class="p">,</span>
+                    <span class="n">marker</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#e74c3c&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
+                    <span class="n">showlegend</span><span class="o">=</span><span class="p">(</span><span class="n">idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="p">),</span>
+                <span class="n">row</span><span class="o">=</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="n">col</span>
+            <span class="p">)</span>
+            
+            <span class="c1"># Reconstruido</span>
+            <span class="n">fig_comparison</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+                <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                    <span class="n">x</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_sample</span><span class="p">))),</span>
+                    <span class="n">y</span><span class="o">=</span><span class="n">X_reconstructed</span><span class="p">[:,</span> <span class="n">feat_idx</span><span class="p">],</span>
+                    <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;markers&#39;</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Reconstruido&#39;</span><span class="p">,</span>
+                    <span class="n">marker</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#3498db&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
+                    <span class="n">showlegend</span><span class="o">=</span><span class="p">(</span><span class="n">idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="p">),</span>
+                <span class="n">row</span><span class="o">=</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="n">col</span>
+            <span class="p">)</span>
+        
+        <span class="n">fig_comparison</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Comparación: Datos Originales vs Reconstruidos&quot;</span><span class="p">,</span>
+            <span class="n">template</span><span class="o">=</span><span class="s2">&quot;plotly_white&quot;</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mi">600</span>
+        <span class="p">)</span>
+        
+        <span class="n">figures</span><span class="p">[</span><span class="s1">&#39;reconstruction_comparison&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fig_comparison</span>
+    
+    <span class="k">return</span> <span class="n">figures</span></div>
+
+
+<div class="viewcode-block" id="render_rbm_module">
+<a class="viewcode-back" href="../api_reference.html#rbm_model.render_rbm_module">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">render_rbm_module</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Renderiza el módulo completo de RBM en Streamlit&quot;&quot;&quot;</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;⚡ Máquina de Boltzmann Restringida (RBM)&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### *Extracción de características latentes mediante aprendizaje generativo*&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Información teórica</span>
+    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">expander</span><span class="p">(</span><span class="s2">&quot;📚 ¿Qué es una RBM?&quot;</span><span class="p">,</span> <span class="n">expanded</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        Una **Máquina de Boltzmann Restringida (RBM)** es un modelo generativo no supervisado </span>
+<span class="s2">        que aprende representaciones latentes de los datos.</span>
+<span class="s2">        </span>
+<span class="s2">        **Arquitectura:**</span>
+<span class="s2">        - **Capa Visible:** Representa los datos de entrada</span>
+<span class="s2">        - **Capa Oculta:** Captura características latentes</span>
+<span class="s2">        - **Sin conexiones** dentro de cada capa (restricción)</span>
+<span class="s2">        - **Conexiones bidireccionales** entre capas</span>
+<span class="s2">        </span>
+<span class="s2">        **Función de Energía:**</span>
+<span class="s2">        ```</span>
+<span class="s2">        E(v,h) = -∑ᵢ aᵢvᵢ - ∑ⱼ bⱼhⱼ - ∑ᵢⱼ vᵢWᵢⱼhⱼ</span>
+<span class="s2">        ```</span>
+<span class="s2">        </span>
+<span class="s2">        **Entrenamiento:**</span>
+<span class="s2">        - Algoritmo: **Contrastive Divergence (CD-k)**</span>
+<span class="s2">        - Objetivo: Maximizar la verosimilitud de los datos</span>
+<span class="s2">        - Aproximación: k pasos de Gibbs sampling</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Verificar datos</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;data/processed/datos_credito_hipotecario_realista.csv&quot;</span><span class="p">):</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;❌ No hay datos disponibles. Ve a &#39;Generar Datos&#39; primero.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="c1"># Cargar datos</span>
+    <span class="nd">@st</span><span class="o">.</span><span class="n">cache_data</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_data</span><span class="p">():</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/processed/datos_credito_hipotecario_realista.csv&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">df</span>
+    
+    <span class="n">df</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">()</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Datos cargados: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> registros, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> variables&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Configuración de la RBM</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;⚙️ Configuración de la RBM&quot;</span><span class="p">)</span>
+    
+    <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;**Arquitectura:**&quot;</span><span class="p">)</span>
+        <span class="n">n_hidden</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">slider</span><span class="p">(</span>
+            <span class="s2">&quot;Unidades ocultas&quot;</span><span class="p">,</span>
+            <span class="n">min_value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">max_value</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+            <span class="n">step</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Número de neuronas en la capa oculta&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="n">learning_rate</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">select_slider</span><span class="p">(</span>
+            <span class="s2">&quot;Tasa de aprendizaje&quot;</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span>
+            <span class="n">value</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Velocidad de actualización de parámetros&quot;</span>
+        <span class="p">)</span>
+    
+    <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;**Entrenamiento:**&quot;</span><span class="p">)</span>
+        <span class="n">n_epochs</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">slider</span><span class="p">(</span>
+            <span class="s2">&quot;Épocas&quot;</span><span class="p">,</span>
+            <span class="n">min_value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">max_value</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+            <span class="n">step</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Número de iteraciones de entrenamiento&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">select_slider</span><span class="p">(</span>
+            <span class="s2">&quot;Tamaño de batch&quot;</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">],</span>
+            <span class="n">value</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Número de muestras por batch&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="n">k_cd</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">slider</span><span class="p">(</span>
+            <span class="s2">&quot;Pasos CD&quot;</span><span class="p">,</span>
+            <span class="n">min_value</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">max_value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Pasos de Gibbs sampling en Contrastive Divergence&quot;</span>
+        <span class="p">)</span>
+    
+    <span class="c1"># Selección de características</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📊 Selección de Características&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Filtrar solo columnas numéricas</span>
+    <span class="n">numeric_columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    
+    <span class="c1"># Excluir algunas columnas problemáticas</span>
+    <span class="n">exclude_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;nivel_riesgo_cod&#39;</span><span class="p">,</span> <span class="s1">&#39;rechazo_automatico&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;nivel_riesgo_cod&#39;</span> <span class="ow">in</span> <span class="n">numeric_columns</span> <span class="k">else</span> <span class="p">[]</span>
+    <span class="n">numeric_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">numeric_columns</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_cols</span><span class="p">]</span>
+    
+    <span class="n">selected_features</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">multiselect</span><span class="p">(</span>
+        <span class="s2">&quot;Selecciona las características para entrenar la RBM:&quot;</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">numeric_columns</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">numeric_columns</span><span class="p">[:</span><span class="mi">15</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">numeric_columns</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">15</span> <span class="k">else</span> <span class="n">numeric_columns</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Selecciona las variables numéricas para el entrenamiento&quot;</span>
+    <span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">selected_features</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;⚠️ Selecciona al menos una característica.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="c1"># Preparar datos</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">selected_features</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">n_visible</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_features</span><span class="p">)</span>
+    
+    <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📊 Datos preparados: </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> muestras × </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> características&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Entrenamiento</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;🚀 Entrenamiento de la RBM&quot;</span><span class="p">)</span>
+    
+    <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;🎯 Entrenar RBM&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;⏳ Entrenando Máquina de Boltzmann...&quot;</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c1"># Crear RBM</span>
+                    <span class="n">rbm</span> <span class="o">=</span> <span class="n">RestrictedBoltzmannMachine</span><span class="p">(</span>
+                        <span class="n">n_visible</span><span class="o">=</span><span class="n">n_visible</span><span class="p">,</span>
+                        <span class="n">n_hidden</span><span class="o">=</span><span class="n">n_hidden</span><span class="p">,</span>
+                        <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span>
+                        <span class="n">n_epochs</span><span class="o">=</span><span class="n">n_epochs</span><span class="p">,</span>
+                        <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+                        <span class="n">k_cd</span><span class="o">=</span><span class="n">k_cd</span><span class="p">,</span>
+                        <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+                    <span class="p">)</span>
+                    
+                    <span class="c1"># Entrenar</span>
+                    <span class="n">history</span> <span class="o">=</span> <span class="n">rbm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">validation_split</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                    
+                    <span class="c1"># Guardar modelo con nombres de características</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s2">&quot;models/rbm&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">model_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;models/rbm/rbm_h</span><span class="si">{</span><span class="n">n_hidden</span><span class="si">}</span><span class="s2">_lr</span><span class="si">{</span><span class="n">learning_rate</span><span class="si">}</span><span class="s2">_e</span><span class="si">{</span><span class="n">n_epochs</span><span class="si">}</span><span class="s2">.pkl&quot;</span>
+                    <span class="n">rbm</span><span class="o">.</span><span class="n">save_model</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="n">selected_features</span><span class="p">)</span>
+                    
+                    <span class="c1"># Guardar en session state</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">rbm_model</span> <span class="o">=</span> <span class="n">rbm</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">rbm_features</span> <span class="o">=</span> <span class="n">selected_features</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">rbm_data</span> <span class="o">=</span> <span class="n">X</span>
+                    
+                    <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;✅ RBM entrenada exitosamente!&quot;</span><span class="p">)</span>
+                    
+                    <span class="c1"># Mostrar métricas finales</span>
+                    <span class="n">col_m1</span><span class="p">,</span> <span class="n">col_m2</span><span class="p">,</span> <span class="n">col_m3</span><span class="p">,</span> <span class="n">col_m4</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+                    
+                    <span class="k">with</span> <span class="n">col_m1</span><span class="p">:</span>
+                        <span class="n">final_error</span> <span class="o">=</span> <span class="n">history</span><span class="p">[</span><span class="s1">&#39;reconstruction_error&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Error Reconstrucción&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">final_error</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    
+                    <span class="k">with</span> <span class="n">col_m2</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">history</span><span class="p">[</span><span class="s1">&#39;pseudo_log_likelihood&#39;</span><span class="p">]:</span>
+                            <span class="n">final_pll</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">history</span><span class="p">[</span><span class="s1">&#39;pseudo_log_likelihood&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Pseudo Log-Likelihood&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">final_pll</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    
+                    <span class="k">with</span> <span class="n">col_m3</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">history</span><span class="p">[</span><span class="s1">&#39;free_energy&#39;</span><span class="p">]:</span>
+                            <span class="n">final_fe</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">history</span><span class="p">[</span><span class="s1">&#39;free_energy&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Energía Libre&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">final_fe</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    
+                    <span class="k">with</span> <span class="n">col_m4</span><span class="p">:</span>
+                        <span class="c1"># Calcular sparsity de activaciones</span>
+                        <span class="n">hidden_act</span> <span class="o">=</span> <span class="n">rbm</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">[:</span><span class="mi">1000</span><span class="p">])</span>
+                        <span class="n">sparsity</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">hidden_act</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">))</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Sparsity&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sparsity</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Error durante el entrenamiento: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+    
+    <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+        <span class="c1"># Cargar modelo existente</span>
+        <span class="n">model_files</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;models/rbm&quot;</span><span class="p">):</span>
+            <span class="n">model_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s2">&quot;models/rbm&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.pkl&#39;</span><span class="p">)]</span>
+        
+        <span class="k">if</span> <span class="n">model_files</span><span class="p">:</span>
+            <span class="n">selected_model</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+                <span class="s2">&quot;O cargar modelo existente:&quot;</span><span class="p">,</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">model_files</span><span class="p">,</span>
+                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Selecciona un modelo RBM previamente entrenado&quot;</span>
+            <span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;📂 Cargar Modelo&quot;</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">model_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;models/rbm/</span><span class="si">{</span><span class="n">selected_model</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="n">rbm</span> <span class="o">=</span> <span class="n">RestrictedBoltzmannMachine</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+                    
+                    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">rbm_model</span> <span class="o">=</span> <span class="n">rbm</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">rbm_features</span> <span class="o">=</span> <span class="n">selected_features</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">rbm_data</span> <span class="o">=</span> <span class="n">X</span>
+                    
+                    <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;✅ Modelo cargado exitosamente!&quot;</span><span class="p">)</span>
+                    
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Error cargando modelo: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Visualizaciones y análisis</span>
+    <span class="k">if</span> <span class="s1">&#39;rbm_model&#39;</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+        <span class="n">rbm</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">rbm_model</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">divider</span><span class="p">()</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📊 Análisis y Visualizaciones&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Crear visualizaciones</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;🎨 Generando visualizaciones...&quot;</span><span class="p">):</span>
+            <span class="n">figures</span> <span class="o">=</span> <span class="n">create_rbm_visualizations</span><span class="p">(</span><span class="n">rbm</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">selected_features</span><span class="p">)</span>
+        
+        <span class="c1"># Mostrar visualizaciones en tabs</span>
+        <span class="n">tab1</span><span class="p">,</span> <span class="n">tab2</span><span class="p">,</span> <span class="n">tab3</span><span class="p">,</span> <span class="n">tab4</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span>
+            <span class="s2">&quot;📈 Aprendizaje&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;🎨 Pesos&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;📊 Activaciones&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;🔄 Reconstrucción&quot;</span>
+        <span class="p">])</span>
+        
+        <span class="k">with</span> <span class="n">tab1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;learning_curve&#39;</span> <span class="ow">in</span> <span class="n">figures</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">figures</span><span class="p">[</span><span class="s1">&#39;learning_curve&#39;</span><span class="p">],</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No hay datos de entrenamiento disponibles.&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">tab2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;weights_heatmap&#39;</span> <span class="ow">in</span> <span class="n">figures</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">figures</span><span class="p">[</span><span class="s1">&#39;weights_heatmap&#39;</span><span class="p">],</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                
+                <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                **Interpretación del Heatmap de Pesos:**</span>
+<span class="s2">                - **Colores rojos:** Conexiones positivas (activación conjunta)</span>
+<span class="s2">                - **Colores azules:** Conexiones negativas (inhibición)</span>
+<span class="s2">                - **Patrones:** Indican qué características se agrupan</span>
+<span class="s2">                &quot;&quot;&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">tab3</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;activations_dist&#39;</span> <span class="ow">in</span> <span class="n">figures</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">figures</span><span class="p">[</span><span class="s1">&#39;activations_dist&#39;</span><span class="p">],</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                
+                <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                **Análisis de Activaciones:**</span>
+<span class="s2">                - Distribución de activaciones promedio de unidades ocultas</span>
+<span class="s2">                - Valores cerca de 0.5 indican unidades balanceadas</span>
+<span class="s2">                - Valores extremos (0 o 1) pueden indicar unidades especializadas</span>
+<span class="s2">                &quot;&quot;&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">tab4</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;reconstruction_comparison&#39;</span> <span class="ow">in</span> <span class="n">figures</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">figures</span><span class="p">[</span><span class="s1">&#39;reconstruction_comparison&#39;</span><span class="p">],</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                
+                <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                **Calidad de Reconstrucción:**</span>
+<span class="s2">                - Comparación entre datos originales y reconstruidos</span>
+<span class="s2">                - Puntos cercanos indican buena reconstrucción</span>
+<span class="s2">                - Dispersión indica pérdida de información</span>
+<span class="s2">                &quot;&quot;&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Extracción de características</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">divider</span><span class="p">()</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;🔧 Extracción de Características&quot;</span><span class="p">)</span>
+        
+        <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;🎯 Extraer Características RBM&quot;</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;⚡ Extrayendo características latentes...&quot;</span><span class="p">):</span>
+                    <span class="c1"># Extraer características</span>
+                    <span class="n">hidden_features</span> <span class="o">=</span> <span class="n">rbm</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+                    
+                    <span class="c1"># Crear DataFrame con características originales + RBM</span>
+                    <span class="n">feature_names_rbm</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;RBM_H</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">hidden_features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+                    <span class="n">df_rbm</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">hidden_features</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">feature_names_rbm</span><span class="p">)</span>
+                    
+                    <span class="c1"># Combinar con datos originales</span>
+                    <span class="n">df_enhanced</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">df_rbm</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    
+                    <span class="c1"># Guardar dataset enriquecido</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s2">&quot;data/processed&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">enhanced_path</span> <span class="o">=</span> <span class="s2">&quot;data/processed/datos_con_rbm.csv&quot;</span>
+                    <span class="n">df_enhanced</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">enhanced_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                    
+                    <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Características extraídas: </span><span class="si">{</span><span class="n">hidden_features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> nuevas variables&quot;</span><span class="p">)</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;💾 Dataset enriquecido guardado: </span><span class="si">{</span><span class="n">enhanced_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    
+                    <span class="c1"># Mostrar estadísticas</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Características RBM&quot;</span><span class="p">,</span> <span class="n">hidden_features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Dataset Total&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">df_enhanced</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> variables&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;🎲 Generar Muestras Sintéticas&quot;</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;🎲 Generando muestras sintéticas...&quot;</span><span class="p">):</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="c1"># Generar muestras</span>
+                        <span class="n">synthetic_samples</span> <span class="o">=</span> <span class="n">rbm</span><span class="o">.</span><span class="n">generate_samples</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_gibbs</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+                        
+                        <span class="c1"># Crear DataFrame</span>
+                        <span class="n">df_synthetic</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">synthetic_samples</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">selected_features</span><span class="p">)</span>
+                        
+                        <span class="c1"># Guardar</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s2">&quot;data/synthetic&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        <span class="n">synthetic_path</span> <span class="o">=</span> <span class="s2">&quot;data/synthetic/rbm_synthetic_samples.csv&quot;</span>
+                        <span class="n">df_synthetic</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">synthetic_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                        
+                        <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;✅ Muestras sintéticas generadas!&quot;</span><span class="p">)</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;💾 Guardadas en: </span><span class="si">{</span><span class="n">synthetic_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        
+                        <span class="c1"># Mostrar muestra</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">df_synthetic</span><span class="o">.</span><span class="n">head</span><span class="p">(),</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Error generando muestras: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Para testing</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Módulo RBM cargado correctamente&quot;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2024, Andrés Fernando Gómez Rojas.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

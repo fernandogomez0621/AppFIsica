@@ -1,0 +1,1113 @@
+﻿🚀 PROMPT COMPLETO Y DEFINITIVO - App de Riesgo Crediticio con RBM y RAG Educativo
+________________
+
+
+📋 DESCRIPCIÓN GENERAL
+Desarrolla una aplicación completa de análisis y predicción de riesgo crediticio hipotecario para Colombia usando Streamlit, totalmente modularizada, documentada con Sphinx, con manual de instalación, que incluye:
+1. Simulación y análisis de datos crediticios
+2. Máquina de Boltzmann Restringida (RBM) como extractor de características
+3. Modelos de clasificación supervisada
+4. Sistema RAG educativo con Groq para aprender sobre RBMs usando papers científicos
+________________
+
+
+🎯 OBJETIVO DEL PROYECTO
+Crear un sistema integral que permita:
+* Generar/cargar datos de solicitudes de crédito hipotecario
+* Realizar análisis exploratorio avanzado
+* Aplicar ingeniería de características automática
+* Entrenar modelos predictivos con RBM + clasificadores
+* Predecir riesgo crediticio en nuevos solicitantes
+* Aprender sobre Máquinas de Boltzmann mediante un asistente RAG con papers científicos
+________________
+
+
+📊 DATOS Y VARIABLES
+Variables de Entrada (Simuladas/Cargadas)
+Financieras del Crédito:
+* valor_inmueble: Valor comercial de la propiedad (COP)
+* monto_credito: Monto solicitado del préstamo (COP)
+* cuota_inicial: Porcentaje de cuota inicial (%)
+* plazo_credito: Plazo del crédito en años
+* tasa_interes: Tasa de interés anual (%)
+Perfil Financiero del Solicitante:
+* puntaje_datacredito: Score crediticio (150-950)
+* salario_mensual: Ingreso mensual (COP)
+* egresos_mensuales: Gastos mensuales totales (COP)
+* saldo_promedio_banco: Saldo promedio últimos 6 meses (COP)
+* patrimonio_total: Patrimonio neto (COP)
+* numero_propiedades: Cantidad de propiedades que posee
+* numero_demandas: Demandas legales por dinero
+Historial Laboral:
+* tipo_empleo: Formal / Informal / Independiente
+* antiguedad_empleo: Años en el empleo actual
+Educación y Demografía:
+* nivel_educacion: Bachiller / Técnico / Profesional / Posgrado
+* edad: Edad del solicitante
+* ciudad: Ciudad de residencia (Colombia)
+* estrato_socioeconomico: Estrato 1-6
+* estado_civil: Soltero / Casado / Unión Libre / Divorciado
+* personas_a_cargo: Número de dependientes
+Características del Inmueble:
+* anos_inmueble: Antigüedad de la propiedad
+Variable Objetivo:
+* nivel_riesgo: Bajo / Medio / Alto
+________________
+
+
+🏗️ ARQUITECTURA COMPLETA DE LA APLICACIÓN
+Estructura de Archivos:
+proyecto_riesgo_crediticio/
+│
+├── app.py                          # Aplicación principal Streamlit
+├── requirements.txt                # Dependencias
+├── README.md                       # Documentación principal
+├── setup.py                        # Instalación del paquete
+├── .streamlit/
+│   └── secrets.toml               # API keys (GROQ_API_KEY)
+│
+├── src/                           # Código fuente modularizado
+│   ├── __init__.py
+│   ├── data_generator.py          # Módulo 1: Generación de datos
+│   ├── data_processor.py          # Módulo 2: Carga y validación
+│   ├── univariate_analysis.py     # Módulo 3: Análisis univariado
+│   ├── bivariate_analysis.py      # Módulo 4: Análisis bivariado
+│   ├── feature_engineering.py     # Módulo 5: Ingeniería de características
+│   ├── clustering.py              # Módulo 6: Clustering
+│   ├── rbm_model.py               # Módulo 7: Máquina de Boltzmann
+│   ├── supervised_models.py       # Módulo 8: Modelos supervisados
+│   ├── prediction.py              # Módulo 9: Sistema de predicción
+│   ├── retraining.py              # Módulo 10: Re-entrenamiento
+│   ├── pdf_processor.py           # Módulo 11: Procesamiento de PDFs (PyMuPDF)
+│   ├── educational_rag.py         # Módulo 12: Sistema RAG educativo
+│   └── utils.py                   # Funciones auxiliares
+│
+├── data/                          # Datos
+│   ├── raw/                       # Datos originales
+│   ├── processed/                 # Datos procesados
+│   └── synthetic/                 # Datos sintéticos
+│
+├── models/                        # Modelos entrenados
+│   ├── rbm/                       # Modelos RBM
+│   ├── supervised/                # Modelos supervisados
+│   └── versions/                  # Versionado de modelos
+│
+├── articles/                      # 📚 PAPERS CIENTÍFICOS (PDFs)
+│   ├── (PDFs subidos por el usuario)
+│   └── README.md                  # Instrucciones para agregar papers
+│
+├── chroma_rbm_db/                 # Base de datos vectorial (ChromaDB)
+│
+├── docs/                          # Documentación Sphinx
+│   ├── source/
+│   │   ├── conf.py
+│   │   ├── index.rst
+│   │   ├── installation.rst
+│   │   ├── modules.rst
+│   │   ├── user_guide.rst
+│   │   └── api_reference.rst
+│   └── build/
+│
+├── tests/                         # Tests unitarios
+│   ├── test_data_generator.py
+│   ├── test_rbm.py
+│   ├── test_pdf_processor.py
+│   └── test_rag.py
+│
+└── notebooks/                     # Jupyter notebooks
+    └── exploratory_analysis.ipynb
+```
+
+
+---
+
+
+## 🔧 **MÓDULOS DETALLADOS**
+
+
+### **MÓDULO 1: Generación de Datos (`data_generator.py`)**
+
+
+**Propósito:** Generar datasets sintéticos realistas para Colombia.
+
+
+**Funcionalidades:**
+- Genera correlaciones lógicas entre variables
+- Distribuciones realistas (salarios, puntajes crediticios, etc.)
+- Configuración de:
+  - Número de registros (default: 10,000)
+  - Proporción de niveles de riesgo (30% bajo, 50% medio, 20% alto)
+  - Semilla aleatoria para reproducibilidad
+- Exporta a CSV/Excel/Parquet
+
+
+**Interfaz Streamlit:**
+- Sliders para configurar parámetros
+- Preview de las primeras filas
+- Botón de descarga
+- Visualización de distribuciones generadas
+
+
+---
+
+
+### **MÓDULO 2: Carga y Validación (`data_processor.py`)**
+
+
+**Propósito:** Validar y procesar datos cargados por el usuario.
+
+
+**Funcionalidades:**
+- **Carga:** Soporta CSV, Excel, Parquet
+- **Validaciones:**
+  - Verificar columnas requeridas
+  - Detectar valores faltantes
+  - Identificar outliers extremos
+  - Validar rangos lógicos (edad > 18, puntaje 150-950, etc.)
+  - Detectar inconsistencias (monto_credito > valor_inmueble)
+- **Procesamiento:**
+  - Imputación inteligente de valores faltantes
+  - Normalización/estandarización
+  - Codificación de categóricas (Label Encoding, One-Hot)
+  - Eliminación de duplicados
+- **Reporte de Calidad:**
+  - Tabla resumen con warnings y sugerencias
+  - Visualización de datos faltantes (heatmap)
+  - Estadísticas antes/después del procesamiento
+
+
+**Interfaz Streamlit:**
+- Upload de archivo (drag & drop)
+- Configuración de parámetros de procesamiento
+- Reporte interactivo de calidad
+- Botón para guardar datos procesados
+
+
+---
+
+
+### **MÓDULO 3: Análisis Descriptivo Univariado (`univariate_analysis.py`)**
+
+
+**Propósito:** Análisis estadístico por variable individual.
+
+
+#### **Para Variables Numéricas:**
+**Estadísticas:**
+- Media, mediana, moda
+- Desviación estándar, varianza
+- Cuartiles, percentiles (5, 25, 50, 75, 95)
+- Rango intercuartílico (IQR)
+- Coeficiente de variación, asimetría, curtosis
+- Mínimo, máximo, rango
+
+
+**Visualizaciones (Plotly):**
+- Histograma con curva de densidad
+- Boxplot con detección de outliers
+- Violin plot
+- Q-Q plot para test de normalidad
+- ECDF (Empirical Cumulative Distribution Function)
+
+
+#### **Para Variables Categóricas:**
+**Estadísticas:**
+- Frecuencias absolutas y relativas
+- Moda, entropía
+- Número de categorías únicas
+
+
+**Visualizaciones:**
+- Gráfico de barras (horizontal/vertical)
+- Gráfico de torta con porcentajes
+- Wordcloud (para categóricas textuales)
+
+
+**Interfaz Streamlit:**
+- Selector de variable
+- Tabs para estadísticas vs visualizaciones
+- Configuración de gráficos (colores, bins, etc.)
+- Descarga de gráficos en PNG/SVG
+
+
+---
+
+
+### **MÓDULO 4: Análisis Bivariado (`bivariate_analysis.py`)**
+
+
+**Propósito:** Análisis de relaciones entre pares de variables.
+
+
+#### **Numérica vs Numérica:**
+- Matriz de correlación (Pearson, Spearman, Kendall)
+- Heatmap interactivo con anotaciones
+- Scatter plots con línea de regresión
+- Gráficos de pares (pairplot) seleccionables
+- Correlación parcial
+
+
+#### **Categórica vs Categórica:**
+- Tablas de contingencia
+- Test Chi-cuadrado (χ²)
+- V de Cramér
+- Heatmap de frecuencias cruzadas
+- Stacked bar charts
+
+
+#### **Numérica vs Categórica:**
+- Boxplots agrupados
+- Violin plots comparativos
+- Test ANOVA / Kruskal-Wallis
+- Estadísticas descriptivas por grupo
+- Ridge plots
+
+
+**Interfaz Streamlit:**
+- Selectores para variables X e Y
+- Detección automática del tipo de análisis
+- Configuración de tests estadísticos
+- Interpretación automática de resultados
+
+
+---
+
+
+### **MÓDULO 5: Ingeniería de Características (`feature_engineering.py`)**
+
+
+**Propósito:** Crear variables derivadas automáticamente.
+
+
+#### **Características Generadas:**
+
+
+**Ratios Financieros:**
+- `ratio_credito_inmueble` = monto_credito / valor_inmueble (LTV - Loan to Value)
+- `ratio_cuota_ingreso` = cuota_mensual / salario_mensual (DTI - Debt to Income)
+- `capacidad_ahorro` = salario_mensual - egresos_mensuales
+- `ratio_patrimonio_deuda` = patrimonio_total / monto_credito
+- `saldo_relativo` = saldo_promedio_banco / salario_mensual
+- `cuota_mensual_estimada` = calculada con fórmula de amortización
+
+
+**Indicadores de Riesgo:**
+- `score_edad` = penalización por edad (<25 o >65)
+- `indicador_sobreendeudamiento` = 1 si ratio_cuota_ingreso > 0.4
+- `score_estabilidad_laboral` = función de antiguedad_empleo + tipo_empleo
+- `riesgo_legal` = función exponencial de numero_demandas
+- `score_educacion` = codificación ordinal de nivel_educacion
+
+
+**Interacciones:**
+- `educacion_x_salario` = nivel_educacion (codificado) × salario_mensual
+- `propiedades_x_patrimonio` = numero_propiedades × log(patrimonio_total + 1)
+- `edad_x_empleo` = edad × antiguedad_empleo
+
+
+**Binning/Discretización:**
+- `grupo_edad`: Joven (<30), Adulto (30-55), Mayor (>55)
+- `rango_salarial`: Bajo, Medio, Alto (basado en percentiles)
+- `categoria_puntaje`: Malo (<600), Regular (600-750), Bueno (>750)
+
+
+**Transformaciones:**
+- Log de variables con distribución sesgada
+- Raíces cuadradas para variables con alta varianza
+
+
+**Interfaz Streamlit:**
+- Lista de características generadas con descripción
+- Preview del dataset enriquecido
+- Importancia estimada de cada característica
+- Exportar dataset con nuevas variables
+
+
+---
+
+
+### **MÓDULO 6: Clustering (`clustering.py`)**
+
+
+**Propósito:** Segmentación de solicitantes en grupos homogéneos.
+
+
+#### **Determinación de K Óptimo:**
+- **Método del Codo:** Gráfico de inercia vs K
+- **Coeficiente de Silueta:** Score promedio por K
+- **Índice Davies-Bouldin:** Minimizar
+- **Gap Statistic**
+- **Selector manual:** Permitir al usuario elegir K (2-10)
+
+
+#### **Algoritmos Disponibles:**
+- **K-Means** (default, rápido)
+- **Hierarchical Clustering** (con dendrograma)
+- **DBSCAN** (detecta outliers)
+- **Gaussian Mixture Models**
+
+
+#### **Análisis por Cluster:**
+- **Perfil de cada cluster:**
+  - Estadísticas descriptivas por variable
+  - Distribución del nivel_riesgo
+  - Tamaño y proporción
+- **Interpretación automática:**
+  - Generada con LLM (opcional)
+  - Ejemplo: "Cluster 1: Alto patrimonio, edad 35-50, empleo formal → Riesgo Bajo"
+  
+#### **Visualizaciones:**
+- **PCA 2D:**
+  - Proyección en 2 componentes principales
+  - % varianza explicada por eje
+  - Puntos coloreados por cluster
+  - Centroides marcados
+- **PCA 3D Interactivo (Plotly):**
+  - Rotable, zoomable
+  - % varianza por eje
+  - Colorear por cluster o riesgo
+- **Heatmap de características por cluster**
+- **Parallel coordinates plot**
+
+
+#### **Etiquetado de Riesgo por Cluster:**
+- Asignar automáticamente Bajo/Medio/Alto basado en:
+  - Promedio de puntaje_datacredito
+  - Ratio de endeudamiento
+  - Historial de defaults (si disponible)
+
+
+**Interfaz Streamlit:**
+- Selector de algoritmo y K
+- Gráficos de optimización de K
+- Visualizaciones interactivas
+- Tabla de perfiles por cluster
+- Exportar asignaciones de cluster
+
+
+---
+
+
+### **MÓDULO 7: Máquina de Boltzmann Restringida (`rbm_model.py`)**
+
+
+**⚡ COMPONENTE CENTRAL PARA PREGRADO EN FÍSICA**
+
+
+#### **Propósito:**
+Extracción de características latentes mediante aprendizaje no supervisado generativo.
+
+
+#### **Arquitectura:**
+```
+[Capa Visible: n_features] ←→ [Capa Oculta: n_hidden]
+* Sin conexiones dentro de cada capa (restricción)
+* Conexiones bidireccionales entre capas
+* Unidades binarias o gaussianas
+Implementación:
+python
+class RestrictedBoltzmannMachine:
+    def __init__(self, n_visible, n_hidden, learning_rate, n_epochs, batch_size, k_cd):
+        self.W = np.random.randn(n_visible, n_hidden) * 0.01  # Pesos
+        self.vb = np.zeros(n_visible)  # Bias visible
+        self.hb = np.zeros(n_hidden)   # Bias oculto
+        
+    def energy(self, v, h):
+        """Función de energía: E(v,h) = -v^T W h - vb^T v - hb^T h"""
+        return -np.dot(v, np.dot(self.W, h)) - np.dot(self.vb, v) - np.dot(self.hb, h)
+    
+    def train_cd(self, X):
+        """Contrastive Divergence de k pasos (CD-k)"""
+        # Implementación completa del algoritmo CD
+        
+    def transform(self, X):
+        """Extrae características de la capa oculta"""
+        return self._sample_hidden(X)
+Entrenamiento:
+* Algoritmo: Contrastive Divergence (CD-k)
+* Hiperparámetros configurables:
+   * n_hidden: Número de unidades ocultas (50-200)
+   * learning_rate: Tasa de aprendizaje (0.001-0.1)
+   * n_epochs: Épocas (50-200)
+   * batch_size: Tamaño del batch (32-256)
+   * k_cd: Pasos de Gibbs sampling (1-10)
+Métricas de Evaluación:
+* Error de Reconstrucción: MSE entre X y X_reconstructed
+* Pseudo Log-Likelihood: Aproximación de la verosimilitud
+* Energía Libre Promedio: Convergencia del entrenamiento
+* Correlación entre activaciones ocultas: Detectar redundancia
+Evaluación de Capacidad Generativa:
+* Generar muestras sintéticas desde el modelo entrenado
+* Test de Kolmogorov-Smirnov por variable
+* Gráficos Q-Q (real vs generado)
+* Histogramas superpuestos
+* Comparación de estadísticas descriptivas
+Visualizaciones:
+* Curvas de aprendizaje: Error de reconstrucción por época
+* Heatmap de pesos W: Visualizar patrones aprendidos
+* Distribución de activaciones: Histograma de unidades ocultas
+* Muestras generadas vs reales: Grid comparativo
+Extracción de Características:
+* Output: Activaciones de la capa oculta (vector de dimensión n_hidden)
+* Se concatenan con características originales/ingenierizadas
+* Resultado: Dataset enriquecido para modelos supervisados
+Interfaz Streamlit:
+* Configuración de arquitectura (sliders)
+* Botón "Entrenar RBM"
+* Progreso en tiempo real (barra + métricas)
+* Visualizaciones de diagnóstico
+* Guardar/cargar modelo (.pkl)
+* Comparación de distribuciones (real vs generado)
+* Sección educativa: Explicación matemática del algoritmo
+________________
+
+
+MÓDULO 8: Modelos de Clasificación Supervisada (supervised_models.py)
+Propósito: Entrenar y comparar modelos de clasificación de riesgo.
+Split de Datos:
+* 70% Entrenamiento (con validación cruzada 5-fold)
+* 20% Testing (evaluación final)
+* 10% Holdout (simulación de producción)
+* Estratificado por nivel_riesgo
+Modelos a Entrenar:
+1. Logistic Regression (baseline)
+2. Random Forest Classifier
+3. Gradient Boosting (XGBoost)
+4. LightGBM
+5. Support Vector Machine (SVM)
+6. Multi-Layer Perceptron (MLP)
+7. RBM + Logistic Regression (stacked model)
+8. RBM + Random Forest
+9. RBM + XGBoost
+Pipeline de Entrenamiento:
+python
+for model_name in models:
+    # 1. Entrenar con X_train (con CV)
+    # 2. Optimizar hiperparámetros (GridSearchCV o RandomizedSearchCV)
+    # 3. Evaluar en X_test
+    # 4. Guardar modelo + metadata
+    # 5. Registrar métricas
+Para Cada Modelo se Guarda:
+* Modelo entrenado: .pkl o .h5
+* Hiperparámetros: config.json
+* Métricas de train/test: metrics.json
+* Feature importances: importances.csv (cuando aplique)
+* Matriz de confusión: confusion_matrix.png
+* Timestamp y versión: Versionado automático
+Métricas de Evaluación:
+* Matriz de Confusión (3x3 para Bajo/Medio/Alto)
+* Accuracy global
+* Precision, Recall, F1-Score (por clase y promedio macro/micro/weighted)
+* ROC Curve y AUC (One-vs-Rest por clase)
+* Precision-Recall Curve
+* Cohen's Kappa
+* Balanced Accuracy
+* Log Loss
+* Matthews Correlation Coefficient
+Comparación de Modelos:
+* Tabla comparativa: Todas las métricas en una tabla
+* Gráficos de barras: Comparar AUC, F1, Accuracy
+* Curvas ROC superpuestas: Todos los modelos
+* Ranking automático: Mejor modelo por métrica
+* Statistical tests: Test de McNemar para comparar pares
+Interpretabilidad:
+* Feature Importances: Random Forest, XGBoost, LightGBM
+* Coeficientes: Logistic Regression
+* SHAP values: Para top 3 modelos (opcional)
+* Partial Dependence Plots
+* LIME para explicaciones locales
+Interfaz Streamlit:
+* Selector de modelos a entrenar
+* Configuración de hiperparámetros
+* Botón "Entrenar todos los modelos"
+* Progress bar con modelo actual
+* Tabla de resultados en tiempo real
+* Visualizaciones comparativas
+* Selector de "Mejor modelo" para producción
+________________
+
+
+MÓDULO 9: Predicción (prediction.py)
+Propósito: Predecir riesgo crediticio de nuevos solicitantes.
+Interfaz de Usuario:
+* Formulario interactivo con campos para todas las variables originales
+* Validaciones en tiempo real:
+   * Rangos válidos (edad > 18, puntaje 150-950)
+   * Tipos de dato correctos
+   * Consistencia lógica (monto_credito ≤ valor_inmueble)
+* Autocompletado inteligente: Sugerencias basadas en datos históricos
+Pipeline de Predicción:
+python
+1. Capturar datos del formulario
+2. Validar y formatear
+3. Aplicar preprocesamiento (mismo que entrenamiento)
+4. Generar características ingenierizadas
+5. Extraer características RBM (si el modelo lo requiere)
+6. Cargar modelo seleccionado
+7. Predecir
+8. Generar explicación
+```
+
+
+#### **Resultados Mostrados:**
+- **Predicción principal:** "Riesgo ALTO" (con color y emoji)
+- **Probabilidades por clase:**
+```
+  🟢 Bajo:  15% ████░░░░░░
+  🟡 Medio: 25% ██████░░░░
+  🔴 Alto:  60% ████████████
+* Factores de riesgo principales:
+   * Top 5 variables que más influyeron (con valores)
+   * Dirección del impacto (aumenta/disminuye riesgo)
+* Recomendación:
+   * ✅ APROBAR
+   * ⚠️ REVISAR MANUALMENTE
+   * ❌ RECHAZAR
+* Explicación en lenguaje natural:
+   * Generada con plantillas o LLM
+   * Ejemplo: "El solicitante presenta alto riesgo debido a bajo puntaje crediticio (450) y ratio de endeudamiento del 55%, que supera el límite recomendado del 40%."
+Modo Batch:
+* Upload de CSV con múltiples solicitantes
+* Procesamiento en paralelo
+* Resultados en tabla interactiva:
+   * Filtros por nivel de riesgo
+   * Ordenamiento por probabilidades
+   * Descarga en Excel/CSV con probabilidades
+Registro de Predicciones:
+* Guardar en base de datos (SQLite) para análisis posterior
+* Incluir: timestamp, features, predicción, probabilidades, modelo usado
+Interfaz Streamlit:
+* Tabs: "Predicción Individual" vs "Predicción Batch"
+* Formulario dinámico con tooltips explicativos
+* Botón "Predecir" prominente
+* Visualización de resultados (gauges, barras)
+* Historial de predicciones
+* Exportar reporte en PDF (opcional)
+________________
+
+
+MÓDULO 10: Re-entrenamiento (retraining.py)
+Propósito: Actualizar modelos con nuevos datos etiquetados.
+Funcionalidades:
+* Agregar nuevos datos:
+   * Upload de CSV con predicciones validadas
+   * Formato: Features + nivel_riesgo_real
+* Detección de drift:
+   * Comparar distribuciones (nuevos vs originales)
+   * Test de Kolmogorov-Smirnov por variable
+   * Alertas si p-value < 0.05
+* Re-entrenamiento incremental:
+   * Opción 1: Re-entrenar desde cero con todos los datos
+   * Opción 2: Fine-tuning (si el modelo lo permite)
+* Versionado de modelos:
+   * Guardar como model_v2, model_v3, etc.
+   * Mantener histórico de versiones
+   * Comparar métricas entre versiones
+* Rollback:
+   * Restaurar versión anterior si el desempeño empeora
+Comparación Antes/Después:
+* Tabla con métricas de versión actual vs nueva
+* Gráficos de evolución de métricas en el tiempo
+* Análisis de mejora/degradación por clase
+Dashboard de Monitoreo:
+* Data drift: Cambios en distribuciones de features
+* Concept drift: Cambios en la relación X → y
+* Model drift: Degradación de métricas en producción
+* Sugerencia de re-entrenamiento: Basada en umbrales
+Interfaz Streamlit:
+* Upload de datos nuevos
+* Visualización de drift
+* Configuración de re-entrenamiento
+* Comparación de versiones
+* Botón "Desplegar nueva versión"
+________________
+
+
+MÓDULO 11: Procesamiento de PDFs (pdf_processor.py)
+⚡ NUEVO - Procesamiento Inteligente de Papers Científicos
+Propósito: Extraer y procesar texto de papers científicos en PDF con múltiples columnas.
+Tecnología: PyMuPDF (fitz)
+bash
+pip install pymupdf
+Funcionalidades:
+python
+class PDFProcessor:
+    """Procesa PDFs científicos con layout complejo"""
+    
+    @staticmethod
+    def extract_text_from_pdf(pdf_path: str) -> List[Dict]:
+        """
+        Extrae texto respetando el orden de lectura
+        Maneja múltiples columnas automáticamente
+        
+        Returns:
+            Lista de {text, metadata} por página
+        """
+        
+    @staticmethod
+    def extract_metadata(pdf_path: str) -> Dict:
+        """
+        Extrae metadata del PDF:
+        - title, author, subject, keywords
+        - fecha de creación, número de páginas
+        """
+        
+    @staticmethod
+    def extract_images(pdf_path: str, output_dir: str):
+        """Extrae figuras y diagramas del PDF (opcional)"""
+        
+    @staticmethod
+    def process_directory(directory: str) -> List[Document]:
+        """
+        Procesa todos los PDFs en una carpeta
+        
+        Returns:
+            Lista de documentos de LangChain con metadata
+        """
+Características Clave:
+* ✅ Manejo de múltiples columnas: Respeta el orden de lectura
+* ✅ Extracción de ecuaciones: LaTeX embebido (cuando esté disponible)
+* ✅ Metadata automática: Título, autor, año, keywords
+* ✅ Limpieza de texto: Elimina headers, footers, números de página
+* ✅ Detección de secciones: Identifica Abstract, Introduction, Conclusions
+* ✅ Manejo de tablas: Extrae tablas como texto estructurado
+* ✅ Progress tracking: Barra de progreso en Streamlit
+Interfaz en Streamlit:
+* Mostrar lista de PDFs en la carpeta articles/
+* Preview de texto extraído por PDF
+* Estadísticas: páginas procesadas, palabras totales
+* Re-procesar carpeta (actualizar vector store)
+________________
+
+
+MÓDULO 12: Sistema RAG Educativo (educational_rag.py)
+🎓 COMPONENTE EDUCATIVO PRINCIPAL
+Propósito: Asistente interactivo para aprender sobre Máquinas de Boltzmann usando papers científicos.
+Arquitectura del Sistema:
+┌─────────────────┐
+│  PDFs en        │
+│  /articles/     │
+└────────┬────────┘
+         │
+         ↓
+┌────────────────────┐
+│  PDFProcessor      │
+│  (PyMuPDF)         │
+└────────┬───────────┘
+         │
+         ↓
+┌────────────────────┐
+│  Text Splitter     │
+│  (chunks de 1500)  │
+└────────┬───────────┘
+         │
+         ↓
+┌────────────────────┐
+│  Embeddings        │
+│  (HuggingFace)     │
+└────────┬───────────┘
+         │
+         ↓
+┌────────────────────┐
+│  ChromaDB          │
+│  (Vector Store)    │
+└────────┬───────────┘
+         │
+         ↓
+┌────────────────────┐
+│  Usuario
+Reintentar
+Claude aún no tiene la capacidad de ejecutar el código que genera.
+AF
+Continuar
+│  Usuario pregunta  │
+└────────┬───────────┘
+         │
+         ↓
+┌────────────────────┐
+│  Retriever         │
+│  (top-k chunks)    │
+└────────┬───────────┘
+         │
+         ↓
+┌────────────────────┐
+│  Groq API          │
+│  (Llama 3.3 70B)   │
+└────────┬───────────┘
+         │
+         ↓
+┌────────────────────┐
+│  Respuesta +       │
+│  Fuentes           │
+└────────────────────┘
+Implementación Completa:
+python
+import os
+import fitz  # PyMuPDF
+from typing import List, Dict
+from langchain.schema import Document
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import Chroma
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_groq import ChatGroq
+from langchain.chains import RetrievalQA
+from langchain.prompts import PromptTemplate
+import streamlit as st
+import hashlib
+import json
+
+
+
+
+class PDFProcessor:
+    """Procesamiento avanzado de PDFs científicos"""
+    
+    @staticmethod
+    def extract_text_from_pdf(pdf_path: str) -> List[Dict]:
+        """
+        Extrae texto de PDF respetando layout de múltiples columnas
+        
+        Args:
+            pdf_path: Ruta al archivo PDF
+            
+        Returns:
+            Lista de diccionarios con texto y metadata por página
+        """
+        documents = []
+        
+        try:
+            doc = fitz.open(pdf_path)
+            filename = os.path.basename(pdf_path)
+            
+            for page_num, page in enumerate(doc, start=1):
+                # Extraer texto con sort=True para respetar orden de lectura
+                text = page.get_text("text", sort=True)
+                
+                # Limpiar texto
+                text = text.strip()
+                text = "\n".join([line for line in text.split("\n") if line.strip()])
+                
+                if text and len(text) > 50:  # Solo páginas con contenido significativo
+                    documents.append({
+                        "text": text,
+                        "metadata": {
+                            "source": filename,
+                            "page": page_num,
+                            "total_pages": len(doc)
+                        }
+                    })
+            
+            doc.close()
+            return documents
+            
+        except Exception as e:
+            st.error(f"❌ Error procesando {pdf_path}: {e}")
+            return []
+    
+    @staticmethod
+    def extract_metadata(pdf_path: str) -> Dict:
+        """Extrae metadata del PDF"""
+        try:
+            doc = fitz.open(pdf_path)
+            metadata = doc.metadata
+            doc.close()
+            
+            return {
+                "title": metadata.get("title", os.path.basename(pdf_path)),
+                "author": metadata.get("author", "Unknown"),
+                "subject": metadata.get("subject", ""),
+                "keywords": metadata.get("keywords", ""),
+                "creator": metadata.get("creator", ""),
+                "producer": metadata.get("producer", "")
+            }
+        except:
+            return {"title": os.path.basename(pdf_path), "author": "Unknown"}
+    
+    @staticmethod
+    def process_directory(directory: str) -> List[Document]:
+        """
+        Procesa todos los PDFs en un directorio
+        
+        Args:
+            directory: Ruta a la carpeta con PDFs
+            
+        Returns:
+            Lista de documentos de LangChain
+        """
+        all_documents = []
+        
+        # Verificar que existe el directorio
+        if not os.path.exists(directory):
+            st.warning(f"⚠️ Directorio no encontrado: {directory}")
+            return []
+        
+        # Buscar todos los PDFs
+        pdf_files = [f for f in os.listdir(directory) if f.lower().endswith('.pdf')]
+        
+        if not pdf_files:
+            st.warning(f"⚠️ No se encontraron PDFs en {directory}")
+            return []
+        
+        st.info(f"📚 Procesando {len(pdf_files)} papers científicos...")
+        
+        # Barra de progreso
+        progress_bar = st.progress(0)
+        status_text = st.empty()
+        
+        for idx, pdf_file in enumerate(pdf_files):
+            pdf_path = os.path.join(directory, pdf_file)
+            status_text.text(f"Procesando: {pdf_file}...")
+            
+            # Extraer texto
+            pages = PDFProcessor.extract_text_from_pdf(pdf_path)
+            
+            # Extraer metadata
+            pdf_metadata = PDFProcessor.extract_metadata(pdf_path)
+            
+            # Convertir a formato LangChain
+            for page_data in pages:
+                combined_metadata = {
+                    **page_data["metadata"],
+                    **pdf_metadata
+                }
+                
+                doc = Document(
+                    page_content=page_data["text"],
+                    metadata=combined_metadata
+                )
+                all_documents.append(doc)
+            
+            # Actualizar progreso
+            progress_bar.progress((idx + 1) / len(pdf_files))
+        
+        progress_bar.empty()
+        status_text.empty()
+        st.success(f"✅ {len(all_documents)} páginas procesadas de {len(pdf_files)} papers")
+        
+        return all_documents
+
+
+
+
+class RBMEducationalRAG:
+    """Sistema RAG para aprendizaje sobre Máquinas de Boltzmann"""
+    
+    def __init__(self, articles_directory: str, groq_api_key: str):
+        self.articles_dir = articles_directory
+        self.cache_file = "./rag_cache.json"
+        
+        # 1. Verificar directorio
+        if not os.path.exists(articles_directory):
+            os.makedirs(articles_directory)
+            st.warning(f"📁 Carpeta creada: {articles_directory}")
+            st.info("👉 **Sube PDFs de papers usando el módulo de carga**")
+            st.stop()
+        
+        # 2. Procesar PDFs
+        st.subheader("🔄 Procesando Papers Científicos")
+        documents = PDFProcessor.process_directory(articles_directory)
+        
+        if not documents:
+            st.error("❌ No hay documentos para procesar. Sube PDFs primero.")
+            st.stop()
+        
+        # 3. Chunking inteligente
+        with st.spinner("✂️ Dividiendo en chunks optimizados..."):
+            text_splitter = RecursiveCharacterTextSplitter(
+                chunk_size=1500,
+                chunk_overlap=300,
+                separators=["\n\n\n", "\n\n", "\n", ". ", " ", ""],
+                length_function=len
+            )
+            chunks = text_splitter.split_documents(documents)
+            st.success(f"✅ {len(chunks)} chunks creados")
+        
+        # 4. Embeddings locales (GRATIS)
+        with st.spinner("🧮 Generando embeddings vectoriales..."):
+            self.embeddings = HuggingFaceEmbeddings(
+                model_name="sentence-transformers/all-MiniLM-L6-v2",
+                model_kwargs={'device': 'cpu'},
+                encode_kwargs={'normalize_embeddings': True}
+            )
+        
+        # 5. Vector Store con ChromaDB
+        with st.spinner("💾 Creando base de datos vectorial..."):
+            self.vectorstore = Chroma.from_documents(
+                documents=chunks,
+                embedding=self.embeddings,
+                persist_directory="./chroma_rbm_db",
+                collection_name="rbm_papers"
+            )
+            self.vectorstore.persist()
+            st.success(f"✅ Base de datos creada: {len(chunks)} vectores")
+        
+        # 6. Configurar Groq LLM
+        self.llm = ChatGroq(
+            groq_api_key=groq_api_key,
+            model_name="llama-3.3-70b-versatile",
+            temperature=0.3,
+            max_tokens=2048
+        )
+        
+        # 7. Prompt educativo optimizado
+        prompt_template = """Eres un profesor experto en Máquinas de Boltzmann y Deep Learning. Tu audiencia son estudiantes de pregrado en Física que están aprendiendo sobre este tema.
+
+
+CONTEXTO DE PAPERS CIENTÍFICOS:
+{context}
+
+
+PREGUNTA DEL ESTUDIANTE: {question}
+
+
+INSTRUCCIONES IMPORTANTES:
+1. Responde de forma clara, didáctica y precisa basándote ÚNICAMENTE en el contexto proporcionado
+2. Si hay ecuaciones matemáticas, usa notación LaTeX: $...$ para inline o $$...$$ para display
+3. Incluye ejemplos prácticos o analogías cuando sea apropiado para facilitar la comprensión
+4. Si mencionas conceptos o información específica, indica qué paper la respalda (menciona el título o autor)
+5. Si la pregunta NO puede responderse con el contexto disponible, dilo claramente y sugiere qué tipo de información falta
+6. Estructura tu respuesta con subtítulos cuando el tema sea complejo
+7. Usa un lenguaje académico pero accesible (evita jerga innecesaria)
+8. Al final, lista brevemente las fuentes específicas que consultaste
+
+
+RESPUESTA:"""
+
+
+        PROMPT = PromptTemplate(
+            template=prompt_template,
+            input_variables=["context", "question"]
+        )
+        
+        # 8. Chain de RAG
+        self.qa_chain = RetrievalQA.from_chain_type(
+            llm=self.llm,
+            chain_type="stuff",
+            retriever=self.vectorstore.as_retriever(
+                search_type="similarity",
+                search_kwargs={"k": 6}  # Top 6 chunks más relevantes
+            ),
+            return_source_documents=True,
+            chain_type_kwargs={"prompt": PROMPT}
+        )
+    
+    def ask(self, question: str) -> Dict:
+        """
+        Hace una pregunta al sistema RAG
+        
+        Args:
+            question: Pregunta del usuario
+            
+        Returns:
+            Dict con 'answer' y 'sources'
+        """
+        # Verificar caché
+        cached = self._get_from_cache(question)
+        if cached:
+            return cached
+        
+        # Hacer query
+        response = self.qa_chain.invoke({"query": question})
+        
+        result = {
+            "answer": response["result"],
+            "sources": response["source_documents"]
+        }
+        
+        # Guardar en caché
+        self._save_to_cache(question, result)
+        
+        return result
+    
+    def _get_from_cache(self, question: str) -> Dict:
+        """Obtiene respuesta del caché si existe"""
+        if not os.path.exists(self.cache_file):
+            return None
+        
+        q_hash = hashlib.md5(question.lower().strip().encode()).hexdigest()
+        
+        try:
+            with open(self.cache_file, 'r', encoding='utf-8') as f:
+                cache = json.load(f)
+            return cache.get(q_hash)
+        except:
+            return None
+    
+    def _save_to_cache(self, question: str, result: Dict):
+        """Guarda respuesta en caché"""
+        q_hash = hashlib.md5(question.lower().strip().encode()).hexdigest()
+        
+        # Cargar caché existente
+        if os.path.exists(self.cache_file):
+            try:
+                with open(self.cache_file, 'r', encoding='utf-8') as f:
+                    cache = json.load(f)
+            except:
+                cache = {}
+        else:
+            cache = {}
+        
+        # Guardar (sin sources para reducir tamaño)
+        cache[q_hash] = {
+            "answer": result["answer"],
+            "sources": []  # No cachear sources para ahorrar espacio
+        }
+        
+        with open(self.cache_file, 'w', encoding='utf-8') as f:
+            json.dump(cache, f, ensure_ascii=False, indent=2)
+    
+    def get_papers_info(self) -> List[Dict]:
+        """Obtiene información de los papers cargados"""
+        try:
+            all_docs = self.vectorstore.get()
+            
+            # Extraer papers únicos
+            papers = {}
+            for metadata in all_docs['metadatas']:
+                source = metadata.get('source', 'Unknown')
+                if source not in papers:
+                    papers[source] = {
+                        'filename': source,
+                        'title': metadata.get('title', source),
+                        'author': metadata.get('author', 'Unknown'),
+                        'pages': metadata.get('total_pages', '?')
+                    }
+            
+            return list(papers.values())
+        except:
+            return []
+    
+    def reindex_papers(self):
+        """Re-procesa todos los PDFs y actualiza el vector store"""
+        st.info("🔄 Re-indexando papers...")
+        
+        # Eliminar vector store anterior
+        if os.path.exists("./chroma_rbm_db"):
+            import shutil
+            shutil.rmtree("./chroma_rbm_db")
+        
+        # Limpiar caché
+        if os.path.exists(self.cache_file):
+            os.remove(self.cache_file)
+        
+        # Re-inicializar
+        st.rerun()
+
+
+
+
+def upload_pdf_interface():
+    """Interfaz para subir PDFs a la carpeta articles/"""
+    
+    st.subheader("📤 Subir Papers Científicos")
+    
+    st.markdown("""
+    Sube papers en formato PDF sobre Máquinas de Boltzmann para enriquecer la base de conocimiento.
+    
+    **Fuentes recomendadas:**
+    - 📚 [arXiv.org](https://arxiv.org/search/?query=restricted+boltzmann+machine)
+    - 📚 [Google Scholar](https://scholar.google.com/)
+    - 📚 [Semantic Scholar](https://www.semanticscholar.org/)
+    """)
+    
+    # Upload de archivos

@@ -1,0 +1,427 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>univariate_analysis &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="bivariate_analysis" href="bivariate_analysis.html" />
+    <link rel="prev" title="data_processor" href="data_processor.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Módulos del Sistema</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#modulos-principales">Módulos Principales</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../modules.html#referencia-completa-de-la-api">Referencia Completa de la API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="generar_datos.html">generar_datos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_processor.html">data_processor</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">univariate_analysis</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#descripcion-general">Descripción General</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#clases-principales">Clases Principales</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-de-analisis">Métodos de Análisis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-de-visualizacion">Métodos de Visualización</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#funciones-de-renderizado">Funciones de Renderizado</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tests-estadisticos">Tests Estadísticos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interpretacion-de-estadisticas">Interpretación de Estadísticas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ejemplo-completo-de-analisis">Ejemplo Completo de Análisis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ver-tambien">Ver también</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="bivariate_analysis.html">bivariate_analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature_engineering.html">feature_engineering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clustering.html">clustering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbm_model.html">rbm_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="supervised_models.html">supervised_models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="prediction.html">prediction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="educational_rag.html">educational_rag</a></li>
+<li class="toctree-l3"><a class="reference internal" href="retraining.html">retraining</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#arquitectura-del-sistema">Arquitectura del Sistema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#flujo-de-datos">Flujo de Datos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#descripcion-de-modulos">Descripción de Módulos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#configuracion-avanzada">Configuración Avanzada</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#integracion-con-otros-sistemas">Integración con Otros Sistemas</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">Módulos del Sistema</a></li>
+      <li class="breadcrumb-item active">univariate_analysis</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/univariate_analysis.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="univariate-analysis">
+<h1>univariate_analysis<a class="headerlink" href="#univariate-analysis" title="Link to this heading"></a></h1>
+<section id="descripcion-general">
+<h2>Descripción General<a class="headerlink" href="#descripcion-general" title="Link to this heading"></a></h2>
+<p>Módulo de análisis estadístico descriptivo univariado. Proporciona estadísticas completas y visualizaciones interactivas para variables individuales.</p>
+</section>
+<section id="clases-principales">
+<h2>Clases Principales<a class="headerlink" href="#clases-principales" title="Link to this heading"></a></h2>
+<section id="univariateanalyzer">
+<h3>UnivariateAnalyzer<a class="headerlink" href="#univariateanalyzer" title="Link to this heading"></a></h3>
+</section>
+</section>
+<section id="metodos-de-analisis">
+<h2>Métodos de Análisis<a class="headerlink" href="#metodos-de-analisis" title="Link to this heading"></a></h2>
+<section id="analyze-numeric-variable">
+<h3>analyze_numeric_variable<a class="headerlink" href="#analyze-numeric-variable" title="Link to this heading"></a></h3>
+<p>Análisis completo de variable numérica.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">column</span></code> (str): Nombre de la columna a analizar</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Diccionario con estadísticas completas</p>
+</dd>
+</dl>
+<p><strong>Estadísticas calculadas:</strong></p>
+<ul class="simple">
+<li><p><strong>Tendencia central:</strong> media, mediana, moda</p></li>
+<li><p><strong>Dispersión:</strong> desviación estándar, varianza, rango, IQR</p></li>
+<li><p><strong>Forma:</strong> asimetría (skewness), curtosis</p></li>
+<li><p><strong>Percentiles:</strong> P5, Q1, Q3, P95</p></li>
+<li><p><strong>Normalidad:</strong> Test de Shapiro-Wilk o Kolmogorov-Smirnov</p></li>
+<li><p><strong>Outliers:</strong> Detección mediante método IQR</p></li>
+</ul>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">analyze_numeric_variable</span><span class="p">(</span><span class="s1">&#39;edad&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Media: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Desviación estándar: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;std&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Asimetría: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;skewness&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Es normal: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;is_normal&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Outliers: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;outliers_count&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;outliers_pct&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="analyze-categorical-variable">
+<h3>analyze_categorical_variable<a class="headerlink" href="#analyze-categorical-variable" title="Link to this heading"></a></h3>
+<p>Análisis completo de variable categórica.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">column</span></code> (str): Nombre de la columna a analizar</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Diccionario con estadísticas</p>
+</dd>
+</dl>
+<p><strong>Estadísticas calculadas:</strong></p>
+<ul class="simple">
+<li><p><strong>Conteo:</strong> total de observaciones, valores únicos</p></li>
+<li><p><strong>Moda:</strong> categoría más frecuente y su porcentaje</p></li>
+<li><p><strong>Distribución:</strong> frecuencias absolutas y relativas</p></li>
+<li><p><strong>Entropía:</strong> Medida de diversidad de categorías</p></li>
+</ul>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">analyze_categorical_variable</span><span class="p">(</span><span class="s1">&#39;nivel_riesgo&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Valores únicos: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;unique_values&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Moda: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;mode_percentage&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Entropía: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;entropy&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Ver distribución</span>
+<span class="k">for</span> <span class="n">categoria</span><span class="p">,</span> <span class="n">frecuencia</span> <span class="ow">in</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;value_counts&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">porcentaje</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;frequencies&#39;</span><span class="p">][</span><span class="n">categoria</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">categoria</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">frecuencia</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">porcentaje</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="metodos-de-visualizacion">
+<h2>Métodos de Visualización<a class="headerlink" href="#metodos-de-visualizacion" title="Link to this heading"></a></h2>
+<section id="create-numeric-visualizations">
+<h3>create_numeric_visualizations<a class="headerlink" href="#create-numeric-visualizations" title="Link to this heading"></a></h3>
+<p>Crea visualizaciones para variable numérica.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">column</span></code> (str): Nombre de la columna</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Diccionario con figuras de Plotly</p>
+</dd>
+</dl>
+<p><strong>Visualizaciones generadas:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Histograma con KDE:</strong> Distribución de frecuencias con curva de densidad</p></li>
+<li><p><strong>Boxplot:</strong> Diagrama de caja con outliers</p></li>
+<li><p><strong>Q-Q Plot:</strong> Evaluación de normalidad</p></li>
+<li><p><strong>ECDF:</strong> Función de distribución empírica acumulada</p></li>
+</ol>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">figures</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">create_numeric_visualizations</span><span class="p">(</span><span class="s1">&#39;puntaje_datacredito&#39;</span><span class="p">)</span>
+
+<span class="c1"># Mostrar histograma</span>
+<span class="n">figures</span><span class="p">[</span><span class="s1">&#39;histogram&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Mostrar boxplot</span>
+<span class="n">figures</span><span class="p">[</span><span class="s1">&#39;boxplot&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="create-categorical-visualizations">
+<h3>create_categorical_visualizations<a class="headerlink" href="#create-categorical-visualizations" title="Link to this heading"></a></h3>
+<p>Crea visualizaciones para variable categórica.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">column</span></code> (str): Nombre de la columna</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Diccionario con figuras de Plotly</p>
+</dd>
+</dl>
+<p><strong>Visualizaciones generadas:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Gráfico de barras:</strong> Frecuencias por categoría</p></li>
+<li><p><strong>Gráfico de torta:</strong> Distribución porcentual</p></li>
+</ol>
+</section>
+</section>
+<section id="funciones-de-renderizado">
+<h2>Funciones de Renderizado<a class="headerlink" href="#funciones-de-renderizado" title="Link to this heading"></a></h2>
+<section id="render-univariate-analysis">
+<h3>render_univariate_analysis<a class="headerlink" href="#render-univariate-analysis" title="Link to this heading"></a></h3>
+<p>Renderiza el módulo de análisis univariado en Streamlit.</p>
+<dl class="simple">
+<dt><strong>Funcionalidades:</strong></dt><dd><ul class="simple">
+<li><p>Selector interactivo de variables</p></li>
+<li><p>Análisis automático según tipo de variable</p></li>
+<li><p>Visualizaciones interactivas</p></li>
+<li><p>Interpretaciones estadísticas</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="render-numeric-analysis">
+<h3>render_numeric_analysis<a class="headerlink" href="#render-numeric-analysis" title="Link to this heading"></a></h3>
+<p>Renderiza análisis específico para variable numérica.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">analyzer</span></code> (UnivariateAnalyzer): Analizador inicializado</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">column</span></code> (str): Nombre de la columna</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">df</span></code> (DataFrame): DataFrame con datos</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="render-categorical-analysis">
+<h3>render_categorical_analysis<a class="headerlink" href="#render-categorical-analysis" title="Link to this heading"></a></h3>
+<p>Renderiza análisis específico para variable categórica.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">analyzer</span></code> (UnivariateAnalyzer): Analizador inicializado</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">column</span></code> (str): Nombre de la columna</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">df</span></code> (DataFrame): DataFrame con datos</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="render-univariate-module">
+<h3>render_univariate_module<a class="headerlink" href="#render-univariate-module" title="Link to this heading"></a></h3>
+<p>Función principal para renderizar el módulo univariado completo.</p>
+</section>
+</section>
+<section id="tests-estadisticos">
+<h2>Tests Estadísticos<a class="headerlink" href="#tests-estadisticos" title="Link to this heading"></a></h2>
+<section id="test-de-normalidad">
+<h3>Test de Normalidad<a class="headerlink" href="#test-de-normalidad" title="Link to this heading"></a></h3>
+<p>El módulo implementa dos tests de normalidad:</p>
+<ul class="simple">
+<li><p><strong>Shapiro-Wilk:</strong> Para n &lt; 5000 muestras</p></li>
+<li><p><strong>Kolmogorov-Smirnov:</strong> Para n ≥ 5000 muestras</p></li>
+</ul>
+<dl class="simple">
+<dt><strong>Interpretación:</strong></dt><dd><ul class="simple">
+<li><p>p-value &gt; 0.05: Distribución normal</p></li>
+<li><p>p-value ≤ 0.05: No sigue distribución normal</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="deteccion-de-outliers">
+<h3>Detección de Outliers<a class="headerlink" href="#deteccion-de-outliers" title="Link to this heading"></a></h3>
+<p>Método IQR (Rango Intercuartílico):</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\text{Límite inferior} = Q1 - 1.5 \times IQR\\\text{Límite superior} = Q3 + 1.5 \times IQR\end{aligned}\end{align} \]</div>
+<dl class="simple">
+<dt>Donde:</dt><dd><ul class="simple">
+<li><p>Q1 = Cuartil 1 (percentil 25)</p></li>
+<li><p>Q3 = Cuartil 3 (percentil 75)</p></li>
+<li><p>IQR = Q3 - Q1</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</section>
+<section id="interpretacion-de-estadisticas">
+<h2>Interpretación de Estadísticas<a class="headerlink" href="#interpretacion-de-estadisticas" title="Link to this heading"></a></h2>
+<section id="asimetria-skewness">
+<h3>Asimetría (Skewness)<a class="headerlink" href="#asimetria-skewness" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>&lt; -1:</strong> Asimetría negativa fuerte (cola izquierda)</p></li>
+<li><p><strong>-1 a -0.5:</strong> Asimetría negativa moderada</p></li>
+<li><p><strong>-0.5 a 0.5:</strong> Aproximadamente simétrica</p></li>
+<li><p><strong>0.5 a 1:</strong> Asimetría positiva moderada</p></li>
+<li><p><strong>&gt; 1:</strong> Asimetría positiva fuerte (cola derecha)</p></li>
+</ul>
+</section>
+<section id="curtosis">
+<h3>Curtosis<a class="headerlink" href="#curtosis" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>&lt; 0:</strong> Platicúrtica (más plana que normal)</p></li>
+<li><p><strong>≈ 0:</strong> Mesocúrtica (similar a normal)</p></li>
+<li><p><strong>&gt; 0:</strong> Leptocúrtica (más puntiaguda que normal)</p></li>
+</ul>
+</section>
+<section id="coeficiente-de-variacion">
+<h3>Coeficiente de Variación<a class="headerlink" href="#coeficiente-de-variacion" title="Link to this heading"></a></h3>
+<div class="math notranslate nohighlight">
+\[CV = \frac{\sigma}{\mu} \times 100\]</div>
+<ul class="simple">
+<li><p><strong>&lt; 15%:</strong> Baja variabilidad</p></li>
+<li><p><strong>15-30%:</strong> Variabilidad moderada</p></li>
+<li><p><strong>&gt; 30%:</strong> Alta variabilidad</p></li>
+</ul>
+</section>
+</section>
+<section id="ejemplo-completo-de-analisis">
+<h2>Ejemplo Completo de Análisis<a class="headerlink" href="#ejemplo-completo-de-analisis" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.univariate_analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnivariateAnalyzer</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Cargar datos</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;datos_credito_hipotecario_realista.csv&quot;</span><span class="p">)</span>
+
+<span class="c1"># Crear analizador</span>
+<span class="n">analyzer</span> <span class="o">=</span> <span class="n">UnivariateAnalyzer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Analizar salario</span>
+<span class="n">stats_salario</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">analyze_numeric_variable</span><span class="p">(</span><span class="s1">&#39;salario_mensual&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== ANÁLISIS DE SALARIO MENSUAL ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Observaciones: </span><span class="si">{</span><span class="n">stats_salario</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Media: $</span><span class="si">{</span><span class="n">stats_salario</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.0f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mediana: $</span><span class="si">{</span><span class="n">stats_salario</span><span class="p">[</span><span class="s1">&#39;median&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.0f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Desv. Estándar: $</span><span class="si">{</span><span class="n">stats_salario</span><span class="p">[</span><span class="s1">&#39;std&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.0f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Coef. Variación: </span><span class="si">{</span><span class="n">stats_salario</span><span class="p">[</span><span class="s1">&#39;cv&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Asimetría: </span><span class="si">{</span><span class="n">stats_salario</span><span class="p">[</span><span class="s1">&#39;skewness&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Outliers: </span><span class="si">{</span><span class="n">stats_salario</span><span class="p">[</span><span class="s1">&#39;outliers_count&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">stats_salario</span><span class="p">[</span><span class="s1">&#39;outliers_pct&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+
+<span class="c1"># Crear visualizaciones</span>
+<span class="n">figures</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">create_numeric_visualizations</span><span class="p">(</span><span class="s1">&#39;salario_mensual&#39;</span><span class="p">)</span>
+<span class="n">figures</span><span class="p">[</span><span class="s1">&#39;histogram&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">write_html</span><span class="p">(</span><span class="s2">&quot;histograma_salario.html&quot;</span><span class="p">)</span>
+
+<span class="c1"># Analizar nivel de riesgo</span>
+<span class="n">stats_riesgo</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">analyze_categorical_variable</span><span class="p">(</span><span class="s1">&#39;nivel_riesgo&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== ANÁLISIS DE NIVEL DE RIESGO ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Categorías: </span><span class="si">{</span><span class="n">stats_riesgo</span><span class="p">[</span><span class="s1">&#39;unique_values&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Moda: </span><span class="si">{</span><span class="n">stats_riesgo</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">stats_riesgo</span><span class="p">[</span><span class="s1">&#39;mode_percentage&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Distribución:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">cat</span><span class="p">,</span> <span class="n">pct</span> <span class="ow">in</span> <span class="n">stats_riesgo</span><span class="p">[</span><span class="s1">&#39;frequencies&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">cat</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">pct</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="ver-tambien">
+<h2>Ver también<a class="headerlink" href="#ver-tambien" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="bivariate_analysis.html"><span class="doc">bivariate_analysis</span></a> - Análisis bivariado</p></li>
+<li><p><a class="reference internal" href="data_processor.html"><span class="doc">data_processor</span></a> - Procesamiento de datos</p></li>
+<li><p><a class="reference internal" href="feature_engineering.html"><span class="doc">feature_engineering</span></a> - Ingeniería de características</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="data_processor.html" class="btn btn-neutral float-left" title="data_processor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="bivariate_analysis.html" class="btn btn-neutral float-right" title="bivariate_analysis" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, Andrés Fernando Gómez Rojas &amp; Carlos Andrés Gómez Vasco. Software Libre bajo Licencia MIT.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

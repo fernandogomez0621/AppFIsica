@@ -1,0 +1,733 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bivariate_analysis &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Módulos del Sistema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Código de módulo</a></li>
+      <li class="breadcrumb-item active">bivariate_analysis</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código fuente para bivariate_analysis</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">============================================================================</span>
+<span class="sd">MÓDULO DE ANÁLISIS BIVARIADO</span>
+<span class="sd">============================================================================</span>
+
+<span class="sd">Análisis de relaciones entre pares de variables.</span>
+<span class="sd">Incluye correlaciones, tablas de contingencia y tests estadísticos.</span>
+
+<span class="sd">Autor: Sistema de Física</span>
+<span class="sd">Versión: 1.0.0</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.express</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">px</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plotly.subplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_subplots</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">chi2_contingency</span><span class="p">,</span> <span class="n">pearsonr</span><span class="p">,</span> <span class="n">spearmanr</span><span class="p">,</span> <span class="n">kendalltau</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BivariateAnalyzer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Analizador de relaciones bivariadas&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicializa el analizador</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: DataFrame con los datos a analizar</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numeric_columns</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">categorical_columns</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">analyze_numeric_vs_numeric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">var2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Análisis de relación entre dos variables numéricas</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            var1, var2: Nombres de las variables</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Diccionario con correlaciones y tests</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Filtrar datos válidos</span>
+        <span class="n">data_clean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[[</span><span class="n">var1</span><span class="p">,</span> <span class="n">var2</span><span class="p">]]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_clean</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;Insuficientes datos válidos&#39;</span><span class="p">}</span>
+        
+        <span class="n">x</span> <span class="o">=</span> <span class="n">data_clean</span><span class="p">[</span><span class="n">var1</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">data_clean</span><span class="p">[</span><span class="n">var2</span><span class="p">]</span>
+        
+        <span class="c1"># Correlaciones</span>
+        <span class="n">pearson_corr</span><span class="p">,</span> <span class="n">pearson_p</span> <span class="o">=</span> <span class="n">pearsonr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">spearman_corr</span><span class="p">,</span> <span class="n">spearman_p</span> <span class="o">=</span> <span class="n">spearmanr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">kendall_corr</span><span class="p">,</span> <span class="n">kendall_p</span> <span class="o">=</span> <span class="n">kendalltau</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        
+        <span class="c1"># Regresión lineal</span>
+        <span class="n">slope</span><span class="p">,</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">r_value</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">std_err</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">linregress</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;n_observations&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_clean</span><span class="p">),</span>
+            <span class="s1">&#39;missing_pairs&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_clean</span><span class="p">),</span>
+            <span class="s1">&#39;correlations&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;pearson&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="n">pearson_corr</span><span class="p">,</span> <span class="s1">&#39;p_value&#39;</span><span class="p">:</span> <span class="n">pearson_p</span><span class="p">},</span>
+                <span class="s1">&#39;spearman&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="n">spearman_corr</span><span class="p">,</span> <span class="s1">&#39;p_value&#39;</span><span class="p">:</span> <span class="n">spearman_p</span><span class="p">},</span>
+                <span class="s1">&#39;kendall&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="n">kendall_corr</span><span class="p">,</span> <span class="s1">&#39;p_value&#39;</span><span class="p">:</span> <span class="n">kendall_p</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;linear_regression&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;slope&#39;</span><span class="p">:</span> <span class="n">slope</span><span class="p">,</span>
+                <span class="s1">&#39;intercept&#39;</span><span class="p">:</span> <span class="n">intercept</span><span class="p">,</span>
+                <span class="s1">&#39;r_squared&#39;</span><span class="p">:</span> <span class="n">r_value</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span>
+                <span class="s1">&#39;p_value&#39;</span><span class="p">:</span> <span class="n">p_value</span><span class="p">,</span>
+                <span class="s1">&#39;std_error&#39;</span><span class="p">:</span> <span class="n">std_err</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="n">results</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">analyze_categorical_vs_categorical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">var2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Análisis de relación entre dos variables categóricas</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            var1, var2: Nombres de las variables</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Diccionario con tabla de contingencia y tests</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Crear tabla de contingencia</span>
+        <span class="n">contingency_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">var1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">var2</span><span class="p">])</span>
+        
+        <span class="c1"># Test Chi-cuadrado</span>
+        <span class="n">chi2</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">dof</span><span class="p">,</span> <span class="n">expected</span> <span class="o">=</span> <span class="n">chi2_contingency</span><span class="p">(</span><span class="n">contingency_table</span><span class="p">)</span>
+        
+        <span class="c1"># V de Cramér</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">contingency_table</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">cramers_v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">chi2</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">contingency_table</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+        
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;contingency_table&#39;</span><span class="p">:</span> <span class="n">contingency_table</span><span class="p">,</span>
+            <span class="s1">&#39;chi2_test&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;statistic&#39;</span><span class="p">:</span> <span class="n">chi2</span><span class="p">,</span>
+                <span class="s1">&#39;p_value&#39;</span><span class="p">:</span> <span class="n">p_value</span><span class="p">,</span>
+                <span class="s1">&#39;degrees_of_freedom&#39;</span><span class="p">:</span> <span class="n">dof</span><span class="p">,</span>
+                <span class="s1">&#39;expected_frequencies&#39;</span><span class="p">:</span> <span class="n">expected</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;cramers_v&#39;</span><span class="p">:</span> <span class="n">cramers_v</span><span class="p">,</span>
+            <span class="s1">&#39;association_strength&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interpret_cramers_v</span><span class="p">(</span><span class="n">cramers_v</span><span class="p">)</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="n">results</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">analyze_numeric_vs_categorical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">numeric_var</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">categorical_var</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Análisis de relación entre variable numérica y categórica</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            numeric_var: Variable numérica</span>
+<span class="sd">            categorical_var: Variable categórica</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Diccionario con estadísticas por grupo y tests</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Estadísticas descriptivas por grupo</span>
+        <span class="n">grouped_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">categorical_var</span><span class="p">)[</span><span class="n">numeric_var</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span>
+            <span class="s1">&#39;count&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="s1">&#39;std&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="s1">&#39;skew&#39;</span>
+        <span class="p">])</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        
+        <span class="c1"># Test ANOVA (paramétrico)</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">group</span><span class="p">[</span><span class="n">numeric_var</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">categorical_var</span><span class="p">)]</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">groups</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">group</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">):</span>
+            <span class="n">f_stat</span><span class="p">,</span> <span class="n">anova_p</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">f_oneway</span><span class="p">(</span><span class="o">*</span><span class="n">groups</span><span class="p">)</span>
+            
+            <span class="c1"># Test Kruskal-Wallis (no paramétrico)</span>
+            <span class="n">kw_stat</span><span class="p">,</span> <span class="n">kw_p</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">kruskal</span><span class="p">(</span><span class="o">*</span><span class="n">groups</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">f_stat</span> <span class="o">=</span> <span class="n">anova_p</span> <span class="o">=</span> <span class="n">kw_stat</span> <span class="o">=</span> <span class="n">kw_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;grouped_statistics&#39;</span><span class="p">:</span> <span class="n">grouped_stats</span><span class="p">,</span>
+            <span class="s1">&#39;anova_test&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;f_statistic&#39;</span><span class="p">:</span> <span class="n">f_stat</span><span class="p">,</span>
+                <span class="s1">&#39;p_value&#39;</span><span class="p">:</span> <span class="n">anova_p</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;kruskal_wallis_test&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;statistic&#39;</span><span class="p">:</span> <span class="n">kw_stat</span><span class="p">,</span>
+                <span class="s1">&#39;p_value&#39;</span><span class="p">:</span> <span class="n">kw_p</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;groups_info&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;n_groups&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">groups</span><span class="p">),</span>
+                <span class="s1">&#39;group_sizes&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">group</span><span class="p">)</span> <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="n">results</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_interpret_cramers_v</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cramers_v</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Interpreta el valor de V de Cramér&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">cramers_v</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Asociación muy débil&quot;</span>
+        <span class="k">elif</span> <span class="n">cramers_v</span> <span class="o">&lt;</span> <span class="mf">0.3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Asociación débil&quot;</span>
+        <span class="k">elif</span> <span class="n">cramers_v</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Asociación moderada&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Asociación fuerte&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_correlation_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;pearson&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Crea matriz de correlación interactiva</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            method: &#39;pearson&#39;, &#39;spearman&#39;, o &#39;kendall&#39;</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Figura de Plotly</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Calcular matriz de correlación</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;pearson&#39;</span><span class="p">:</span>
+            <span class="n">corr_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">numeric_columns</span><span class="p">]</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;pearson&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;spearman&#39;</span><span class="p">:</span>
+            <span class="n">corr_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">numeric_columns</span><span class="p">]</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;spearman&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;kendall&#39;</span><span class="p">:</span>
+            <span class="n">corr_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">numeric_columns</span><span class="p">]</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;kendall&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># Crear heatmap</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">go</span><span class="o">.</span><span class="n">Heatmap</span><span class="p">(</span>
+            <span class="n">z</span><span class="o">=</span><span class="n">corr_matrix</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">corr_matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">corr_matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+            <span class="n">colorscale</span><span class="o">=</span><span class="s1">&#39;RdBu&#39;</span><span class="p">,</span>
+            <span class="n">zmid</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">corr_matrix</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+            <span class="n">texttemplate</span><span class="o">=</span><span class="s1">&#39;%</span><span class="si">{text}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="n">textfont</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">},</span>
+            <span class="n">showscale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">colorbar</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Correlación </span><span class="si">{</span><span class="n">method</span><span class="o">.</span><span class="n">title</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="p">))</span>
+        
+        <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Matriz de Correlación - </span><span class="si">{</span><span class="n">method</span><span class="o">.</span><span class="n">title</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">template</span><span class="o">=</span><span class="s2">&quot;plotly_white&quot;</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
+            <span class="n">width</span><span class="o">=</span><span class="mi">800</span>
+        <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">fig</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_scatter_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">var2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">color_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Crea gráfico de dispersión con línea de regresión</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            var1, var2: Variables para ejes X e Y</span>
+<span class="sd">            color_var: Variable para colorear puntos (opcional)</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Figura de Plotly</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Filtrar datos válidos</span>
+        <span class="k">if</span> <span class="n">color_var</span><span class="p">:</span>
+            <span class="n">data_clean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[[</span><span class="n">var1</span><span class="p">,</span> <span class="n">var2</span><span class="p">,</span> <span class="n">color_var</span><span class="p">]]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data_clean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[[</span><span class="n">var1</span><span class="p">,</span> <span class="n">var2</span><span class="p">]]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+        
+        <span class="c1"># Crear scatter plot</span>
+        <span class="k">if</span> <span class="n">color_var</span> <span class="ow">and</span> <span class="n">color_var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">categorical_columns</span><span class="p">:</span>
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                <span class="n">data_clean</span><span class="p">,</span>
+                <span class="n">x</span><span class="o">=</span><span class="n">var1</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="n">var2</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">color_var</span><span class="p">,</span>
+                <span class="n">trendline</span><span class="o">=</span><span class="s2">&quot;ols&quot;</span><span class="p">,</span>
+                <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Relación: </span><span class="si">{</span><span class="n">var1</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="n">var2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="n">var1</span><span class="p">:</span> <span class="n">var1</span><span class="p">,</span> <span class="n">var2</span><span class="p">:</span> <span class="n">var2</span><span class="p">}</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                <span class="n">data_clean</span><span class="p">,</span>
+                <span class="n">x</span><span class="o">=</span><span class="n">var1</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="n">var2</span><span class="p">,</span>
+                <span class="n">trendline</span><span class="o">=</span><span class="s2">&quot;ols&quot;</span><span class="p">,</span>
+                <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Relación: </span><span class="si">{</span><span class="n">var1</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="n">var2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="n">var1</span><span class="p">:</span> <span class="n">var1</span><span class="p">,</span> <span class="n">var2</span><span class="p">:</span> <span class="n">var2</span><span class="p">}</span>
+            <span class="p">)</span>
+        
+        <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">template</span><span class="o">=</span><span class="s2">&quot;plotly_white&quot;</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mi">500</span>
+        <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">fig</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_contingency_heatmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">var2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Crea heatmap de tabla de contingencia</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            var1, var2: Variables categóricas</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Figura de Plotly</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Crear tabla de contingencia</span>
+        <span class="n">contingency</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">var1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">var2</span><span class="p">])</span>
+        
+        <span class="c1"># Crear heatmap</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">go</span><span class="o">.</span><span class="n">Heatmap</span><span class="p">(</span>
+            <span class="n">z</span><span class="o">=</span><span class="n">contingency</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">contingency</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">contingency</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+            <span class="n">colorscale</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="n">contingency</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+            <span class="n">texttemplate</span><span class="o">=</span><span class="s1">&#39;%</span><span class="si">{text}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="n">textfont</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">},</span>
+            <span class="n">showscale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">colorbar</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Frecuencia&quot;</span><span class="p">)</span>
+        <span class="p">))</span>
+        
+        <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Tabla de Contingencia: </span><span class="si">{</span><span class="n">var1</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="n">var2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">xaxis_title</span><span class="o">=</span><span class="n">var2</span><span class="p">,</span>
+            <span class="n">yaxis_title</span><span class="o">=</span><span class="n">var1</span><span class="p">,</span>
+            <span class="n">template</span><span class="o">=</span><span class="s2">&quot;plotly_white&quot;</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mi">500</span>
+        <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">fig</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_grouped_boxplot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">numeric_var</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">categorical_var</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Crea boxplot agrupado</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            numeric_var: Variable numérica</span>
+<span class="sd">            categorical_var: Variable categórica</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Figura de Plotly</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">box</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">categorical_var</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">numeric_var</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Distribución de </span><span class="si">{</span><span class="n">numeric_var</span><span class="si">}</span><span class="s2"> por </span><span class="si">{</span><span class="n">categorical_var</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">categorical_var</span>
+        <span class="p">)</span>
+        
+        <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">template</span><span class="o">=</span><span class="s2">&quot;plotly_white&quot;</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+            <span class="n">showlegend</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">fig</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">render_bivariate_analysis</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Renderiza el módulo de análisis bivariado en Streamlit&quot;&quot;&quot;</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;📊 Análisis Bivariado&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### *Análisis de relaciones entre pares de variables*&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Verificar datos</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;data/processed/datos_credito_hipotecario_realista.csv&quot;</span><span class="p">):</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;❌ No hay datos disponibles. Ve a &#39;Generar Datos&#39; primero.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="c1"># Cargar datos</span>
+    <span class="nd">@st</span><span class="o">.</span><span class="n">cache_data</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_data</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/processed/datos_credito_hipotecario_realista.csv&quot;</span><span class="p">)</span>
+    
+    <span class="n">df</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">()</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Datos cargados: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> registros, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> variables&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Crear analizador</span>
+    <span class="n">analyzer</span> <span class="o">=</span> <span class="n">BivariateAnalyzer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    
+    <span class="c1"># Tabs principales</span>
+    <span class="n">tab1</span><span class="p">,</span> <span class="n">tab2</span><span class="p">,</span> <span class="n">tab3</span><span class="p">,</span> <span class="n">tab4</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span>
+        <span class="s2">&quot;🔗 Correlaciones&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;📈 Numérica vs Numérica&quot;</span><span class="p">,</span> 
+        <span class="s2">&quot;📊 Categórica vs Categórica&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;📦 Numérica vs Categórica&quot;</span>
+    <span class="p">])</span>
+    
+    <span class="c1"># ==================== TAB 1: CORRELACIONES ====================</span>
+    <span class="k">with</span> <span class="n">tab1</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;🔗 Matriz de Correlación&quot;</span><span class="p">)</span>
+        
+        <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+        
+        <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+            <span class="n">correlation_method</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+                <span class="s2">&quot;Método de correlación:&quot;</span><span class="p">,</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pearson&#39;</span><span class="p">,</span> <span class="s1">&#39;spearman&#39;</span><span class="p">,</span> <span class="s1">&#39;kendall&#39;</span><span class="p">],</span>
+                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Pearson: lineal, Spearman: monotónica, Kendall: ordinal&quot;</span>
+            <span class="p">)</span>
+            
+            <span class="n">min_corr</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">slider</span><span class="p">(</span>
+                <span class="s2">&quot;Correlación mínima a mostrar:&quot;</span><span class="p">,</span>
+                <span class="n">min_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                <span class="n">max_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                <span class="n">step</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Filtrar correlaciones débiles&quot;</span>
+            <span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;📊 Generar Matriz de Correlación&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">):</span>
+                <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;📊 Calculando correlaciones...&quot;</span><span class="p">):</span>
+                    <span class="n">fig_corr</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">create_correlation_matrix</span><span class="p">(</span><span class="n">correlation_method</span><span class="p">)</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">fig_corr</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    
+                    <span class="c1"># Tabla de correlaciones más altas</span>
+                    <span class="n">corr_matrix</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">analyzer</span><span class="o">.</span><span class="n">numeric_columns</span><span class="p">]</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">correlation_method</span><span class="p">)</span>
+                    
+                    <span class="c1"># Extraer correlaciones únicas</span>
+                    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">triu</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">corr_matrix</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">corr_pairs</span> <span class="o">=</span> <span class="n">corr_matrix</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+                    <span class="n">corr_pairs</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Variable 1&#39;</span><span class="p">,</span> <span class="s1">&#39;Variable 2&#39;</span><span class="p">,</span> <span class="s1">&#39;Correlación&#39;</span><span class="p">]</span>
+                    <span class="n">corr_pairs</span><span class="p">[</span><span class="s1">&#39;Correlación Abs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">corr_pairs</span><span class="p">[</span><span class="s1">&#39;Correlación&#39;</span><span class="p">])</span>
+                    
+                    <span class="c1"># Filtrar y ordenar</span>
+                    <span class="n">high_corr</span> <span class="o">=</span> <span class="n">corr_pairs</span><span class="p">[</span>
+                        <span class="n">corr_pairs</span><span class="p">[</span><span class="s1">&#39;Correlación Abs&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_corr</span>
+                    <span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;Correlación Abs&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                    
+                    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔝 Top Correlaciones (|r| ≥ </span><span class="si">{</span><span class="n">min_corr</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span>
+                        <span class="n">high_corr</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)[[</span><span class="s1">&#39;Variable 1&#39;</span><span class="p">,</span> <span class="s1">&#39;Variable 2&#39;</span><span class="p">,</span> <span class="s1">&#39;Correlación&#39;</span><span class="p">]],</span>
+                        <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">hide_index</span><span class="o">=</span><span class="kc">True</span>
+                    <span class="p">)</span>
+    
+    <span class="c1"># ==================== TAB 2: NUMÉRICA VS NUMÉRICA ====================</span>
+    <span class="k">with</span> <span class="n">tab2</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📈 Análisis: Numérica vs Numérica&quot;</span><span class="p">)</span>
+        
+        <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+            <span class="n">var1</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+                <span class="s2">&quot;Variable X:&quot;</span><span class="p">,</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">analyzer</span><span class="o">.</span><span class="n">numeric_columns</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="s2">&quot;num_var1&quot;</span>
+            <span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+            <span class="n">var2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+                <span class="s2">&quot;Variable Y:&quot;</span><span class="p">,</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">analyzer</span><span class="o">.</span><span class="n">numeric_columns</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="s2">&quot;num_var2&quot;</span>
+            <span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col3</span><span class="p">:</span>
+            <span class="n">color_var</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+                <span class="s2">&quot;Colorear por (opcional):&quot;</span><span class="p">,</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">+</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">categorical_columns</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="s2">&quot;color_var&quot;</span>
+            <span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">var1</span> <span class="ow">and</span> <span class="n">var2</span> <span class="ow">and</span> <span class="n">var1</span> <span class="o">!=</span> <span class="n">var2</span><span class="p">:</span>
+            <span class="c1"># Análisis estadístico</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">analyze_numeric_vs_numeric</span><span class="p">(</span><span class="n">var1</span><span class="p">,</span> <span class="n">var2</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="s1">&#39;error&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+                <span class="c1"># Mostrar métricas</span>
+                <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span><span class="p">,</span> <span class="n">col4</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+                
+                <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Correlación Pearson&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;correlations&#39;</span><span class="p">][</span><span class="s1">&#39;pearson&#39;</span><span class="p">][</span><span class="s1">&#39;r&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+                <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Correlación Spearman&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;correlations&#39;</span><span class="p">][</span><span class="s1">&#39;spearman&#39;</span><span class="p">][</span><span class="s1">&#39;r&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+                <span class="k">with</span> <span class="n">col3</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;R² (Regresión)&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;linear_regression&#39;</span><span class="p">][</span><span class="s1">&#39;r_squared&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+                <span class="k">with</span> <span class="n">col4</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Observaciones&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;n_observations&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+                <span class="c1"># Gráfico de dispersión</span>
+                <span class="n">fig_scatter</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">create_scatter_plot</span><span class="p">(</span><span class="n">var1</span><span class="p">,</span> <span class="n">var2</span><span class="p">,</span> <span class="n">color_var</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">fig_scatter</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                
+                <span class="c1"># Interpretación</span>
+                <span class="n">pearson_r</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;correlations&#39;</span><span class="p">][</span><span class="s1">&#39;pearson&#39;</span><span class="p">][</span><span class="s1">&#39;r&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pearson_r</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.3</span><span class="p">:</span>
+                    <span class="n">strength</span> <span class="o">=</span> <span class="s2">&quot;débil&quot;</span>
+                <span class="k">elif</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pearson_r</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.7</span><span class="p">:</span>
+                    <span class="n">strength</span> <span class="o">=</span> <span class="s2">&quot;moderada&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">strength</span> <span class="o">=</span> <span class="s2">&quot;fuerte&quot;</span>
+                
+                <span class="n">direction</span> <span class="o">=</span> <span class="s2">&quot;positiva&quot;</span> <span class="k">if</span> <span class="n">pearson_r</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;negativa&quot;</span>
+                
+                <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;💡 **Interpretación:** Correlación </span><span class="si">{</span><span class="n">strength</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">direction</span><span class="si">}</span><span class="s2"> (r = </span><span class="si">{</span><span class="n">pearson_r</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
+    
+    <span class="c1"># ==================== TAB 3: CATEGÓRICA VS CATEGÓRICA ====================</span>
+    <span class="k">with</span> <span class="n">tab3</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📊 Análisis: Categórica vs Categórica&quot;</span><span class="p">)</span>
+        
+        <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+            <span class="n">cat_var1</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+                <span class="s2">&quot;Variable 1:&quot;</span><span class="p">,</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">analyzer</span><span class="o">.</span><span class="n">categorical_columns</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="s2">&quot;cat_var1&quot;</span>
+            <span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+            <span class="n">cat_var2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+                <span class="s2">&quot;Variable 2:&quot;</span><span class="p">,</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">analyzer</span><span class="o">.</span><span class="n">categorical_columns</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="s2">&quot;cat_var2&quot;</span>
+            <span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">cat_var1</span> <span class="ow">and</span> <span class="n">cat_var2</span> <span class="ow">and</span> <span class="n">cat_var1</span> <span class="o">!=</span> <span class="n">cat_var2</span><span class="p">:</span>
+            <span class="c1"># Análisis estadístico</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">analyze_categorical_vs_categorical</span><span class="p">(</span><span class="n">cat_var1</span><span class="p">,</span> <span class="n">cat_var2</span><span class="p">)</span>
+            
+            <span class="c1"># Mostrar métricas</span>
+            <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            
+            <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Chi² Estadístico&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;chi2_test&#39;</span><span class="p">][</span><span class="s1">&#39;statistic&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;P-valor&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;chi2_test&#39;</span><span class="p">][</span><span class="s1">&#39;p_value&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="k">with</span> <span class="n">col3</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;V de Cramér&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;cramers_v&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Interpretación</span>
+            <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;chi2_test&#39;</span><span class="p">][</span><span class="s1">&#39;p_value&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;✅ Existe asociación significativa (p &lt; 0.05)&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;⚠️ No hay asociación significativa (p ≥ 0.05)&quot;</span><span class="p">)</span>
+            
+            <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;💡 **Fuerza de asociación:** </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;association_strength&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Visualizaciones</span>
+            <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            
+            <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+                <span class="c1"># Heatmap de contingencia</span>
+                <span class="n">fig_heatmap</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">create_contingency_heatmap</span><span class="p">(</span><span class="n">cat_var1</span><span class="p">,</span> <span class="n">cat_var2</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">fig_heatmap</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            
+            <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+                <span class="c1"># Gráfico de barras apiladas</span>
+                <span class="n">contingency</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;contingency_table&#39;</span><span class="p">]</span>
+                <span class="n">fig_stacked</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
+                
+                <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">contingency</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                    <span class="n">fig_stacked</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span>
+                        <span class="n">name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">col</span><span class="p">),</span>
+                        <span class="n">x</span><span class="o">=</span><span class="n">contingency</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                        <span class="n">y</span><span class="o">=</span><span class="n">contingency</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+                    <span class="p">))</span>
+                
+                <span class="n">fig_stacked</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Distribución: </span><span class="si">{</span><span class="n">cat_var1</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="n">cat_var2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">xaxis_title</span><span class="o">=</span><span class="n">cat_var1</span><span class="p">,</span>
+                    <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Frecuencia&quot;</span><span class="p">,</span>
+                    <span class="n">barmode</span><span class="o">=</span><span class="s1">&#39;stack&#39;</span><span class="p">,</span>
+                    <span class="n">template</span><span class="o">=</span><span class="s2">&quot;plotly_white&quot;</span><span class="p">,</span>
+                    <span class="n">height</span><span class="o">=</span><span class="mi">500</span>
+                <span class="p">)</span>
+                
+                <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">fig_stacked</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            
+            <span class="c1"># Tabla de contingencia</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📋 Tabla de Contingencia&quot;</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;contingency_table&#39;</span><span class="p">],</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># ==================== TAB 4: NUMÉRICA VS CATEGÓRICA ====================</span>
+    <span class="k">with</span> <span class="n">tab4</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📦 Análisis: Numérica vs Categórica&quot;</span><span class="p">)</span>
+        
+        <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+            <span class="n">num_var</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+                <span class="s2">&quot;Variable Numérica:&quot;</span><span class="p">,</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">analyzer</span><span class="o">.</span><span class="n">numeric_columns</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="s2">&quot;num_var_mixed&quot;</span>
+            <span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+            <span class="n">cat_var</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+                <span class="s2">&quot;Variable Categórica:&quot;</span><span class="p">,</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">analyzer</span><span class="o">.</span><span class="n">categorical_columns</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">=</span><span class="s2">&quot;cat_var_mixed&quot;</span>
+            <span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">num_var</span> <span class="ow">and</span> <span class="n">cat_var</span><span class="p">:</span>
+            <span class="c1"># Análisis estadístico</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">analyze_numeric_vs_categorical</span><span class="p">(</span><span class="n">num_var</span><span class="p">,</span> <span class="n">cat_var</span><span class="p">)</span>
+            
+            <span class="c1"># Mostrar métricas de tests</span>
+            <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            
+            <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;F-estadístico (ANOVA)&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;anova_test&#39;</span><span class="p">][</span><span class="s1">&#39;f_statistic&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;P-valor ANOVA&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;anova_test&#39;</span><span class="p">][</span><span class="s1">&#39;p_value&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="k">with</span> <span class="n">col3</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Grupos&quot;</span><span class="p">,</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;groups_info&#39;</span><span class="p">][</span><span class="s1">&#39;n_groups&#39;</span><span class="p">])</span>
+            
+            <span class="c1"># Interpretación de tests</span>
+            <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;anova_test&#39;</span><span class="p">][</span><span class="s1">&#39;p_value&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;✅ Diferencias significativas entre grupos (ANOVA p &lt; 0.05)&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;⚠️ No hay diferencias significativas entre grupos (ANOVA p ≥ 0.05)&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Visualizaciones</span>
+            <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            
+            <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+                <span class="c1"># Boxplot agrupado</span>
+                <span class="n">fig_box</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">create_grouped_boxplot</span><span class="p">(</span><span class="n">num_var</span><span class="p">,</span> <span class="n">cat_var</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">fig_box</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            
+            <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+                <span class="c1"># Violin plot</span>
+                <span class="n">fig_violin</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">violin</span><span class="p">(</span>
+                    <span class="n">df</span><span class="p">,</span>
+                    <span class="n">x</span><span class="o">=</span><span class="n">cat_var</span><span class="p">,</span>
+                    <span class="n">y</span><span class="o">=</span><span class="n">num_var</span><span class="p">,</span>
+                    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Distribución de </span><span class="si">{</span><span class="n">num_var</span><span class="si">}</span><span class="s2"> por </span><span class="si">{</span><span class="n">cat_var</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">box</span><span class="o">=</span><span class="kc">True</span>
+                <span class="p">)</span>
+                <span class="n">fig_violin</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                    <span class="n">template</span><span class="o">=</span><span class="s2">&quot;plotly_white&quot;</span><span class="p">,</span>
+                    <span class="n">height</span><span class="o">=</span><span class="mi">500</span>
+                <span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">fig_violin</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            
+            <span class="c1"># Estadísticas por grupo</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📊 Estadísticas por Grupo&quot;</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;grouped_statistics&#39;</span><span class="p">],</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="render_bivariate_module">
+<a class="viewcode-back" href="../api_reference.html#bivariate_analysis.render_bivariate_module">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">render_bivariate_module</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Función principal para renderizar el módulo bivariado&quot;&quot;&quot;</span>
+    <span class="n">render_bivariate_analysis</span><span class="p">()</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Módulo de análisis bivariado cargado correctamente&quot;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2024, Andrés Fernando Gómez Rojas.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

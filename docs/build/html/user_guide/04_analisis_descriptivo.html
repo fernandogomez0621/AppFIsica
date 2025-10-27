@@ -1,0 +1,534 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>4. Análisis Descriptivo &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="5. Ingeniería de Características" href="05_ingenieria_caracteristicas.html" />
+    <link rel="prev" title="3. Cargar Datos Externos" href="03_cargar_datos.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#introduccion">Introducción</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#flujo-de-trabajo-recomendado">Flujo de Trabajo Recomendado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#requisitos-previos">Requisitos Previos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#convenciones-de-este-manual">Convenciones de este Manual</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../user_guide.html#estructura-del-manual">Estructura del Manual</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="01_inicio.html">1. Página de Inicio y Navegación</a></li>
+<li class="toctree-l3"><a class="reference internal" href="02_generar_datos.html">2. Generar Datos Sintéticos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="03_cargar_datos.html">3. Cargar Datos Externos</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">4. Análisis Descriptivo</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#acceso-al-modulo">Acceso al Módulo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#analisis-univariado">Análisis Univariado</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#analisis-bivariado">Análisis Bivariado</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deteccion-de-outliers">Detección de Outliers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reportes-estadisticos">Reportes Estadísticos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#casos-de-uso">Casos de Uso</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tips-y-mejores-practicas">Tips y Mejores Prácticas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="05_ingenieria_caracteristicas.html">5. Ingeniería de Características</a></li>
+<li class="toctree-l3"><a class="reference internal" href="06_clustering.html">6. Clustering y Segmentación</a></li>
+<li class="toctree-l3"><a class="reference internal" href="07_rbm.html">7. Máquina de Boltzmann Restringida (RBM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="08_modelos_supervisados.html">8. Modelos Supervisados</a></li>
+<li class="toctree-l3"><a class="reference internal" href="09_prediccion.html">9. Predicción de Riesgo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="10_reentrenamiento.html">10. Reentrenamiento de Modelos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="11_rag_educativo.html">11. Sistema RAG Educativo</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#acceso-rapido">Acceso Rápido</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#soporte-y-recursos">Soporte y Recursos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Módulos del Sistema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../user_guide.html">Manual de Usuario</a></li>
+      <li class="breadcrumb-item active">4. Análisis Descriptivo</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/04_analisis_descriptivo.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="analisis-descriptivo">
+<h1>4. Análisis Descriptivo<a class="headerlink" href="#analisis-descriptivo" title="Link to this heading"></a></h1>
+<p>Esta guía te enseñará a realizar análisis exploratorio completo de tus datos de crédito hipotecario, incluyendo estadísticas univariadas, bivariadas y visualizaciones interactivas.</p>
+<section id="objetivo-del-modulo">
+<h2>Objetivo del Módulo<a class="headerlink" href="#objetivo-del-modulo" title="Link to this heading"></a></h2>
+<p>El módulo de análisis descriptivo te permite:</p>
+<ul class="simple">
+<li><p>📊 <strong>Explorar distribuciones</strong> de variables individuales</p></li>
+<li><p>📈 <strong>Analizar correlaciones</strong> entre variables</p></li>
+<li><p>🔍 <strong>Detectar outliers</strong> y valores atípicos</p></li>
+<li><p>📉 <strong>Visualizar patrones</strong> con gráficos interactivos</p></li>
+<li><p>📋 <strong>Generar reportes</strong> estadísticos completos</p></li>
+<li><p>🎯 <strong>Identificar insights</strong> para modelado</p></li>
+</ul>
+</section>
+<section id="acceso-al-modulo">
+<h2>Acceso al Módulo<a class="headerlink" href="#acceso-al-modulo" title="Link to this heading"></a></h2>
+<p>En el sidebar, click en:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>📈 Análisis → 📈 Análisis Descriptivo
+</pre></div>
+</div>
+</section>
+<section id="analisis-univariado">
+<h2>Análisis Univariado<a class="headerlink" href="#analisis-univariado" title="Link to this heading"></a></h2>
+<section id="seleccion-de-variables">
+<h3>Selección de Variables<a class="headerlink" href="#seleccion-de-variables" title="Link to this heading"></a></h3>
+<p><strong>Paso 1: Seleccionar variables</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Selecciona variables para analizar:
+
+☑ edad
+☑ salario_mensual
+☑ puntaje_datacredito
+☑ dti
+☑ nivel_riesgo
+</pre></div>
+</div>
+<p><strong>Paso 2: Ejecutar análisis</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[🎯 Analizar Variables Seleccionadas]
+</pre></div>
+</div>
+</section>
+<section id="estadisticas-descriptivas">
+<h3>Estadísticas Descriptivas<a class="headerlink" href="#estadisticas-descriptivas" title="Link to this heading"></a></h3>
+<p>Para cada variable numérica, obtendrás:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Variable: salario_mensual
+═══════════════════════════
+
+Medidas de Tendencia Central:
+• Media:           $4,235,000
+• Mediana:         $3,850,000
+• Moda:            $3,500,000
+
+Medidas de Dispersión:
+• Desv. Estándar:  $2,150,000
+• Varianza:        4.62e+12
+• Rango:           $24,000,000
+• IQR:             $2,800,000
+
+Percentiles:
+• P5:              $1,500,000
+• P25:             $2,600,000
+• P50 (Mediana):   $3,850,000
+• P75:             $5,400,000
+• P95:             $8,200,000
+
+Forma de la Distribución:
+• Asimetría:       1.23 (sesgada a derecha)
+• Curtosis:        2.45 (leptocúrtica)
+
+Tests de Normalidad:
+• Shapiro-Wilk:    p-value = 0.001 (No normal)
+• Kolmogorov-S:    p-value = 0.003 (No normal)
+</pre></div>
+</div>
+</section>
+<section id="visualizaciones-univariadas">
+<h3>Visualizaciones Univariadas<a class="headerlink" href="#visualizaciones-univariadas" title="Link to this heading"></a></h3>
+<p><strong>1. Histograma con Curva de Densidad</strong></p>
+<p>Muestra la distribución de frecuencias con curva KDE superpuesta.</p>
+<p><strong>2. Boxplot (Diagrama de Cajas)</strong></p>
+<p>Identifica:
+- Mediana (línea central)
+- Cuartiles Q1 y Q3 (caja)
+- Valores atípicos (puntos fuera de bigotes)
+- Rango intercuartílico</p>
+<p><strong>3. Q-Q Plot (Gráfico Cuantil-Cuantil)</strong></p>
+<p>Compara la distribución con una normal teórica.</p>
+<p><strong>4. Violin Plot</strong></p>
+<p>Combina boxplot con densidad de probabilidad.</p>
+<div class="admonition tip">
+<p class="admonition-title">Truco</p>
+<p>Usa el botón de descarga en cada gráfico para guardar las visualizaciones.</p>
+</div>
+</section>
+<section id="variables-categoricas">
+<h3>Variables Categóricas<a class="headerlink" href="#variables-categoricas" title="Link to this heading"></a></h3>
+<p>Para variables categóricas (ej: <code class="docutils literal notranslate"><span class="pre">nivel_riesgo</span></code>):</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Variable: nivel_riesgo
+═══════════════════════
+
+Frecuencias:
+• Bajo:   6,074 (60.7%) ████████████████████████
+• Medio:  2,943 (29.4%) ████████████
+• Alto:     983 ( 9.8%) ████
+
+Moda: Bajo
+Entropía: 1.23 bits
+Índice de Gini: 0.54
+</pre></div>
+</div>
+<p><strong>Visualizaciones:</strong></p>
+<ul class="simple">
+<li><p>Gráfico de barras</p></li>
+<li><p>Gráfico de pastel</p></li>
+<li><p>Tabla de frecuencias</p></li>
+</ul>
+</section>
+</section>
+<section id="analisis-bivariado">
+<h2>Análisis Bivariado<a class="headerlink" href="#analisis-bivariado" title="Link to this heading"></a></h2>
+<section id="correlaciones">
+<h3>Correlaciones<a class="headerlink" href="#correlaciones" title="Link to this heading"></a></h3>
+<p><strong>Matriz de Correlación:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[🔗 Calcular Matriz de Correlación]
+</pre></div>
+</div>
+<p>Genera una matriz de calor mostrando correlaciones entre todas las variables numéricas.</p>
+<p><strong>Interpretación:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Correlación    Interpretación
+─────────────────────────────────
+0.8 - 1.0      Muy fuerte positiva
+0.6 - 0.8      Fuerte positiva
+0.4 - 0.6      Moderada positiva
+0.2 - 0.4      Débil positiva
+-0.2 - 0.2     Muy débil/ninguna
+-0.4 - -0.2    Débil negativa
+-0.6 - -0.4    Moderada negativa
+-0.8 - -0.6    Fuerte negativa
+-1.0 - -0.8    Muy fuerte negativa
+</pre></div>
+</div>
+<p><strong>Correlaciones Importantes:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Top 5 Correlaciones Positivas:
+1. salario_mensual ↔ patrimonio_total: 0.72
+2. valor_inmueble ↔ monto_credito: 0.89
+3. edad ↔ antiguedad_empleo: 0.58
+4. puntaje_datacredito ↔ capacidad_ahorro: 0.45
+5. estrato ↔ salario_mensual: 0.51
+
+Top 5 Correlaciones Negativas:
+1. dti ↔ capacidad_residual: -0.68
+2. numero_demandas ↔ puntaje_datacredito: -0.23
+3. ltv ↔ cuota_inicial: -0.85
+4. edad ↔ plazo_credito: -0.42
+5. egresos ↔ capacidad_ahorro: -0.78
+</pre></div>
+</div>
+</section>
+<section id="scatter-plots">
+<h3>Scatter Plots<a class="headerlink" href="#scatter-plots" title="Link to this heading"></a></h3>
+<p><strong>Gráficos de Dispersión:</strong></p>
+<p>Selecciona dos variables para ver su relación:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Variable X: salario_mensual
+Variable Y: valor_inmueble
+Color por: nivel_riesgo
+
+[📊 Generar Scatter Plot]
+</pre></div>
+</div>
+<p><strong>Características:</strong></p>
+<ul class="simple">
+<li><p>Puntos coloreados por categoría</p></li>
+<li><p>Línea de tendencia</p></li>
+<li><p>Coeficiente de correlación</p></li>
+<li><p>Intervalos de confianza</p></li>
+</ul>
+</section>
+<section id="analisis-por-grupos">
+<h3>Análisis por Grupos<a class="headerlink" href="#analisis-por-grupos" title="Link to this heading"></a></h3>
+<p><strong>Comparar distribuciones por categoría:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Variable numérica: dti
+Agrupar por: nivel_riesgo
+
+[📊 Comparar Grupos]
+</pre></div>
+</div>
+<p><strong>Resultados:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>DTI por Nivel de Riesgo:
+
+Bajo:   Media = 23.5%, Mediana = 22.8%
+Medio:  Media = 29.2%, Mediana = 28.5%
+Alto:   Media = 34.8%, Mediana = 35.2%
+
+Test ANOVA: F = 245.3, p &lt; 0.001
+Conclusión: Diferencias significativas entre grupos
+</pre></div>
+</div>
+<p><strong>Visualizaciones:</strong></p>
+<ul class="simple">
+<li><p>Boxplots comparativos</p></li>
+<li><p>Violin plots por grupo</p></li>
+<li><p>Histogramas superpuestos</p></li>
+</ul>
+</section>
+<section id="tablas-de-contingencia">
+<h3>Tablas de Contingencia<a class="headerlink" href="#tablas-de-contingencia" title="Link to this heading"></a></h3>
+<p>Para dos variables categóricas:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Variable 1: tipo_empleo
+Variable 2: nivel_riesgo
+
+[📋 Generar Tabla de Contingencia]
+</pre></div>
+</div>
+<p><strong>Resultado:</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p>Bajo</p></th>
+<th class="head"><p>Medio</p></th>
+<th class="head"><p>Alto</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Formal</p></td>
+<td><p>4,250 (65%)</p></td>
+<td><p>1,580 (24%)</p></td>
+<td><p>720 (11%)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Informal</p></td>
+<td><p>1,420 (51%)</p></td>
+<td><p>980 (35%)</p></td>
+<td><p>390 (14%)</p></td>
+</tr>
+<tr class="row-even"><td><p>Independiente</p></td>
+<td><p>404 (62%)</p></td>
+<td><p>183 (28%)</p></td>
+<td><p>63 (10%)</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Test Chi-Cuadrado:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>χ² = 89.5, p &lt; 0.001
+Conclusión: Asociación significativa
+</pre></div>
+</div>
+</section>
+</section>
+<section id="deteccion-de-outliers">
+<h2>Detección de Outliers<a class="headerlink" href="#deteccion-de-outliers" title="Link to this heading"></a></h2>
+<section id="metodos-automaticos">
+<h3>Métodos Automáticos<a class="headerlink" href="#metodos-automaticos" title="Link to this heading"></a></h3>
+<p><strong>1. Método IQR (Rango Intercuartílico)</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Outliers detectados en salario_mensual:
+
+Límite inferior: Q1 - 1.5*IQR = $0
+Límite superior: Q3 + 1.5*IQR = $9,600,000
+
+Outliers superiores: 23 valores
+Valores: [$10.2M, $11.5M, $12.8M, ...]
+</pre></div>
+</div>
+<p><strong>2. Método Z-Score</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Outliers (|Z| &gt; 3):
+
+salario_mensual: 15 valores extremos
+valor_inmueble: 8 valores extremos
+patrimonio_total: 12 valores extremos
+</pre></div>
+</div>
+<p><strong>3. Isolation Forest</strong></p>
+<p>Algoritmo de ML para detectar anomalías multivariadas.</p>
+</section>
+<section id="visualizacion-de-outliers">
+<h3>Visualización de Outliers<a class="headerlink" href="#visualizacion-de-outliers" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Boxplots con outliers marcados</p></li>
+<li><p>Scatter plots con outliers resaltados</p></li>
+<li><p>Histogramas con zonas de outliers</p></li>
+</ul>
+</section>
+</section>
+<section id="reportes-estadisticos">
+<h2>Reportes Estadísticos<a class="headerlink" href="#reportes-estadisticos" title="Link to this heading"></a></h2>
+<section id="reporte-completo">
+<h3>Reporte Completo<a class="headerlink" href="#reporte-completo" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[📄 Generar Reporte Completo]
+</pre></div>
+</div>
+<p>Incluye:</p>
+<ol class="arabic simple">
+<li><p><strong>Resumen Ejecutivo</strong>
+- Tamaño del dataset
+- Variables analizadas
+- Hallazgos principales</p></li>
+<li><p><strong>Estadísticas Univariadas</strong>
+- Todas las variables numéricas
+- Todas las variables categóricas</p></li>
+<li><p><strong>Análisis Bivariado</strong>
+- Matriz de correlación
+- Top correlaciones
+- Tests estadísticos</p></li>
+<li><p><strong>Detección de Anomalías</strong>
+- Outliers por variable
+- Registros problemáticos</p></li>
+<li><p><strong>Recomendaciones</strong>
+- Variables para transformar
+- Outliers a tratar
+- Próximos pasos</p></li>
+</ol>
+</section>
+<section id="exportar-resultados">
+<h3>Exportar Resultados<a class="headerlink" href="#exportar-resultados" title="Link to this heading"></a></h3>
+<p><strong>Formatos disponibles:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[📊 Exportar a Excel]
+[📄 Exportar a PDF]
+[📋 Exportar a CSV]
+[🖼️ Exportar Gráficos]
+</pre></div>
+</div>
+</section>
+</section>
+<section id="casos-de-uso">
+<h2>Casos de Uso<a class="headerlink" href="#casos-de-uso" title="Link to this heading"></a></h2>
+<p><strong>Caso 1: Exploración Inicial</strong></p>
+<p>Objetivo: Entender la estructura de los datos.</p>
+<p>Pasos:
+1. Analizar todas las variables numéricas
+2. Revisar distribuciones
+3. Identificar outliers
+4. Generar reporte inicial</p>
+<p><strong>Caso 2: Validación de Calidad</strong></p>
+<p>Objetivo: Verificar calidad antes de modelar.</p>
+<p>Pasos:
+1. Detectar valores atípicos
+2. Verificar normalidad
+3. Analizar correlaciones
+4. Identificar problemas</p>
+<p><strong>Caso 3: Feature Selection</strong></p>
+<p>Objetivo: Seleccionar variables para modelos.</p>
+<p>Pasos:
+1. Calcular correlaciones con target
+2. Identificar multicolinealidad
+3. Analizar importancia de variables
+4. Seleccionar features óptimas</p>
+</section>
+<section id="tips-y-mejores-practicas">
+<h2>Tips y Mejores Prácticas<a class="headerlink" href="#tips-y-mejores-practicas" title="Link to this heading"></a></h2>
+<p>✅ <strong>Haz:</strong></p>
+<ul class="simple">
+<li><p>Analiza todas las variables antes de modelar</p></li>
+<li><p>Documenta hallazgos importantes</p></li>
+<li><p>Compara distribuciones por grupos</p></li>
+<li><p>Verifica supuestos estadísticos</p></li>
+</ul>
+<p>❌ <strong>Evita:</strong></p>
+<ul class="simple">
+<li><p>Ignorar outliers sin investigar</p></li>
+<li><p>Asumir normalidad sin verificar</p></li>
+<li><p>Pasar por alto correlaciones altas</p></li>
+<li><p>Omitir análisis bivariado</p></li>
+</ul>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<p><strong>Problema: Gráficos no se generan</strong></p>
+<p>Solución: Verifica que hayas seleccionado variables válidas.</p>
+<p><strong>Problema: Tests estadísticos fallan</strong></p>
+<p>Solución: Asegúrate de tener suficientes datos (n &gt; 30).</p>
+<p><strong>Problema: Correlaciones inesperadas</strong></p>
+<p>Solución: Verifica calidad de datos y outliers.</p>
+</section>
+<section id="proximos-pasos">
+<h2>Próximos Pasos<a class="headerlink" href="#proximos-pasos" title="Link to this heading"></a></h2>
+<p>Con tu análisis completo:</p>
+<ol class="arabic simple">
+<li><p><strong>Crear características</strong>: <a class="reference internal" href="05_ingenieria_caracteristicas.html"><span class="doc">5. Ingeniería de Características</span></a></p></li>
+<li><p><strong>Segmentar clientes</strong>: <a class="reference internal" href="06_clustering.html"><span class="doc">6. Clustering y Segmentación</span></a></p></li>
+<li><p><strong>Entrenar RBM</strong>: <a class="reference internal" href="07_rbm.html"><span class="doc">7. Máquina de Boltzmann Restringida (RBM)</span></a></p></li>
+</ol>
+<p>¡Has completado el análisis exploratorio! 📊</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="03_cargar_datos.html" class="btn btn-neutral float-left" title="3. Cargar Datos Externos" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="05_ingenieria_caracteristicas.html" class="btn btn-neutral float-right" title="5. Ingeniería de Características" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, Andrés Fernando Gómez Rojas &amp; Carlos Andrés Gómez Vasco. Software Libre bajo Licencia MIT.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

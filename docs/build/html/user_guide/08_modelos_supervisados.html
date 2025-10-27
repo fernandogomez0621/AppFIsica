@@ -1,0 +1,606 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>8. Modelos Supervisados &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="9. Predicción de Riesgo" href="09_prediccion.html" />
+    <link rel="prev" title="7. Máquina de Boltzmann Restringida (RBM)" href="07_rbm.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#introduccion">Introducción</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#flujo-de-trabajo-recomendado">Flujo de Trabajo Recomendado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#requisitos-previos">Requisitos Previos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#convenciones-de-este-manual">Convenciones de este Manual</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../user_guide.html#estructura-del-manual">Estructura del Manual</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="01_inicio.html">1. Página de Inicio y Navegación</a></li>
+<li class="toctree-l3"><a class="reference internal" href="02_generar_datos.html">2. Generar Datos Sintéticos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="03_cargar_datos.html">3. Cargar Datos Externos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04_analisis_descriptivo.html">4. Análisis Descriptivo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05_ingenieria_caracteristicas.html">5. Ingeniería de Características</a></li>
+<li class="toctree-l3"><a class="reference internal" href="06_clustering.html">6. Clustering y Segmentación</a></li>
+<li class="toctree-l3"><a class="reference internal" href="07_rbm.html">7. Máquina de Boltzmann Restringida (RBM)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">8. Modelos Supervisados</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#acceso-al-modulo">Acceso al Módulo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#algoritmos-disponibles">Algoritmos Disponibles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proceso-de-entrenamiento">Proceso de Entrenamiento</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#comparacion-de-modelos">Comparación de Modelos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#importancia-de-features">Importancia de Features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#optimizacion-de-hiperparametros">Optimización de Hiperparámetros</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#validacion-cruzada">Validación Cruzada</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#manejo-de-desbalanceo">Manejo de Desbalanceo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#guardar-modelos">Guardar Modelos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#casos-de-uso">Casos de Uso</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tips-y-mejores-practicas">Tips y Mejores Prácticas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="09_prediccion.html">9. Predicción de Riesgo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="10_reentrenamiento.html">10. Reentrenamiento de Modelos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="11_rag_educativo.html">11. Sistema RAG Educativo</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#acceso-rapido">Acceso Rápido</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#soporte-y-recursos">Soporte y Recursos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Módulos del Sistema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../user_guide.html">Manual de Usuario</a></li>
+      <li class="breadcrumb-item active">8. Modelos Supervisados</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/08_modelos_supervisados.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="modelos-supervisados">
+<h1>8. Modelos Supervisados<a class="headerlink" href="#modelos-supervisados" title="Link to this heading"></a></h1>
+<p>Esta guía te enseñará a entrenar y comparar múltiples modelos de clasificación supervisada para predecir el nivel de riesgo crediticio.</p>
+<section id="objetivo-del-modulo">
+<h2>Objetivo del Módulo<a class="headerlink" href="#objetivo-del-modulo" title="Link to this heading"></a></h2>
+<p>El módulo de modelos supervisados te permite:</p>
+<ul class="simple">
+<li><p>🤖 <strong>Entrenar 9 algoritmos</strong> de clasificación</p></li>
+<li><p>📊 <strong>Comparar rendimiento</strong> automáticamente</p></li>
+<li><p>🎯 <strong>Optimizar hiperparámetros</strong> con Grid Search</p></li>
+<li><p>📈 <strong>Visualizar métricas</strong> y curvas ROC</p></li>
+<li><p>💾 <strong>Guardar mejores modelos</strong> para producción</p></li>
+<li><p>🔍 <strong>Analizar importancia</strong> de features</p></li>
+</ul>
+</section>
+<section id="acceso-al-modulo">
+<h2>Acceso al Módulo<a class="headerlink" href="#acceso-al-modulo" title="Link to this heading"></a></h2>
+<p>En el sidebar, click en:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>🤖 Modelado → 🤖 Modelos Supervisados
+</pre></div>
+</div>
+</section>
+<section id="algoritmos-disponibles">
+<h2>Algoritmos Disponibles<a class="headerlink" href="#algoritmos-disponibles" title="Link to this heading"></a></h2>
+<section id="logistic-regression">
+<h3>1. Logistic Regression<a class="headerlink" href="#logistic-regression" title="Link to this heading"></a></h3>
+<p><strong>Características:</strong></p>
+<ul class="simple">
+<li><p>Simple y rápido</p></li>
+<li><p>Interpretable</p></li>
+<li><p>Baseline sólido</p></li>
+</ul>
+<p><strong>Cuándo usar:</strong> Relaciones lineales, interpretabilidad crítica.</p>
+</section>
+<section id="random-forest">
+<h3>2. Random Forest<a class="headerlink" href="#random-forest" title="Link to this heading"></a></h3>
+<p><strong>Características:</strong></p>
+<ul class="simple">
+<li><p>Robusto a outliers</p></li>
+<li><p>Maneja no linealidades</p></li>
+<li><p>Feature importance</p></li>
+</ul>
+<p><strong>Cuándo usar:</strong> Datos complejos, alta precisión.</p>
+</section>
+<section id="xgboost">
+<h3>3. XGBoost<a class="headerlink" href="#xgboost" title="Link to this heading"></a></h3>
+<p><strong>Características:</strong></p>
+<ul class="simple">
+<li><p>Estado del arte</p></li>
+<li><p>Muy preciso</p></li>
+<li><p>Maneja desbalanceo</p></li>
+</ul>
+<p><strong>Cuándo usar:</strong> Competencias, máxima precisión.</p>
+</section>
+<section id="lightgbm">
+<h3>4. LightGBM<a class="headerlink" href="#lightgbm" title="Link to this heading"></a></h3>
+<p><strong>Características:</strong></p>
+<ul class="simple">
+<li><p>Muy rápido</p></li>
+<li><p>Eficiente en memoria</p></li>
+<li><p>Preciso</p></li>
+</ul>
+<p><strong>Cuándo usar:</strong> Datasets grandes, velocidad crítica.</p>
+</section>
+<section id="support-vector-machine-svm">
+<h3>5. Support Vector Machine (SVM)<a class="headerlink" href="#support-vector-machine-svm" title="Link to this heading"></a></h3>
+<p><strong>Características:</strong></p>
+<ul class="simple">
+<li><p>Kernel tricks</p></li>
+<li><p>Margen máximo</p></li>
+<li><p>Robusto</p></li>
+</ul>
+<p><strong>Cuándo usar:</strong> Datasets pequeños/medianos, alta dimensionalidad.</p>
+</section>
+<section id="k-nearest-neighbors-knn">
+<h3>6. K-Nearest Neighbors (KNN)<a class="headerlink" href="#k-nearest-neighbors-knn" title="Link to this heading"></a></h3>
+<p><strong>Características:</strong></p>
+<ul class="simple">
+<li><p>No paramétrico</p></li>
+<li><p>Simple</p></li>
+<li><p>Lazy learning</p></li>
+</ul>
+<p><strong>Cuándo usar:</strong> Patrones locales, pocos datos.</p>
+</section>
+<section id="naive-bayes">
+<h3>7. Naive Bayes<a class="headerlink" href="#naive-bayes" title="Link to this heading"></a></h3>
+<p><strong>Características:</strong></p>
+<ul class="simple">
+<li><p>Muy rápido</p></li>
+<li><p>Probabilístico</p></li>
+<li><p>Asume independencia</p></li>
+</ul>
+<p><strong>Cuándo usar:</strong> Baseline rápido, features independientes.</p>
+</section>
+<section id="neural-network-mlp">
+<h3>8. Neural Network (MLP)<a class="headerlink" href="#neural-network-mlp" title="Link to this heading"></a></h3>
+<p><strong>Características:</strong></p>
+<ul class="simple">
+<li><p>Aprende no linealidades</p></li>
+<li><p>Flexible</p></li>
+<li><p>Requiere más datos</p></li>
+</ul>
+<p><strong>Cuándo usar:</strong> Patrones complejos, suficientes datos.</p>
+</section>
+<section id="gradient-boosting">
+<h3>9. Gradient Boosting<a class="headerlink" href="#gradient-boosting" title="Link to this heading"></a></h3>
+<p><strong>Características:</strong></p>
+<ul class="simple">
+<li><p>Ensemble potente</p></li>
+<li><p>Preciso</p></li>
+<li><p>Interpretable</p></li>
+</ul>
+<p><strong>Cuándo usar:</strong> Balance precisión/interpretabilidad.</p>
+</section>
+</section>
+<section id="proceso-de-entrenamiento">
+<h2>Proceso de Entrenamiento<a class="headerlink" href="#proceso-de-entrenamiento" title="Link to this heading"></a></h2>
+<section id="paso-1-preparar-datos">
+<h3>Paso 1: Preparar Datos<a class="headerlink" href="#paso-1-preparar-datos" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[⚙️ Preparar Datos]
+
+✓ Features: 20 (incluyendo RBM)
+✓ Target: nivel_riesgo (3 clases)
+✓ Train: 8,000 (80%)
+✓ Test: 2,000 (20%)
+✓ Balanceo: SMOTE aplicado
+</pre></div>
+</div>
+</section>
+<section id="paso-2-seleccionar-modelos">
+<h3>Paso 2: Seleccionar Modelos<a class="headerlink" href="#paso-2-seleccionar-modelos" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Modelos a entrenar:
+
+☑ Logistic Regression
+☑ Random Forest
+☑ XGBoost
+☑ LightGBM
+☑ SVM
+☐ KNN
+☐ Naive Bayes
+☐ Neural Network
+☐ Gradient Boosting
+</pre></div>
+</div>
+</section>
+<section id="paso-3-entrenar-modelos">
+<h3>Paso 3: Entrenar Modelos<a class="headerlink" href="#paso-3-entrenar-modelos" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[🎯 Entrenar Modelos Seleccionados]
+
+Entrenando Logistic Regression... ✓ (2s)
+Entrenando Random Forest... ✓ (15s)
+Entrenando XGBoost... ✓ (25s)
+Entrenando LightGBM... ✓ (12s)
+Entrenando SVM... ✓ (45s)
+
+✓ Todos los modelos entrenados
+Tiempo total: 1m 39s
+</pre></div>
+</div>
+</section>
+</section>
+<section id="comparacion-de-modelos">
+<h2>Comparación de Modelos<a class="headerlink" href="#comparacion-de-modelos" title="Link to this heading"></a></h2>
+<section id="tabla-de-metricas">
+<h3>Tabla de Métricas<a class="headerlink" href="#tabla-de-metricas" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Modelo</p></th>
+<th class="head"><p>Accuracy</p></th>
+<th class="head"><p>Precision</p></th>
+<th class="head"><p>Recall</p></th>
+<th class="head"><p>F1-Score</p></th>
+<th class="head"><p>ROC-AUC</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>XGBoost</p></td>
+<td><p><strong>95.2%</strong></p></td>
+<td><p>94.8%</p></td>
+<td><p>95.1%</p></td>
+<td><p><strong>95.0%</strong></p></td>
+<td><p><strong>0.982</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>LightGBM</p></td>
+<td><p>94.8%</p></td>
+<td><p><strong>95.1%</strong></p></td>
+<td><p>94.5%</p></td>
+<td><p>94.8%</p></td>
+<td><p>0.979</p></td>
+</tr>
+<tr class="row-even"><td><p>Random Forest</p></td>
+<td><p>94.1%</p></td>
+<td><p>93.8%</p></td>
+<td><p><strong>95.3%</strong></p></td>
+<td><p>94.5%</p></td>
+<td><p>0.975</p></td>
+</tr>
+<tr class="row-odd"><td><p>SVM</p></td>
+<td><p>92.5%</p></td>
+<td><p>92.1%</p></td>
+<td><p>92.8%</p></td>
+<td><p>92.4%</p></td>
+<td><p>0.968</p></td>
+</tr>
+<tr class="row-even"><td><p>Logistic Reg.</p></td>
+<td><p>89.3%</p></td>
+<td><p>88.7%</p></td>
+<td><p>89.9%</p></td>
+<td><p>89.3%</p></td>
+<td><p>0.945</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Mejor modelo:</strong> XGBoost (95.2% accuracy)</p>
+</section>
+<section id="matriz-de-confusion">
+<h3>Matriz de Confusión<a class="headerlink" href="#matriz-de-confusion" title="Link to this heading"></a></h3>
+<p>Para XGBoost:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             Predicho
+           Bajo  Medio  Alto
+Real Bajo  1180    25     5
+     Medio   30   570    15
+     Alto     8    12   155
+
+Accuracy: 95.2%
+Errores: 95 de 2,000
+</pre></div>
+</div>
+</section>
+<section id="curvas-roc">
+<h3>Curvas ROC<a class="headerlink" href="#curvas-roc" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[📊 Visualizar Curvas ROC]
+
+Curva ROC multiclase (One-vs-Rest)
+• Bajo vs Rest: AUC = 0.985
+• Medio vs Rest: AUC = 0.978
+• Alto vs Rest: AUC = 0.983
+</pre></div>
+</div>
+</section>
+</section>
+<section id="importancia-de-features">
+<h2>Importancia de Features<a class="headerlink" href="#importancia-de-features" title="Link to this heading"></a></h2>
+<section id="top-10-features">
+<h3>Top 10 Features<a class="headerlink" href="#top-10-features" title="Link to this heading"></a></h3>
+<p>Para Random Forest:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Feature Importance:
+
+1. dti: 0.185 ████████████████████
+2. puntaje_datacredito: 0.152 ████████████████
+3. capacidad_residual: 0.128 █████████████
+4. ltv: 0.095 ██████████
+5. rbm_feature_1: 0.082 ████████
+6. score_estabilidad: 0.071 ███████
+7. patrimonio_total: 0.065 ██████
+8. salario_mensual: 0.058 ██████
+9. rbm_feature_5: 0.052 █████
+10. edad: 0.048 ████
+</pre></div>
+</div>
+<p><strong>Insights:</strong></p>
+<ul class="simple">
+<li><p>DTI es el predictor más importante</p></li>
+<li><p>Features RBM aportan valor significativo</p></li>
+<li><p>Variables financieras dominan</p></li>
+</ul>
+</section>
+<section id="shap-values">
+<h3>SHAP Values<a class="headerlink" href="#shap-values" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[🔍 Calcular SHAP Values]
+
+Análisis de contribución individual
+Muestra cómo cada feature afecta predicciones
+</pre></div>
+</div>
+</section>
+</section>
+<section id="optimizacion-de-hiperparametros">
+<h2>Optimización de Hiperparámetros<a class="headerlink" href="#optimizacion-de-hiperparametros" title="Link to this heading"></a></h2>
+<section id="grid-search">
+<h3>Grid Search<a class="headerlink" href="#grid-search" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Modelo: XGBoost
+
+Parámetros a optimizar:
+• n_estimators: [100, 200, 300]
+• max_depth: [3, 5, 7]
+• learning_rate: [0.01, 0.05, 0.1]
+• subsample: [0.8, 0.9, 1.0]
+
+[🔧 Ejecutar Grid Search]
+
+Probando 36 combinaciones...
+Mejor combinación encontrada:
+• n_estimators: 200
+• max_depth: 5
+• learning_rate: 0.05
+• subsample: 0.9
+
+Accuracy mejorada: 95.2% → 95.8%
+</pre></div>
+</div>
+</section>
+<section id="random-search">
+<h3>Random Search<a class="headerlink" href="#random-search" title="Link to this heading"></a></h3>
+<p>Más rápido que Grid Search:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[🎲 Ejecutar Random Search]
+
+100 iteraciones aleatorias
+Tiempo: 15 minutos
+Mejora: +0.4% accuracy
+</pre></div>
+</div>
+</section>
+</section>
+<section id="validacion-cruzada">
+<h2>Validación Cruzada<a class="headerlink" href="#validacion-cruzada" title="Link to this heading"></a></h2>
+<section id="k-fold-cross-validation">
+<h3>K-Fold Cross-Validation<a class="headerlink" href="#k-fold-cross-validation" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[✅ Validación Cruzada (5-fold)]
+
+Fold 1: 94.8%
+Fold 2: 95.1%
+Fold 3: 95.5%
+Fold 4: 94.9%
+Fold 5: 95.3%
+
+Media: 95.1% ± 0.3%
+
+Modelo robusto ✓
+</pre></div>
+</div>
+</section>
+<section id="stratified-k-fold">
+<h3>Stratified K-Fold<a class="headerlink" href="#stratified-k-fold" title="Link to this heading"></a></h3>
+<p>Mantiene proporción de clases:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Distribución preservada en cada fold
+Mejor para datasets desbalanceados
+</pre></div>
+</div>
+</section>
+</section>
+<section id="manejo-de-desbalanceo">
+<h2>Manejo de Desbalanceo<a class="headerlink" href="#manejo-de-desbalanceo" title="Link to this heading"></a></h2>
+<section id="tecnicas-disponibles">
+<h3>Técnicas Disponibles<a class="headerlink" href="#tecnicas-disponibles" title="Link to this heading"></a></h3>
+<p><strong>1. SMOTE (Synthetic Minority Over-sampling)</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Antes:
+Bajo: 6,074 (60.7%)
+Medio: 2,943 (29.4%)
+Alto: 983 (9.8%)
+
+Después de SMOTE:
+Bajo: 6,074 (33.3%)
+Medio: 6,074 (33.3%)
+Alto: 6,074 (33.3%)
+</pre></div>
+</div>
+<p><strong>2. Class Weights</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Pesos automáticos:
+Bajo: 0.55
+Medio: 1.13
+Alto: 3.39
+</pre></div>
+</div>
+<p><strong>3. Undersampling</strong></p>
+<p>Reduce clase mayoritaria.</p>
+<p><strong>4. Ensemble Methods</strong></p>
+<p>Combina múltiples técnicas.</p>
+</section>
+</section>
+<section id="guardar-modelos">
+<h2>Guardar Modelos<a class="headerlink" href="#guardar-modelos" title="Link to this heading"></a></h2>
+<section id="guardar-mejor-modelo">
+<h3>Guardar Mejor Modelo<a class="headerlink" href="#guardar-mejor-modelo" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[💾 Guardar Modelo]
+
+Modelo: XGBoost
+Accuracy: 95.8%
+
+Guardado:
+✓ Modelo entrenado
+✓ Scaler
+✓ Feature names
+✓ Métricas
+✓ Hiperparámetros
+
+Archivo: xgboost_best_20240115.pkl
+</pre></div>
+</div>
+</section>
+<section id="cargar-modelo">
+<h3>Cargar Modelo<a class="headerlink" href="#cargar-modelo" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[📂 Cargar Modelo]
+
+✓ Modelo cargado
+✓ Listo para predicciones
+</pre></div>
+</div>
+</section>
+</section>
+<section id="casos-de-uso">
+<h2>Casos de Uso<a class="headerlink" href="#casos-de-uso" title="Link to this heading"></a></h2>
+<p><strong>Caso 1: Producción</strong></p>
+<p>Entrenar modelo final para sistema en vivo.</p>
+<p><strong>Caso 2: Comparación</strong></p>
+<p>Evaluar múltiples algoritmos para seleccionar el mejor.</p>
+<p><strong>Caso 3: Investigación</strong></p>
+<p>Experimentar con diferentes features y configuraciones.</p>
+</section>
+<section id="tips-y-mejores-practicas">
+<h2>Tips y Mejores Prácticas<a class="headerlink" href="#tips-y-mejores-practicas" title="Link to this heading"></a></h2>
+<p>✅ <strong>Haz:</strong></p>
+<ul class="simple">
+<li><p>Entrena múltiples modelos</p></li>
+<li><p>Usa validación cruzada</p></li>
+<li><p>Optimiza hiperparámetros</p></li>
+<li><p>Maneja desbalanceo</p></li>
+<li><p>Guarda modelos y métricas</p></li>
+</ul>
+<p>❌ <strong>Evita:</strong></p>
+<ul class="simple">
+<li><p>Overfitting (validar siempre)</p></li>
+<li><p>Ignorar desbalanceo de clases</p></li>
+<li><p>No optimizar hiperparámetros</p></li>
+<li><p>Entrenar sin normalizar</p></li>
+<li><p>Usar solo accuracy como métrica</p></li>
+</ul>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<p><strong>Problema: Overfitting</strong></p>
+<p>Solución: Regularización, más datos, validación cruzada.</p>
+<p><strong>Problema: Underfitting</strong></p>
+<p>Solución: Modelo más complejo, más features, menos regularización.</p>
+<p><strong>Problema: Entrenamiento lento</strong></p>
+<p>Solución: LightGBM, menos datos, menos hiperparámetros.</p>
+</section>
+<section id="proximos-pasos">
+<h2>Próximos Pasos<a class="headerlink" href="#proximos-pasos" title="Link to this heading"></a></h2>
+<p>Con tus modelos entrenados:</p>
+<ol class="arabic simple">
+<li><p><strong>Predecir</strong>: <a class="reference internal" href="09_prediccion.html"><span class="doc">9. Predicción de Riesgo</span></a></p></li>
+<li><p><strong>Reentrenar</strong>: <a class="reference internal" href="10_reentrenamiento.html"><span class="doc">10. Reentrenamiento de Modelos</span></a></p></li>
+<li><p><strong>Aprender</strong>: <a class="reference internal" href="11_rag_educativo.html"><span class="doc">11. Sistema RAG Educativo</span></a></p></li>
+</ol>
+<p>¡Modelos listos para producción! 🤖</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="07_rbm.html" class="btn btn-neutral float-left" title="7. Máquina de Boltzmann Restringida (RBM)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="09_prediccion.html" class="btn btn-neutral float-right" title="9. Predicción de Riesgo" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, Andrés Fernando Gómez Rojas &amp; Carlos Andrés Gómez Vasco. Software Libre bajo Licencia MIT.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,324 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>generar_datos &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="data_processor" href="data_processor.html" />
+    <link rel="prev" title="Módulos del Sistema" href="../modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Módulos del Sistema</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#modulos-principales">Módulos Principales</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../modules.html#referencia-completa-de-la-api">Referencia Completa de la API</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">generar_datos</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#descripcion-general">Descripción General</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#clases-principales">Clases Principales</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-principales">Métodos Principales</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#funciones-auxiliares">Funciones Auxiliares</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#variables-generadas">Variables Generadas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#validaciones-implementadas">Validaciones Implementadas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#notas-de-implementacion">Notas de Implementación</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ver-tambien">Ver también</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="data_processor.html">data_processor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="univariate_analysis.html">univariate_analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bivariate_analysis.html">bivariate_analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature_engineering.html">feature_engineering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clustering.html">clustering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbm_model.html">rbm_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="supervised_models.html">supervised_models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="prediction.html">prediction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="educational_rag.html">educational_rag</a></li>
+<li class="toctree-l3"><a class="reference internal" href="retraining.html">retraining</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#arquitectura-del-sistema">Arquitectura del Sistema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#flujo-de-datos">Flujo de Datos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#descripcion-de-modulos">Descripción de Módulos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#configuracion-avanzada">Configuración Avanzada</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#integracion-con-otros-sistemas">Integración con Otros Sistemas</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">Módulos del Sistema</a></li>
+      <li class="breadcrumb-item active">generar_datos</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/generar_datos.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="generar-datos">
+<h1>generar_datos<a class="headerlink" href="#generar-datos" title="Link to this heading"></a></h1>
+<section id="descripcion-general">
+<h2>Descripción General<a class="headerlink" href="#descripcion-general" title="Link to this heading"></a></h2>
+<p>Este módulo implementa un generador completo de datos sintéticos de crédito hipotecario para Colombia con distribución realista de riesgo crediticio.</p>
+<p><strong>Características principales:</strong></p>
+<ul class="simple">
+<li><p>Generación de 10,000+ registros sintéticos realistas</p></li>
+<li><p>Distribución de riesgo: 60% Bajo, 25% Medio, 15% Alto</p></li>
+<li><p>Correlaciones creíbles entre variables</p></li>
+<li><p>Capacidad residual 100% positiva garantizada</p></li>
+<li><p>Validaciones automáticas de consistencia</p></li>
+</ul>
+</section>
+<section id="clases-principales">
+<h2>Clases Principales<a class="headerlink" href="#clases-principales" title="Link to this heading"></a></h2>
+<section id="generadorcreditohipotecariorealista">
+<h3>GeneradorCreditoHipotecarioRealista<a class="headerlink" href="#generadorcreditohipotecariorealista" title="Link to this heading"></a></h3>
+</section>
+</section>
+<section id="metodos-principales">
+<h2>Métodos Principales<a class="headerlink" href="#metodos-principales" title="Link to this heading"></a></h2>
+<section id="generar">
+<h3>generar<a class="headerlink" href="#generar" title="Link to this heading"></a></h3>
+<p>Genera el dataset completo ejecutando todas las fases de generación.</p>
+<dl class="simple">
+<dt><strong>Returns:</strong></dt><dd><p>DataFrame con todos los datos generados</p>
+</dd>
+</dl>
+<p><strong>Fases de generación:</strong></p>
+<ol class="arabic simple">
+<li><p>Variables demográficas (edad, ciudad, estrato, educación)</p></li>
+<li><p>Variables laborales (tipo empleo, antigüedad, salario)</p></li>
+<li><p>Variables financieras (demandas, puntaje DataCrédito, patrimonio)</p></li>
+<li><p>Variables del crédito (valor inmueble, cuota inicial, plazo)</p></li>
+<li><p>Características derivadas (DTI, LTV, capacidad residual)</p></li>
+<li><p>Nivel de riesgo (clasificación final)</p></li>
+</ol>
+</section>
+<section id="exportar-csv">
+<h3>exportar_csv<a class="headerlink" href="#exportar-csv" title="Link to this heading"></a></h3>
+<p>Exporta el dataset generado a formato CSV.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nombre_archivo</span></code> (str): Nombre del archivo de salida</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="exportar-metadata">
+<h3>exportar_metadata<a class="headerlink" href="#exportar-metadata" title="Link to this heading"></a></h3>
+<p>Exporta metadata de la generación en formato JSON.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nombre_archivo</span></code> (str): Nombre del archivo de metadata</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</section>
+<section id="funciones-auxiliares">
+<h2>Funciones Auxiliares<a class="headerlink" href="#funciones-auxiliares" title="Link to this heading"></a></h2>
+<section id="generar-datos-credito-realista">
+<h3>generar_datos_credito_realista<a class="headerlink" href="#generar-datos-credito-realista" title="Link to this heading"></a></h3>
+<p>Función principal para generar datos de crédito hipotecario con configuración realista.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">n_registros</span></code> (int): Número de registros (default: 10000)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">semilla</span></code> (int): Semilla aleatoria (default: 42)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exportar_csv</span></code> (bool): Si exportar a CSV (default: True)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exportar_metadata</span></code> (bool): Si exportar metadata (default: True)</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>DataFrame con datos generados</p>
+</dd>
+</dl>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.generar_datos</span><span class="w"> </span><span class="kn">import</span> <span class="n">generar_datos_credito_realista</span>
+
+<span class="c1"># Generar 5000 registros</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">generar_datos_credito_realista</span><span class="p">(</span>
+    <span class="n">n_registros</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+    <span class="n">semilla</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="n">exportar_csv</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">exportar_metadata</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generados </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">}</span><span class="s2"> registros&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Columnas: </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="variables-generadas">
+<h2>Variables Generadas<a class="headerlink" href="#variables-generadas" title="Link to this heading"></a></h2>
+<p>El generador crea las siguientes variables:</p>
+<dl class="simple">
+<dt><strong>Demográficas:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">edad</span></code>: Edad del solicitante (22-65 años)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ciudad</span></code>: Ciudad de residencia</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">estrato_socioeconomico</span></code>: Estrato (1-6)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nivel_educacion</span></code>: Nivel educativo</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">estado_civil</span></code>: Estado civil</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">personas_a_cargo</span></code>: Número de dependientes</p></li>
+</ul>
+</dd>
+<dt><strong>Laborales:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tipo_empleo</span></code>: Formal/Informal/Independiente</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">antiguedad_empleo</span></code>: Años en el empleo actual</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">salario_mensual</span></code>: Ingreso mensual (COP)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">egresos_mensuales</span></code>: Gastos mensuales (COP)</p></li>
+</ul>
+</dd>
+<dt><strong>Financieras:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">puntaje_datacredito</span></code>: Score crediticio (150-950)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numero_demandas</span></code>: Demandas legales</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">patrimonio_total</span></code>: Patrimonio total (COP)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numero_propiedades</span></code>: Propiedades actuales</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">saldo_promedio_banco</span></code>: Saldo bancario promedio</p></li>
+</ul>
+</dd>
+<dt><strong>Del Crédito:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">valor_inmueble</span></code>: Valor del inmueble (COP)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">porcentaje_cuota_inicial</span></code>: Porcentaje de cuota inicial</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">valor_cuota_inicial</span></code>: Valor de cuota inicial (COP)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">monto_credito</span></code>: Monto del crédito (COP)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plazo_credito</span></code>: Plazo en años</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tasa_interes_anual</span></code>: Tasa de interés anual (%)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cuota_mensual</span></code>: Cuota mensual (COP)</p></li>
+</ul>
+</dd>
+<dt><strong>Derivadas:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ltv</span></code>: Loan-to-Value ratio (%)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dti</span></code>: Debt-to-Income ratio (%)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">capacidad_ahorro</span></code>: Capacidad de ahorro mensual</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">capacidad_residual</span></code>: Capacidad residual después de cuota</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nivel_riesgo</span></code>: Clasificación de riesgo (Bajo/Medio/Alto)</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="validaciones-implementadas">
+<h2>Validaciones Implementadas<a class="headerlink" href="#validaciones-implementadas" title="Link to this heading"></a></h2>
+<p>El generador incluye validaciones automáticas:</p>
+<ol class="arabic simple">
+<li><p><strong>Salario &gt; Egresos</strong>: Garantizado en todos los casos</p></li>
+<li><p><strong>DTI ≤ 40%</strong>: Ratio de endeudamiento controlado</p></li>
+<li><p><strong>Capacidad Residual ≥ 0</strong>: 100% de casos con capacidad positiva</p></li>
+<li><p><strong>Edad + Plazo ≤ 80</strong>: Restricción de edad máxima al finalizar crédito</p></li>
+<li><p><strong>Correlaciones realistas</strong>: Verificación de correlaciones esperadas</p></li>
+</ol>
+</section>
+<section id="notas-de-implementacion">
+<h2>Notas de Implementación<a class="headerlink" href="#notas-de-implementacion" title="Link to this heading"></a></h2>
+<p><strong>Mejoras realistas implementadas:</strong></p>
+<ul class="simple">
+<li><p>Distribución de riesgo ajustada a la realidad (60-25-15)</p></li>
+<li><p>Salarios y valores de inmuebles más conservadores</p></li>
+<li><p>Correlaciones suaves entre variables</p></li>
+<li><p>Impacto realista de demandas en puntaje DataCrédito</p></li>
+<li><p>DTI máximo garantizado de 35%</p></li>
+<li><p>Capacidad residual siempre positiva</p></li>
+</ul>
+<p><strong>Configuración por defecto:</strong></p>
+<ul class="simple">
+<li><p>10,000 registros</p></li>
+<li><p>Semilla aleatoria: 42</p></li>
+<li><p>Distribución de ciudades según población real</p></li>
+<li><p>Estratos según distribución urbana colombiana</p></li>
+<li><p>Salarios ajustados por ciudad y educación</p></li>
+</ul>
+</section>
+<section id="ver-tambien">
+<h2>Ver también<a class="headerlink" href="#ver-tambien" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="data_processor.html"><span class="doc">data_processor</span></a> - Procesamiento de datos generados</p></li>
+<li><p><a class="reference internal" href="feature_engineering.html"><span class="doc">feature_engineering</span></a> - Ingeniería de características</p></li>
+<li><p><a class="reference internal" href="supervised_models.html"><span class="doc">supervised_models</span></a> - Modelos de clasificación</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="../modules.html" class="btn btn-neutral float-left" title="Módulos del Sistema" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="data_processor.html" class="btn btn-neutral float-right" title="data_processor" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, Andrés Fernando Gómez Rojas &amp; Carlos Andrés Gómez Vasco. Software Libre bajo Licencia MIT.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

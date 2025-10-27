@@ -1,0 +1,42 @@
+[global]
+# Configuración global de Streamlit
+developmentMode = false
+showWarningOnDirectExecution = false
+
+[server]
+# Configuración del servidor
+port = 8501
+enableCORS = false
+enableXsrfProtection = false
+maxUploadSize = 200
+headless = false
+
+[browser]
+# Configuración del navegador
+gatherUsageStats = false
+serverAddress = "localhost"
+serverPort = 8501
+
+[theme]
+# Tema personalizado
+primaryColor = "#FF6B6B"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F0F2F6"
+textColor = "#262730"
+font = "sans serif"
+
+[client]
+# Configuración del cliente
+showErrorDetails = true
+toolbarMode = "auto"
+
+[runner]
+# Configuración del runner
+magicEnabled = true
+installTracer = false
+fixMatplotlib = true
+
+[logger]
+# Configuración de logging
+level = "info"
+messageFormat = "%(asctime)s %(message)s"

@@ -1,0 +1,715 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>univariate_analysis &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Módulos del Sistema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Código de módulo</a></li>
+      <li class="breadcrumb-item active">univariate_analysis</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código fuente para univariate_analysis</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">============================================================================</span>
+<span class="sd">MÓDULO DE ANÁLISIS UNIVARIADO</span>
+<span class="sd">============================================================================</span>
+
+<span class="sd">Análisis estadístico descriptivo por variable individual.</span>
+<span class="sd">Incluye estadísticas completas y visualizaciones interactivas.</span>
+
+<span class="sd">Autor: Sistema de Física</span>
+<span class="sd">Versión: 1.0.0</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.express</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">px</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plotly.subplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_subplots</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">UnivariateAnalyzer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Analizador de estadísticas univariadas&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicializa el analizador</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            data: DataFrame con los datos a analizar</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numeric_columns</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">categorical_columns</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">analyze_numeric_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Análisis completo de variable numérica</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            column: Nombre de la columna a analizar</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Diccionario con estadísticas y tests</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">numeric_columns</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s2">&#39; no es una variable numérica&quot;</span><span class="p">)</span>
+        
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+        
+        <span class="c1"># Estadísticas descriptivas</span>
+        <span class="n">stats_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;count&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
+            <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
+            <span class="s1">&#39;missing_pct&#39;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+            <span class="s1">&#39;median&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">median</span><span class="p">(),</span>
+            <span class="s1">&#39;mode&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">mode</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">mode</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+            <span class="s1">&#39;std&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span>
+            <span class="s1">&#39;variance&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">var</span><span class="p">(),</span>
+            <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+            <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
+            <span class="s1">&#39;range&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">data</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+            <span class="s1">&#39;q25&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.25</span><span class="p">),</span>
+            <span class="s1">&#39;q75&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.75</span><span class="p">),</span>
+            <span class="s1">&#39;iqr&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span> <span class="o">-</span> <span class="n">data</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.25</span><span class="p">),</span>
+            <span class="s1">&#39;cv&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">*</span> <span class="mi">100</span> <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
+            <span class="s1">&#39;skewness&#39;</span><span class="p">:</span> <span class="n">stats</span><span class="o">.</span><span class="n">skew</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
+            <span class="s1">&#39;kurtosis&#39;</span><span class="p">:</span> <span class="n">stats</span><span class="o">.</span><span class="n">kurtosis</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
+            <span class="s1">&#39;p5&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.05</span><span class="p">),</span>
+            <span class="s1">&#39;p95&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)</span>
+        <span class="p">}</span>
+        
+        <span class="c1"># Tests estadísticos</span>
+        <span class="c1"># Test de normalidad (Shapiro-Wilk para n &lt; 5000, Kolmogorov-Smirnov para n &gt;= 5000)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5000</span><span class="p">:</span>
+            <span class="n">normality_stat</span><span class="p">,</span> <span class="n">normality_p</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">shapiro</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">normality_test</span> <span class="o">=</span> <span class="s2">&quot;Shapiro-Wilk&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">normality_stat</span><span class="p">,</span> <span class="n">normality_p</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">kstest</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;norm&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">data</span><span class="o">.</span><span class="n">std</span><span class="p">()))</span>
+            <span class="n">normality_test</span> <span class="o">=</span> <span class="s2">&quot;Kolmogorov-Smirnov&quot;</span>
+        
+        <span class="n">stats_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s1">&#39;normality_test&#39;</span><span class="p">:</span> <span class="n">normality_test</span><span class="p">,</span>
+            <span class="s1">&#39;normality_statistic&#39;</span><span class="p">:</span> <span class="n">normality_stat</span><span class="p">,</span>
+            <span class="s1">&#39;normality_p_value&#39;</span><span class="p">:</span> <span class="n">normality_p</span><span class="p">,</span>
+            <span class="s1">&#39;is_normal&#39;</span><span class="p">:</span> <span class="n">normality_p</span> <span class="o">&gt;</span> <span class="mf">0.05</span>
+        <span class="p">})</span>
+        
+        <span class="c1"># Detección de outliers (método IQR)</span>
+        <span class="n">q1</span><span class="p">,</span> <span class="n">q3</span> <span class="o">=</span> <span class="n">stats_dict</span><span class="p">[</span><span class="s1">&#39;q25&#39;</span><span class="p">],</span> <span class="n">stats_dict</span><span class="p">[</span><span class="s1">&#39;q75&#39;</span><span class="p">]</span>
+        <span class="n">iqr</span> <span class="o">=</span> <span class="n">stats_dict</span><span class="p">[</span><span class="s1">&#39;iqr&#39;</span><span class="p">]</span>
+        <span class="n">lower_bound</span> <span class="o">=</span> <span class="n">q1</span> <span class="o">-</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">iqr</span>
+        <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">q3</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">iqr</span>
+        
+        <span class="n">outliers</span> <span class="o">=</span> <span class="n">data</span><span class="p">[(</span><span class="n">data</span> <span class="o">&lt;</span> <span class="n">lower_bound</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">data</span> <span class="o">&gt;</span> <span class="n">upper_bound</span><span class="p">)]</span>
+        <span class="n">stats_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s1">&#39;outliers_count&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">outliers</span><span class="p">),</span>
+            <span class="s1">&#39;outliers_pct&#39;</span><span class="p">:</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">outliers</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="s1">&#39;outliers_lower_bound&#39;</span><span class="p">:</span> <span class="n">lower_bound</span><span class="p">,</span>
+            <span class="s1">&#39;outliers_upper_bound&#39;</span><span class="p">:</span> <span class="n">upper_bound</span>
+        <span class="p">})</span>
+        
+        <span class="k">return</span> <span class="n">stats_dict</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">analyze_categorical_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Análisis completo de variable categórica</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            column: Nombre de la columna a analizar</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Diccionario con estadísticas</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">categorical_columns</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s2">&#39; no es una variable categórica&quot;</span><span class="p">)</span>
+        
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+        <span class="n">value_counts</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+        
+        <span class="c1"># Estadísticas descriptivas</span>
+        <span class="n">stats_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;count&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
+            <span class="s1">&#39;missing&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
+            <span class="s1">&#39;missing_pct&#39;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="s1">&#39;unique_values&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">nunique</span><span class="p">(),</span>
+            <span class="s1">&#39;mode&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">mode</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">mode</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;mode_frequency&#39;</span><span class="p">:</span> <span class="n">value_counts</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value_counts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s1">&#39;mode_percentage&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">value_counts</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value_counts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s1">&#39;entropy&#39;</span><span class="p">:</span> <span class="n">stats</span><span class="o">.</span><span class="n">entropy</span><span class="p">(</span><span class="n">value_counts</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+            <span class="s1">&#39;value_counts&#39;</span><span class="p">:</span> <span class="n">value_counts</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
+            <span class="s1">&#39;frequencies&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">value_counts</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="n">stats_dict</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_numeric_visualizations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Crea visualizaciones para variable numérica</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            column: Nombre de la columna</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Diccionario con figuras de Plotly</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+        <span class="n">figures</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="c1"># 1. Histograma con curva de densidad</span>
+        <span class="n">fig_hist</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
+        
+        <span class="c1"># Histograma</span>
+        <span class="n">fig_hist</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Histogram</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">nbinsx</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Frecuencia&#39;</span><span class="p">,</span>
+            <span class="n">opacity</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+            <span class="n">marker_color</span><span class="o">=</span><span class="s1">&#39;#3498db&#39;</span><span class="p">,</span>
+            <span class="n">yaxis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span>
+        <span class="p">))</span>
+        
+        <span class="c1"># Curva de densidad (KDE)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">gaussian_kde</span>
+            <span class="n">kde</span> <span class="o">=</span> <span class="n">gaussian_kde</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">x_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">data</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">100</span><span class="p">)</span>
+            <span class="n">kde_values</span> <span class="o">=</span> <span class="n">kde</span><span class="p">(</span><span class="n">x_range</span><span class="p">)</span>
+            
+            <span class="c1"># Escalar KDE para que se vea bien con el histograma</span>
+            <span class="n">kde_scaled</span> <span class="o">=</span> <span class="n">kde_values</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">data</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="mi">50</span>
+            
+            <span class="n">fig_hist</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+                <span class="n">x</span><span class="o">=</span><span class="n">x_range</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="n">kde_scaled</span><span class="p">,</span>
+                <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;lines&#39;</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Densidad (KDE)&#39;</span><span class="p">,</span>
+                <span class="n">line</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#e74c3c&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+                <span class="n">yaxis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span>
+            <span class="p">))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+        
+        <span class="n">fig_hist</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Distribución de </span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">xaxis_title</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
+            <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Frecuencia&quot;</span><span class="p">,</span>
+            <span class="n">template</span><span class="o">=</span><span class="s2">&quot;plotly_white&quot;</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mi">400</span>
+        <span class="p">)</span>
+        
+        <span class="n">figures</span><span class="p">[</span><span class="s1">&#39;histogram&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fig_hist</span>
+        
+        <span class="c1"># 2. Boxplot</span>
+        <span class="n">fig_box</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
+        
+        <span class="n">fig_box</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
+            <span class="n">boxpoints</span><span class="o">=</span><span class="s1">&#39;outliers&#39;</span><span class="p">,</span>
+            <span class="n">marker_color</span><span class="o">=</span><span class="s1">&#39;#2ecc71&#39;</span><span class="p">,</span>
+            <span class="n">line_color</span><span class="o">=</span><span class="s1">&#39;#27ae60&#39;</span>
+        <span class="p">))</span>
+        
+        <span class="n">fig_box</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Boxplot de </span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">yaxis_title</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
+            <span class="n">template</span><span class="o">=</span><span class="s2">&quot;plotly_white&quot;</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mi">400</span>
+        <span class="p">)</span>
+        
+        <span class="n">figures</span><span class="p">[</span><span class="s1">&#39;boxplot&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fig_box</span>
+        
+        <span class="c1"># 3. Q-Q Plot para normalidad</span>
+        <span class="n">fig_qq</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
+        
+        <span class="c1"># Calcular quantiles teóricos y empíricos</span>
+        <span class="n">sorted_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sorted_data</span><span class="p">)</span>
+        <span class="n">theoretical_quantiles</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        
+        <span class="n">fig_qq</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">theoretical_quantiles</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">sorted_data</span><span class="p">,</span>
+            <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;markers&#39;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Datos&#39;</span><span class="p">,</span>
+            <span class="n">marker</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#9b59b6&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="p">))</span>
+        
+        <span class="c1"># Línea de referencia</span>
+        <span class="n">min_val</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">theoretical_quantiles</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">sorted_data</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+        <span class="n">max_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">theoretical_quantiles</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">sorted_data</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+        
+        <span class="n">fig_qq</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="p">],</span>
+            <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="p">],</span>
+            <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;lines&#39;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Línea Normal&#39;</span><span class="p">,</span>
+            <span class="n">line</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#e74c3c&#39;</span><span class="p">,</span> <span class="n">dash</span><span class="o">=</span><span class="s1">&#39;dash&#39;</span><span class="p">)</span>
+        <span class="p">))</span>
+        
+        <span class="n">fig_qq</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Q-Q Plot - </span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Quantiles Teóricos (Normal)&quot;</span><span class="p">,</span>
+            <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Quantiles Empíricos&quot;</span><span class="p">,</span>
+            <span class="n">template</span><span class="o">=</span><span class="s2">&quot;plotly_white&quot;</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mi">400</span>
+        <span class="p">)</span>
+        
+        <span class="n">figures</span><span class="p">[</span><span class="s1">&#39;qqplot&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fig_qq</span>
+        
+        <span class="c1"># 4. ECDF (Empirical Cumulative Distribution Function)</span>
+        <span class="n">fig_ecdf</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
+        
+        <span class="n">sorted_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">y_ecdf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sorted_data</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">sorted_data</span><span class="p">)</span>
+        
+        <span class="n">fig_ecdf</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">sorted_data</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">y_ecdf</span><span class="p">,</span>
+            <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;lines&#39;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ECDF&#39;</span><span class="p">,</span>
+            <span class="n">line</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#f39c12&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="p">))</span>
+        
+        <span class="n">fig_ecdf</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Función de Distribución Empírica - </span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">xaxis_title</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
+            <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Probabilidad Acumulada&quot;</span><span class="p">,</span>
+            <span class="n">template</span><span class="o">=</span><span class="s2">&quot;plotly_white&quot;</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mi">400</span>
+        <span class="p">)</span>
+        
+        <span class="n">figures</span><span class="p">[</span><span class="s1">&#39;ecdf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fig_ecdf</span>
+        
+        <span class="k">return</span> <span class="n">figures</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_categorical_visualizations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Crea visualizaciones para variable categórica</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            column: Nombre de la columna</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Diccionario con figuras de Plotly</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+        <span class="n">value_counts</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+        <span class="n">figures</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="c1"># 1. Gráfico de barras</span>
+        <span class="n">fig_bar</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">value_counts</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">value_counts</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Frecuencias de </span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">column</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="s1">&#39;Frecuencia&#39;</span><span class="p">},</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">value_counts</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+            <span class="n">color_continuous_scale</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span>
+        <span class="p">)</span>
+        
+        <span class="n">fig_bar</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">template</span><span class="o">=</span><span class="s2">&quot;plotly_white&quot;</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+            <span class="n">showlegend</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        
+        <span class="n">figures</span><span class="p">[</span><span class="s1">&#39;barplot&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fig_bar</span>
+        
+        <span class="c1"># 2. Gráfico de torta</span>
+        <span class="n">fig_pie</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span>
+            <span class="n">values</span><span class="o">=</span><span class="n">value_counts</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+            <span class="n">names</span><span class="o">=</span><span class="n">value_counts</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Distribución de </span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="n">fig_pie</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">template</span><span class="o">=</span><span class="s2">&quot;plotly_white&quot;</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mi">400</span>
+        <span class="p">)</span>
+        
+        <span class="n">figures</span><span class="p">[</span><span class="s1">&#39;pieplot&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fig_pie</span>
+        
+        <span class="k">return</span> <span class="n">figures</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">render_univariate_analysis</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Renderiza el módulo de análisis univariado en Streamlit&quot;&quot;&quot;</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;📈 Análisis Descriptivo Univariado&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### *Análisis estadístico detallado por variable individual*&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Verificar datos</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;data/processed/datos_credito_hipotecario_realista.csv&quot;</span><span class="p">):</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;❌ No hay datos disponibles. Ve a &#39;Generar Datos&#39; primero.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="c1"># Cargar datos</span>
+    <span class="nd">@st</span><span class="o">.</span><span class="n">cache_data</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_data</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/processed/datos_credito_hipotecario_realista.csv&quot;</span><span class="p">)</span>
+    
+    <span class="n">df</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">()</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Datos cargados: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> registros, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> variables&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Crear analizador</span>
+    <span class="n">analyzer</span> <span class="o">=</span> <span class="n">UnivariateAnalyzer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    
+    <span class="c1"># Selector de variable</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;🎯 Selección de Variable&quot;</span><span class="p">)</span>
+    
+    <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+        <span class="c1"># Combinar todas las columnas</span>
+        <span class="n">all_columns</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">numeric_columns</span> <span class="o">+</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">categorical_columns</span>
+        
+        <span class="n">selected_variable</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+            <span class="s2">&quot;Selecciona una variable para analizar:&quot;</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="n">all_columns</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Elige la variable que deseas analizar en detalle&quot;</span>
+        <span class="p">)</span>
+    
+    <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+        <span class="n">variable_type</span> <span class="o">=</span> <span class="s2">&quot;Numérica&quot;</span> <span class="k">if</span> <span class="n">selected_variable</span> <span class="ow">in</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">numeric_columns</span> <span class="k">else</span> <span class="s2">&quot;Categórica&quot;</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Tipo de Variable&quot;</span><span class="p">,</span> <span class="n">variable_type</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">variable_type</span> <span class="o">==</span> <span class="s2">&quot;Numérica&quot;</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Valores Únicos&quot;</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="n">selected_variable</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Categorías&quot;</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="n">selected_variable</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">())</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">selected_variable</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;⚠️ Selecciona una variable para continuar.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="c1"># Análisis según el tipo de variable</span>
+    <span class="k">if</span> <span class="n">variable_type</span> <span class="o">==</span> <span class="s2">&quot;Numérica&quot;</span><span class="p">:</span>
+        <span class="n">render_numeric_analysis</span><span class="p">(</span><span class="n">analyzer</span><span class="p">,</span> <span class="n">selected_variable</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">render_categorical_analysis</span><span class="p">(</span><span class="n">analyzer</span><span class="p">,</span> <span class="n">selected_variable</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">render_numeric_analysis</span><span class="p">(</span><span class="n">analyzer</span><span class="p">:</span> <span class="n">UnivariateAnalyzer</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Renderiza análisis de variable numérica&quot;&quot;&quot;</span>
+    
+    <span class="c1"># Análisis estadístico</span>
+    <span class="n">stats_result</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">analyze_numeric_variable</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+    
+    <span class="c1"># Crear visualizaciones</span>
+    <span class="n">figures</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">create_numeric_visualizations</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+    
+    <span class="c1"># Mostrar en tabs</span>
+    <span class="n">tab1</span><span class="p">,</span> <span class="n">tab2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span><span class="s2">&quot;📊 Estadísticas&quot;</span><span class="p">,</span> <span class="s2">&quot;📈 Visualizaciones&quot;</span><span class="p">])</span>
+    
+    <span class="k">with</span> <span class="n">tab1</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📊 Estadísticas Descriptivas - </span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Métricas principales</span>
+        <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span><span class="p">,</span> <span class="n">col4</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Media&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Mediana&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;median&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Desv. Estándar&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;std&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Coef. Variación&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;cv&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col3</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Mínimo&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Máximo&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col4</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Asimetría&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;skewness&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Curtosis&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;kurtosis&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Tabla detallada</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📋 Estadísticas Completas&quot;</span><span class="p">)</span>
+        
+        <span class="n">stats_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+            <span class="p">[</span><span class="s2">&quot;Observaciones&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="s2">&quot;Valores Faltantes&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;missing&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;missing_pct&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="s2">&quot;Media&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="s2">&quot;Mediana&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;median&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="s2">&quot;Moda&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="s2">&quot;Desviación Estándar&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;std&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="s2">&quot;Varianza&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;variance&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="s2">&quot;Rango&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;range&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="s2">&quot;Rango Intercuartílico (IQR)&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;iqr&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="s2">&quot;Percentil 5&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;p5&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="s2">&quot;Cuartil 1 (Q1)&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;q25&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="s2">&quot;Cuartil 3 (Q3)&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;q75&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="s2">&quot;Percentil 95&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;p95&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="s2">&quot;Coeficiente de Variación&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;cv&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="s2">&quot;Asimetría (Skewness)&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;skewness&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+            <span class="p">[</span><span class="s2">&quot;Curtosis&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;kurtosis&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+        <span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Estadística&quot;</span><span class="p">,</span> <span class="s2">&quot;Valor&quot;</span><span class="p">])</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">stats_df</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hide_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="c1"># Test de normalidad</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;🔍 Test de Normalidad&quot;</span><span class="p">)</span>
+        
+        <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span><span class="p">,</span> <span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;normality_test&#39;</span><span class="p">])</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Estadístico&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;normality_statistic&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;P-valor&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;normality_p_value&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;is_normal&#39;</span><span class="p">]:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;✅ Distribución Normal (p &gt; 0.05)&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;⚠️ No sigue distribución normal (p ≤ 0.05)&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Outliers</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;🎯 Detección de Outliers&quot;</span><span class="p">)</span>
+        
+        <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Outliers&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;outliers_count&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Porcentaje&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;outliers_pct&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col3</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;outliers_pct&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;✅ Pocos outliers&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;outliers_pct&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;⚠️ Outliers moderados&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;❌ Muchos outliers&quot;</span><span class="p">)</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        **Rango normal (método IQR):**</span>
+<span class="s2">        - Límite inferior: </span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;outliers_lower_bound&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span>
+<span class="s2">        - Límite superior: </span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;outliers_upper_bound&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.2f</span><span class="si">}</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">)</span>
+    
+    <span class="k">with</span> <span class="n">tab2</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📈 Visualizaciones - </span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Mostrar gráficos en sub-tabs</span>
+        <span class="n">subtab1</span><span class="p">,</span> <span class="n">subtab2</span><span class="p">,</span> <span class="n">subtab3</span><span class="p">,</span> <span class="n">subtab4</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span>
+            <span class="s2">&quot;📊 Histograma&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;📦 Boxplot&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;📈 Q-Q Plot&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;📉 ECDF&quot;</span>
+        <span class="p">])</span>
+        
+        <span class="k">with</span> <span class="n">subtab1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;histogram&#39;</span> <span class="ow">in</span> <span class="n">figures</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">figures</span><span class="p">[</span><span class="s1">&#39;histogram&#39;</span><span class="p">],</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                **Interpretación del Histograma:**</span>
+<span class="s2">                - Muestra la distribución de frecuencias</span>
+<span class="s2">                - La curva roja (KDE) suaviza la distribución</span>
+<span class="s2">                - Identifica modas, asimetría y forma de la distribución</span>
+<span class="s2">                &quot;&quot;&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">subtab2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;boxplot&#39;</span> <span class="ow">in</span> <span class="n">figures</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">figures</span><span class="p">[</span><span class="s1">&#39;boxplot&#39;</span><span class="p">],</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                **Interpretación del Boxplot:**</span>
+<span class="s2">                - La caja muestra Q1, mediana y Q3</span>
+<span class="s2">                - Los bigotes se extienden hasta 1.5×IQR</span>
+<span class="s2">                - Los puntos son outliers potenciales</span>
+<span class="s2">                &quot;&quot;&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">subtab3</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;qqplot&#39;</span> <span class="ow">in</span> <span class="n">figures</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">figures</span><span class="p">[</span><span class="s1">&#39;qqplot&#39;</span><span class="p">],</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                **Interpretación del Q-Q Plot:**</span>
+<span class="s2">                - Compara quantiles empíricos vs teóricos (normal)</span>
+<span class="s2">                - Puntos sobre la línea roja = distribución normal</span>
+<span class="s2">                - Desviaciones indican no-normalidad</span>
+<span class="s2">                &quot;&quot;&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">subtab4</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;ecdf&#39;</span> <span class="ow">in</span> <span class="n">figures</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">figures</span><span class="p">[</span><span class="s1">&#39;ecdf&#39;</span><span class="p">],</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                **Interpretación del ECDF:**</span>
+<span class="s2">                - Función de distribución empírica acumulada</span>
+<span class="s2">                - Muestra la probabilidad de valores ≤ x</span>
+<span class="s2">                - Útil para comparar distribuciones</span>
+<span class="s2">                &quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">render_categorical_analysis</span><span class="p">(</span><span class="n">analyzer</span><span class="p">:</span> <span class="n">UnivariateAnalyzer</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Renderiza análisis de variable categórica&quot;&quot;&quot;</span>
+    
+    <span class="c1"># Análisis estadístico</span>
+    <span class="n">stats_result</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">analyze_categorical_variable</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+    
+    <span class="c1"># Crear visualizaciones</span>
+    <span class="n">figures</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">create_categorical_visualizations</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+    
+    <span class="c1"># Mostrar en tabs</span>
+    <span class="n">tab1</span><span class="p">,</span> <span class="n">tab2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span><span class="s2">&quot;📊 Estadísticas&quot;</span><span class="p">,</span> <span class="s2">&quot;📈 Visualizaciones&quot;</span><span class="p">])</span>
+    
+    <span class="k">with</span> <span class="n">tab1</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📊 Estadísticas Descriptivas - </span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Métricas principales</span>
+        <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span><span class="p">,</span> <span class="n">col4</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Observaciones&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Valores Únicos&quot;</span><span class="p">,</span> <span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;unique_values&#39;</span><span class="p">])</span>
+        
+        <span class="k">with</span> <span class="n">col3</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Moda&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]))</span>
+        
+        <span class="k">with</span> <span class="n">col4</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="s2">&quot;Entropía&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;entropy&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Tabla de frecuencias</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📋 Tabla de Frecuencias&quot;</span><span class="p">)</span>
+        
+        <span class="n">freq_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+            <span class="p">[</span><span class="n">cat</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="p">(</span><span class="n">freq</span><span class="o">/</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">cat</span><span class="p">,</span> <span class="n">freq</span> <span class="ow">in</span> <span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;value_counts&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Categoría&quot;</span><span class="p">,</span> <span class="s2">&quot;Frecuencia&quot;</span><span class="p">,</span> <span class="s2">&quot;Porcentaje&quot;</span><span class="p">])</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">freq_df</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hide_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="c1"># Información adicional</span>
+        <span class="k">if</span> <span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;missing&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Valores faltantes: </span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;missing&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;missing_pct&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;💡 La categoría más frecuente es &#39;</span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; con </span><span class="si">{</span><span class="n">stats_result</span><span class="p">[</span><span class="s1">&#39;mode_percentage&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">% de los casos.&quot;</span><span class="p">)</span>
+    
+    <span class="k">with</span> <span class="n">tab2</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📈 Visualizaciones - </span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Mostrar gráficos en columnas</span>
+        <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;barplot&#39;</span> <span class="ow">in</span> <span class="n">figures</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">figures</span><span class="p">[</span><span class="s1">&#39;barplot&#39;</span><span class="p">],</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;pieplot&#39;</span> <span class="ow">in</span> <span class="n">figures</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">figures</span><span class="p">[</span><span class="s1">&#39;pieplot&#39;</span><span class="p">],</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># FUNCIÓN PRINCIPAL PARA INTEGRAR EN APP.PY</span>
+<span class="c1"># ============================================================================</span>
+
+<div class="viewcode-block" id="render_univariate_module">
+<a class="viewcode-back" href="../api_reference.html#univariate_analysis.render_univariate_module">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">render_univariate_module</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Función principal para renderizar el módulo univariado&quot;&quot;&quot;</span>
+    <span class="n">render_univariate_analysis</span><span class="p">()</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Para testing</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Módulo de análisis univariado cargado correctamente&quot;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2024, Andrés Fernando Gómez Rojas.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,632 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>10. Reentrenamiento de Modelos &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="11. Sistema RAG Educativo" href="11_rag_educativo.html" />
+    <link rel="prev" title="9. Predicción de Riesgo" href="09_prediccion.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#introduccion">Introducción</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#flujo-de-trabajo-recomendado">Flujo de Trabajo Recomendado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#requisitos-previos">Requisitos Previos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#convenciones-de-este-manual">Convenciones de este Manual</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../user_guide.html#estructura-del-manual">Estructura del Manual</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="01_inicio.html">1. Página de Inicio y Navegación</a></li>
+<li class="toctree-l3"><a class="reference internal" href="02_generar_datos.html">2. Generar Datos Sintéticos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="03_cargar_datos.html">3. Cargar Datos Externos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04_analisis_descriptivo.html">4. Análisis Descriptivo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05_ingenieria_caracteristicas.html">5. Ingeniería de Características</a></li>
+<li class="toctree-l3"><a class="reference internal" href="06_clustering.html">6. Clustering y Segmentación</a></li>
+<li class="toctree-l3"><a class="reference internal" href="07_rbm.html">7. Máquina de Boltzmann Restringida (RBM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="08_modelos_supervisados.html">8. Modelos Supervisados</a></li>
+<li class="toctree-l3"><a class="reference internal" href="09_prediccion.html">9. Predicción de Riesgo</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">10. Reentrenamiento de Modelos</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#acceso-al-modulo">Acceso al Módulo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#por-que-reentrenar">¿Por Qué Reentrenar?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#monitoreo-de-modelos">Monitoreo de Modelos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proceso-de-reentrenamiento">Proceso de Reentrenamiento</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#comparacion-de-versiones">Comparación de Versiones</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#versionado-de-modelos">Versionado de Modelos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#estrategias-de-reentrenamiento">Estrategias de Reentrenamiento</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#automatizacion">Automatización</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#casos-de-uso">Casos de Uso</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tips-y-mejores-practicas">Tips y Mejores Prácticas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="11_rag_educativo.html">11. Sistema RAG Educativo</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#acceso-rapido">Acceso Rápido</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#soporte-y-recursos">Soporte y Recursos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Módulos del Sistema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../user_guide.html">Manual de Usuario</a></li>
+      <li class="breadcrumb-item active">10. Reentrenamiento de Modelos</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/10_reentrenamiento.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="reentrenamiento-de-modelos">
+<h1>10. Reentrenamiento de Modelos<a class="headerlink" href="#reentrenamiento-de-modelos" title="Link to this heading"></a></h1>
+<p>Esta guía te enseñará a actualizar y reentrenar modelos con nuevos datos para mantener su precisión y relevancia en producción.</p>
+<section id="objetivo-del-modulo">
+<h2>Objetivo del Módulo<a class="headerlink" href="#objetivo-del-modulo" title="Link to this heading"></a></h2>
+<p>El módulo de reentrenamiento te permite:</p>
+<ul class="simple">
+<li><p>🔄 <strong>Actualizar modelos</strong> con nuevos datos</p></li>
+<li><p>📊 <strong>Monitorear degradación</strong> de rendimiento</p></li>
+<li><p>🎯 <strong>Detectar drift</strong> de datos</p></li>
+<li><p>📈 <strong>Comparar versiones</strong> de modelos</p></li>
+<li><p>💾 <strong>Versionar modelos</strong> automáticamente</p></li>
+<li><p>🔍 <strong>Validar mejoras</strong> antes de desplegar</p></li>
+</ul>
+</section>
+<section id="acceso-al-modulo">
+<h2>Acceso al Módulo<a class="headerlink" href="#acceso-al-modulo" title="Link to this heading"></a></h2>
+<p>En el sidebar, click en:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>🔮 Predicción → 🔄 Reentrenamiento
+</pre></div>
+</div>
+</section>
+<section id="por-que-reentrenar">
+<h2>¿Por Qué Reentrenar?<a class="headerlink" href="#por-que-reentrenar" title="Link to this heading"></a></h2>
+<section id="razones-para-reentrenar">
+<h3>Razones para Reentrenar<a class="headerlink" href="#razones-para-reentrenar" title="Link to this heading"></a></h3>
+<p><strong>1. Drift de Datos</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Distribución de salarios cambió:
+
+2023: Media = $4.2M
+2024: Media = $4.8M (+14%)
+
+Modelo desactualizado ⚠️
+</pre></div>
+</div>
+<p><strong>2. Degradación de Rendimiento</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Accuracy en producción:
+
+Mes 1: 95.2%
+Mes 2: 94.8%
+Mes 3: 93.5%
+Mes 4: 91.2% ⚠️
+
+Reentrenamiento necesario
+</pre></div>
+</div>
+<p><strong>3. Nuevos Datos Disponibles</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Datos de entrenamiento:
+Original: 10,000 registros
+Nuevos: 5,000 registros
+
+Total: 15,000 registros
+
+Oportunidad de mejorar
+</pre></div>
+</div>
+<p><strong>4. Cambios en el Negocio</strong></p>
+<ul class="simple">
+<li><p>Nuevas políticas de crédito</p></li>
+<li><p>Cambios regulatorios</p></li>
+<li><p>Nuevos productos</p></li>
+</ul>
+</section>
+</section>
+<section id="monitoreo-de-modelos">
+<h2>Monitoreo de Modelos<a class="headerlink" href="#monitoreo-de-modelos" title="Link to this heading"></a></h2>
+<section id="dashboard-de-rendimiento">
+<h3>Dashboard de Rendimiento<a class="headerlink" href="#dashboard-de-rendimiento" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Modelo: XGBoost v2.1
+Desplegado: 2024-01-01
+Días en producción: 45
+
+Métricas Actuales:
+• Accuracy: 92.1% (↓ 3.1% vs baseline)
+• Precision: 91.5% (↓ 3.3%)
+• Recall: 92.8% (↓ 2.4%)
+• F1-Score: 92.1% (↓ 2.9%)
+
+Estado: ⚠️ Degradación detectada
+</pre></div>
+</div>
+</section>
+<section id="deteccion-de-drift">
+<h3>Detección de Drift<a class="headerlink" href="#deteccion-de-drift" title="Link to this heading"></a></h3>
+<p><strong>Data Drift:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Variables con drift significativo:
+
+• salario_mensual: KS-test p=0.001 ⚠️
+• valor_inmueble: KS-test p=0.003 ⚠️
+• puntaje_datacredito: KS-test p=0.045 ⚠️
+
+Acción: Reentrenamiento recomendado
+</pre></div>
+</div>
+<p><strong>Concept Drift:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Relación DTI → Riesgo cambió:
+
+Antes: Correlación = 0.68
+Ahora: Correlación = 0.54
+
+Modelo desactualizado
+</pre></div>
+</div>
+</section>
+<section id="alertas-automaticas">
+<h3>Alertas Automáticas<a class="headerlink" href="#alertas-automaticas" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>🔔 Alertas Activas:
+
+1. Accuracy &lt; 93% por 7 días consecutivos
+2. Data drift detectado en 3 variables
+3. 150 predicciones con baja confianza esta semana
+
+Recomendación: Reentrenar inmediatamente
+</pre></div>
+</div>
+</section>
+</section>
+<section id="proceso-de-reentrenamiento">
+<h2>Proceso de Reentrenamiento<a class="headerlink" href="#proceso-de-reentrenamiento" title="Link to this heading"></a></h2>
+<section id="paso-1-preparar-nuevos-datos">
+<h3>Paso 1: Preparar Nuevos Datos<a class="headerlink" href="#paso-1-preparar-nuevos-datos" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[📁 Cargar Nuevos Datos]
+
+Datos originales: 10,000
+Datos nuevos: 5,000
+
+Opciones:
+○ Reemplazar datos antiguos
+● Combinar con datos antiguos
+○ Solo usar datos nuevos
+
+Total para reentrenamiento: 15,000
+</pre></div>
+</div>
+</section>
+<section id="paso-2-validar-calidad">
+<h3>Paso 2: Validar Calidad<a class="headerlink" href="#paso-2-validar-calidad" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[✅ Validar Nuevos Datos]
+
+✓ Sin valores faltantes
+✓ Distribuciones consistentes
+✓ Sin duplicados
+⚠ 12 outliers detectados (0.24%)
+
+Calidad: Buena
+</pre></div>
+</div>
+</section>
+<section id="paso-3-configurar-reentrenamiento">
+<h3>Paso 3: Configurar Reentrenamiento<a class="headerlink" href="#paso-3-configurar-reentrenamiento" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Estrategia de reentrenamiento:
+
+● Reentrenar desde cero
+○ Fine-tuning (transfer learning)
+○ Incremental learning
+
+Modelos a reentrenar:
+☑ XGBoost
+☑ LightGBM
+☑ Random Forest
+☐ RBM
+</pre></div>
+</div>
+</section>
+<section id="paso-4-ejecutar-reentrenamiento">
+<h3>Paso 4: Ejecutar Reentrenamiento<a class="headerlink" href="#paso-4-ejecutar-reentrenamiento" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[🔄 Iniciar Reentrenamiento]
+
+Reentrenando XGBoost...
+Época 1/100: Loss = 0.245
+Época 50/100: Loss = 0.089
+Época 100/100: Loss = 0.045
+✓ Completado (3m 25s)
+
+Reentrenando LightGBM...
+✓ Completado (2m 10s)
+
+Reentrenando Random Forest...
+✓ Completado (4m 05s)
+
+Total: 9m 40s
+</pre></div>
+</div>
+</section>
+</section>
+<section id="comparacion-de-versiones">
+<h2>Comparación de Versiones<a class="headerlink" href="#comparacion-de-versiones" title="Link to this heading"></a></h2>
+<section id="metricas-comparativas">
+<h3>Métricas Comparativas<a class="headerlink" href="#metricas-comparativas" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23.8%" />
+<col style="width: 19.0%" />
+<col style="width: 19.0%" />
+<col style="width: 19.0%" />
+<col style="width: 19.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Modelo</p></th>
+<th class="head"><p>Versión</p></th>
+<th class="head"><p>Accuracy</p></th>
+<th class="head"><p>F1-Score</p></th>
+<th class="head"><p>Cambio</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>XGBoost</p></td>
+<td><p>v2.1 (old)</p></td>
+<td><p>92.1%</p></td>
+<td><p>92.1%</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>XGBoost</p></td>
+<td><p>v2.2 (new)</p></td>
+<td><p><strong>95.8%</strong></p></td>
+<td><p><strong>95.7%</strong></p></td>
+<td><p><strong>+3.7%</strong> ✓</p></td>
+</tr>
+<tr class="row-even"><td><p>LightGBM</p></td>
+<td><p>v1.5 (old)</p></td>
+<td><p>91.8%</p></td>
+<td><p>91.5%</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>LightGBM</p></td>
+<td><p>v1.6 (new)</p></td>
+<td><p><strong>95.2%</strong></p></td>
+<td><p><strong>95.0%</strong></p></td>
+<td><p><strong>+3.4%</strong> ✓</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Resultado:</strong> Mejora significativa en todos los modelos</p>
+</section>
+<section id="tests-a-b">
+<h3>Tests A/B<a class="headerlink" href="#tests-a-b" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[🧪 Ejecutar Test A/B]
+
+Grupo A (v2.1): 1,000 predicciones
+Grupo B (v2.2): 1,000 predicciones
+
+Resultados:
+• Accuracy A: 92.3%
+• Accuracy B: 95.6%
+• Diferencia: +3.3% (p &lt; 0.001)
+
+Conclusión: v2.2 es significativamente mejor
+</pre></div>
+</div>
+</section>
+<section id="validacion-cruzada">
+<h3>Validación Cruzada<a class="headerlink" href="#validacion-cruzada" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>5-Fold Cross-Validation:
+
+Modelo v2.1:
+Folds: [92.1%, 91.8%, 92.5%, 91.9%, 92.3%]
+Media: 92.1% ± 0.3%
+
+Modelo v2.2:
+Folds: [95.5%, 95.8%, 95.9%, 95.6%, 95.7%]
+Media: 95.7% ± 0.2%
+
+Mejora: +3.6% ✓
+</pre></div>
+</div>
+</section>
+</section>
+<section id="versionado-de-modelos">
+<h2>Versionado de Modelos<a class="headerlink" href="#versionado-de-modelos" title="Link to this heading"></a></h2>
+<section id="sistema-de-versiones">
+<h3>Sistema de Versiones<a class="headerlink" href="#sistema-de-versiones" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Historial de Versiones:
+
+v2.2 (2024-02-15) ← Actual
+• Accuracy: 95.8%
+• Datos: 15,000
+• Cambios: Reentrenamiento completo
+
+v2.1 (2024-01-01)
+• Accuracy: 95.2%
+• Datos: 10,000
+• Cambios: Optimización hiperparámetros
+
+v2.0 (2023-12-01)
+• Accuracy: 94.1%
+• Datos: 10,000
+• Cambios: Versión inicial
+</pre></div>
+</div>
+</section>
+<section id="metadata-de-versiones">
+<h3>Metadata de Versiones<a class="headerlink" href="#metadata-de-versiones" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Modelo: XGBoost v2.2
+
+Información:
+• Fecha creación: 2024-02-15 10:30:00
+• Autor: sistema_auto
+• Datos entrenamiento: 15,000
+• Datos validación: 3,000
+• Tiempo entrenamiento: 3m 25s
+• Hiperparámetros: {...}
+• Features: 20
+• Métricas: {...}
+• Hash modelo: a3f5b2c...
+</pre></div>
+</div>
+</section>
+<section id="rollback">
+<h3>Rollback<a class="headerlink" href="#rollback" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[⏮️ Revertir a Versión Anterior]
+
+Versión actual: v2.2
+Revertir a: v2.1
+
+⚠️ Advertencia:
+Perderás mejoras de +3.6% accuracy
+
+¿Confirmar rollback? [Sí] [No]
+</pre></div>
+</div>
+</section>
+</section>
+<section id="estrategias-de-reentrenamiento">
+<h2>Estrategias de Reentrenamiento<a class="headerlink" href="#estrategias-de-reentrenamiento" title="Link to this heading"></a></h2>
+<section id="reentrenamiento-completo">
+<h3>1. Reentrenamiento Completo<a class="headerlink" href="#reentrenamiento-completo" title="Link to this heading"></a></h3>
+<p><strong>Cuándo usar:</strong></p>
+<ul class="simple">
+<li><p>Drift significativo</p></li>
+<li><p>Muchos datos nuevos</p></li>
+<li><p>Cambios estructurales</p></li>
+</ul>
+<p><strong>Ventajas:</strong></p>
+<ul class="simple">
+<li><p>Modelo completamente actualizado</p></li>
+<li><p>Mejor rendimiento</p></li>
+</ul>
+<p><strong>Desventajas:</strong></p>
+<ul class="simple">
+<li><p>Más tiempo y recursos</p></li>
+<li><p>Pierde conocimiento previo</p></li>
+</ul>
+</section>
+<section id="fine-tuning">
+<h3>2. Fine-Tuning<a class="headerlink" href="#fine-tuning" title="Link to this heading"></a></h3>
+<p><strong>Cuándo usar:</strong></p>
+<ul class="simple">
+<li><p>Pocos datos nuevos</p></li>
+<li><p>Drift moderado</p></li>
+<li><p>Ajustes menores</p></li>
+</ul>
+<p><strong>Ventajas:</strong></p>
+<ul class="simple">
+<li><p>Rápido</p></li>
+<li><p>Mantiene conocimiento previo</p></li>
+</ul>
+<p><strong>Desventajas:</strong></p>
+<ul class="simple">
+<li><p>Mejora limitada</p></li>
+</ul>
+</section>
+<section id="incremental-learning">
+<h3>3. Incremental Learning<a class="headerlink" href="#incremental-learning" title="Link to this heading"></a></h3>
+<p><strong>Cuándo usar:</strong></p>
+<ul class="simple">
+<li><p>Datos continuos</p></li>
+<li><p>Actualizaciones frecuentes</p></li>
+<li><p>Recursos limitados</p></li>
+</ul>
+<p><strong>Ventajas:</strong></p>
+<ul class="simple">
+<li><p>Muy eficiente</p></li>
+<li><p>Actualización continua</p></li>
+</ul>
+<p><strong>Desventajas:</strong></p>
+<ul class="simple">
+<li><p>No todos los algoritmos lo soportan</p></li>
+</ul>
+</section>
+</section>
+<section id="automatizacion">
+<h2>Automatización<a class="headerlink" href="#automatizacion" title="Link to this heading"></a></h2>
+<section id="reentrenamiento-programado">
+<h3>Reentrenamiento Programado<a class="headerlink" href="#reentrenamiento-programado" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[⏰ Configurar Reentrenamiento Automático]
+
+Frecuencia: ● Mensual ○ Semanal ○ Diario
+Día: 1 de cada mes
+Hora: 02:00 AM
+
+Condiciones:
+☑ Solo si accuracy &lt; 94%
+☑ Solo si hay &gt; 1,000 datos nuevos
+☑ Notificar por email
+
+[💾 Guardar Configuración]
+</pre></div>
+</div>
+</section>
+<section id="triggers-automaticos">
+<h3>Triggers Automáticos<a class="headerlink" href="#triggers-automaticos" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Triggers configurados:
+
+1. Accuracy &lt; 93% por 5 días
+   → Reentrenar automáticamente
+
+2. Data drift detectado
+   → Notificar y sugerir reentrenamiento
+
+3. 5,000 nuevos datos acumulados
+   → Reentrenar automáticamente
+</pre></div>
+</div>
+</section>
+<section id="pipeline-ci-cd">
+<h3>Pipeline CI/CD<a class="headerlink" href="#pipeline-ci-cd" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Pipeline de Reentrenamiento:
+
+1. Detectar trigger
+2. Validar nuevos datos
+3. Reentrenar modelos
+4. Validar mejora (&gt;2%)
+5. Test A/B (1 semana)
+6. Desplegar si exitoso
+7. Monitorear rendimiento
+</pre></div>
+</div>
+</section>
+</section>
+<section id="casos-de-uso">
+<h2>Casos de Uso<a class="headerlink" href="#casos-de-uso" title="Link to this heading"></a></h2>
+<p><strong>Caso 1: Reentrenamiento Mensual</strong></p>
+<p>Actualización rutinaria con datos del mes.</p>
+<p><strong>Caso 2: Reentrenamiento de Emergencia</strong></p>
+<p>Degradación crítica detectada, reentrenar inmediatamente.</p>
+<p><strong>Caso 3: Reentrenamiento por Cambio Regulatorio</strong></p>
+<p>Nueva ley requiere actualizar criterios de riesgo.</p>
+</section>
+<section id="tips-y-mejores-practicas">
+<h2>Tips y Mejores Prácticas<a class="headerlink" href="#tips-y-mejores-practicas" title="Link to this heading"></a></h2>
+<p>✅ <strong>Haz:</strong></p>
+<ul class="simple">
+<li><p>Monitorea rendimiento continuamente</p></li>
+<li><p>Versiona todos los modelos</p></li>
+<li><p>Valida mejoras antes de desplegar</p></li>
+<li><p>Mantén datos de entrenamiento históricos</p></li>
+<li><p>Documenta cambios</p></li>
+</ul>
+<p>❌ <strong>Evita:</strong></p>
+<ul class="simple">
+<li><p>Reentrenar sin validar mejora</p></li>
+<li><p>Desplegar sin test A/B</p></li>
+<li><p>Perder versiones anteriores</p></li>
+<li><p>Ignorar drift de datos</p></li>
+<li><p>Reentrenar demasiado frecuentemente</p></li>
+</ul>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<p><strong>Problema: Modelo nuevo peor que anterior</strong></p>
+<p>Solución: Rollback y revisar datos nuevos.</p>
+<p><strong>Problema: Reentrenamiento muy lento</strong></p>
+<p>Solución: Usa menos datos o algoritmo más rápido.</p>
+<p><strong>Problema: Drift no detectado</strong></p>
+<p>Solución: Ajusta umbrales de detección.</p>
+</section>
+<section id="proximos-pasos">
+<h2>Próximos Pasos<a class="headerlink" href="#proximos-pasos" title="Link to this heading"></a></h2>
+<p>Después de reentrenar:</p>
+<ol class="arabic simple">
+<li><p><strong>Predecir</strong>: <a class="reference internal" href="09_prediccion.html"><span class="doc">9. Predicción de Riesgo</span></a></p></li>
+<li><p><strong>Aprender</strong>: <a class="reference internal" href="11_rag_educativo.html"><span class="doc">11. Sistema RAG Educativo</span></a></p></li>
+<li><p><strong>Monitorear</strong>: Continuar vigilando rendimiento</p></li>
+</ol>
+<p>¡Modelos actualizados y optimizados! 🔄</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="09_prediccion.html" class="btn btn-neutral float-left" title="9. Predicción de Riesgo" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="11_rag_educativo.html" class="btn btn-neutral float-right" title="11. Sistema RAG Educativo" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, Andrés Fernando Gómez Rojas &amp; Carlos Andrés Gómez Vasco. Software Libre bajo Licencia MIT.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

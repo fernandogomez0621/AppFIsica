@@ -1,0 +1,781 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>prediction &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="educational_rag" href="educational_rag.html" />
+    <link rel="prev" title="supervised_models" href="supervised_models.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Módulos del Sistema</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#modulos-principales">Módulos Principales</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../modules.html#referencia-completa-de-la-api">Referencia Completa de la API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="generar_datos.html">generar_datos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_processor.html">data_processor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="univariate_analysis.html">univariate_analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bivariate_analysis.html">bivariate_analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature_engineering.html">feature_engineering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clustering.html">clustering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbm_model.html">rbm_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="supervised_models.html">supervised_models</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">prediction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#descripcion-general">Descripción General</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#clases-principales">Clases Principales</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-de-carga">Métodos de Carga</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-de-formulario">Métodos de Formulario</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-de-prediccion">Métodos de Predicción</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-de-explicacion">Métodos de Explicación</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#funciones-de-renderizado">Funciones de Renderizado</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#funciones-auxiliares">Funciones Auxiliares</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#validaciones-en-tiempo-real">Validaciones en Tiempo Real</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ejemplo-completo-de-prediccion">Ejemplo Completo de Predicción</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-de-calculo">Métodos de Cálculo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-de-generacion-de-insights">Métodos de Generación de Insights</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">Funciones de Renderizado</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id9">Funciones Auxiliares</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ejemplo-de-batch-prediction">Ejemplo de Batch Prediction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#integracion-con-otros-modulos">Integración con Otros Módulos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ver-tambien">Ver también</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="educational_rag.html">educational_rag</a></li>
+<li class="toctree-l3"><a class="reference internal" href="retraining.html">retraining</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#arquitectura-del-sistema">Arquitectura del Sistema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#flujo-de-datos">Flujo de Datos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#descripcion-de-modulos">Descripción de Módulos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#configuracion-avanzada">Configuración Avanzada</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#integracion-con-otros-sistemas">Integración con Otros Sistemas</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">Módulos del Sistema</a></li>
+      <li class="breadcrumb-item active">prediction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/prediction.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="prediction">
+<h1>prediction<a class="headerlink" href="#prediction" title="Link to this heading"></a></h1>
+<section id="descripcion-general">
+<h2>Descripción General<a class="headerlink" href="#descripcion-general" title="Link to this heading"></a></h2>
+<p>Sistema de predicción de riesgo crediticio para nuevos solicitantes con formulario interactivo, explicaciones detalladas y recomendaciones automáticas.</p>
+</section>
+<section id="clases-principales">
+<h2>Clases Principales<a class="headerlink" href="#clases-principales" title="Link to this heading"></a></h2>
+<section id="creditriskpredictor">
+<h3>CreditRiskPredictor<a class="headerlink" href="#creditriskpredictor" title="Link to this heading"></a></h3>
+</section>
+</section>
+<section id="metodos-de-carga">
+<h2>Métodos de Carga<a class="headerlink" href="#metodos-de-carga" title="Link to this heading"></a></h2>
+<section id="load-available-models">
+<h3>_load_available_models<a class="headerlink" href="#load-available-models" title="Link to this heading"></a></h3>
+<p>Carga lista de modelos disponibles desde el directorio de modelos.</p>
+<dl class="simple">
+<dt><strong>Modelos detectados:</strong></dt><dd><ul class="simple">
+<li><p>Archivos .pkl en <code class="docutils literal notranslate"><span class="pre">models/supervised/</span></code></p></li>
+<li><p>Métricas asociadas en archivos .json</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="load-model">
+<h3>load_model<a class="headerlink" href="#load-model" title="Link to this heading"></a></h3>
+<p>Carga un modelo entrenado específico.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">model_key</span></code> (str): Clave del modelo a cargar</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>True si se cargó exitosamente</p>
+</dd>
+</dl>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cargar modelo XGBoost</span>
+<span class="n">success</span> <span class="o">=</span> <span class="n">predictor</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="s1">&#39;xgboost&#39;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Modelo cargado&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Características requeridas: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">predictor</span><span class="o">.</span><span class="n">model_data</span><span class="p">[</span><span class="s1">&#39;feature_names&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Error cargando modelo&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="metodos-de-formulario">
+<h2>Métodos de Formulario<a class="headerlink" href="#metodos-de-formulario" title="Link to this heading"></a></h2>
+<section id="create-prediction-form">
+<h3>create_prediction_form<a class="headerlink" href="#create-prediction-form" title="Link to this heading"></a></h3>
+<p>Crea formulario interactivo para capturar datos del solicitante.</p>
+<dl class="simple">
+<dt><strong>Returns:</strong></dt><dd><p>Diccionario con datos del formulario</p>
+</dd>
+</dl>
+<p><strong>Secciones del formulario:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>👤 Personal:</strong> Edad, estado civil, educación, ciudad, estrato, personas a cargo</p></li>
+<li><p><strong>💼 Laboral:</strong> Tipo empleo, antigüedad, salario, egresos</p></li>
+<li><p><strong>💰 Financiero:</strong> Puntaje DataCrédito, patrimonio, propiedades, saldo banco, demandas</p></li>
+<li><p><strong>🏠 Inmueble:</strong> Valor, cuota inicial, años, plazo, tasa de interés</p></li>
+</ol>
+<p><strong>Ejemplo de uso en Streamlit:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># En aplicación Streamlit</span>
+<span class="n">form_data</span> <span class="o">=</span> <span class="n">predictor</span><span class="o">.</span><span class="n">create_prediction_form</span><span class="p">()</span>
+
+<span class="c1"># Los datos se capturan interactivamente</span>
+<span class="c1"># form_data contendrá todos los campos del formulario</span>
+</pre></div>
+</div>
+</section>
+<section id="calculate-derived-features">
+<h3>calculate_derived_features<a class="headerlink" href="#calculate-derived-features" title="Link to this heading"></a></h3>
+<p>Calcula características derivadas a partir de los datos del formulario.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">form_data</span></code> (Dict): Datos del formulario</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Datos con características derivadas</p>
+</dd>
+</dl>
+<p><strong>Características calculadas:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">valor_cuota_inicial</span></code>: Valor × Porcentaje/100</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">monto_credito</span></code>: Valor - Cuota inicial</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cuota_mensual</span></code>: Calculada con fórmula de amortización</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ltv</span></code>: (Monto/Valor) × 100</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dti</span></code>: (Cuota/Salario) × 100</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">capacidad_ahorro</span></code>: Salario - Egresos</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">capacidad_residual</span></code>: Ahorro - Cuota</p></li>
+</ul>
+<p><strong>Fórmula de cuota mensual:</strong></p>
+<div class="math notranslate nohighlight">
+\[C = M \times \frac{i(1+i)^n}{(1+i)^n - 1}\]</div>
+<dl class="simple">
+<dt>Donde:</dt><dd><ul class="simple">
+<li><p>C = Cuota mensual</p></li>
+<li><p>M = Monto del crédito</p></li>
+<li><p>i = Tasa mensual (tasa_anual/12/100)</p></li>
+<li><p>n = Número de cuotas (plazo_años × 12)</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</section>
+<section id="metodos-de-prediccion">
+<h2>Métodos de Predicción<a class="headerlink" href="#metodos-de-prediccion" title="Link to this heading"></a></h2>
+<section id="predict-risk">
+<h3>predict_risk<a class="headerlink" href="#predict-risk" title="Link to this heading"></a></h3>
+<p>Predice el riesgo crediticio del solicitante.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">applicant_data</span></code> (Dict): Datos del solicitante con características derivadas</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Diccionario con resultados de predicción</p>
+</dd>
+</dl>
+<p><strong>Resultados incluyen:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">predicted_class</span></code>: Clase predicha (Bajo/Medio/Alto)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">probabilities</span></code>: Probabilidades por clase</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">explanation</span></code>: Explicación en lenguaje natural</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">recommendation</span></code>: Recomendación de aprobación</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">risk_factors</span></code>: Factores de riesgo identificados</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">applicant_data</span></code>: Datos completos del solicitante</p></li>
+</ul>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Predecir</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">predictor</span><span class="o">.</span><span class="n">predict_risk</span><span class="p">(</span><span class="n">enhanced_data</span><span class="p">)</span>
+
+<span class="c1"># Resultado principal</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Riesgo: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;predicted_class&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Confianza: </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;probabilities&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Probabilidades</span>
+<span class="k">for</span> <span class="n">clase</span><span class="p">,</span> <span class="n">prob</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;probabilities&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">clase</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">prob</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Recomendación</span>
+<span class="n">rec</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;recommendation&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Recomendación: </span><span class="si">{</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;decision&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Confianza: </span><span class="si">{</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Factores de riesgo</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Factores de riesgo:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">factor</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;risk_factors&#39;</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">factor</span><span class="p">[</span><span class="s1">&#39;factor&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">factor</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> - Impacto </span><span class="si">{</span><span class="n">factor</span><span class="p">[</span><span class="s1">&#39;impact&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="metodos-de-explicacion">
+<h2>Métodos de Explicación<a class="headerlink" href="#metodos-de-explicacion" title="Link to this heading"></a></h2>
+<section id="generate-explanation">
+<h3>_generate_explanation<a class="headerlink" href="#generate-explanation" title="Link to this heading"></a></h3>
+<p>Genera explicación en lenguaje natural de la predicción.</p>
+<p><strong>Factores considerados:</strong></p>
+<ul class="simple">
+<li><p>Puntaje DataCrédito (&lt; 600 o &gt; 750)</p></li>
+<li><p>DTI (&gt; 35% o &lt; 25%)</p></li>
+<li><p>Capacidad residual (&lt; 0 o &gt; 500,000)</p></li>
+<li><p>Estabilidad laboral (Formal + antigüedad &gt; 3 años)</p></li>
+<li><p>Tipo de empleo (Informal)</p></li>
+</ul>
+<p><strong>Ejemplo de explicación:</strong></p>
+<blockquote>
+<div><p>«El solicitante presenta riesgo <strong>BAJO</strong> con 85.3% de confianza. Esto se debe principalmente a: excelente puntaje DataCrédito (780), bajo ratio de endeudamiento (22.5%), buena capacidad residual, empleo formal estable.»</p>
+</div></blockquote>
+</section>
+<section id="generate-recommendation">
+<h3>_generate_recommendation<a class="headerlink" href="#generate-recommendation" title="Link to this heading"></a></h3>
+<p>Genera recomendación de aprobación del crédito.</p>
+<p><strong>Decisiones posibles:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>APROBAR:</strong> Riesgo Bajo con confianza &gt; 70%</p></li>
+<li><p><strong>RECHAZAR:</strong> Riesgo Alto o confianza &gt; 80%</p></li>
+<li><p><strong>REVISAR MANUALMENTE:</strong> Casos intermedios</p></li>
+</ol>
+<dl class="simple">
+<dt><strong>Condiciones adicionales evaluadas:</strong></dt><dd><ul class="simple">
+<li><p>DTI &gt; 40%</p></li>
+<li><p>Número de demandas &gt; 0</p></li>
+<li><p>Capacidad residual &lt; 0</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="identify-risk-factors">
+<h3>_identify_risk_factors<a class="headerlink" href="#identify-risk-factors" title="Link to this heading"></a></h3>
+<p>Identifica los principales factores de riesgo.</p>
+<dl class="simple">
+<dt><strong>Returns:</strong></dt><dd><p>Lista de diccionarios con factores</p>
+</dd>
+</dl>
+<p><strong>Factores analizados:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Puntaje DataCrédito</strong></p></li>
+<li><p><strong>Ratio Deuda/Ingreso (DTI)</strong></p></li>
+<li><p><strong>Capacidad Residual</strong></p></li>
+<li><p><strong>Loan-to-Value (LTV)</strong></p></li>
+<li><p><strong>Estabilidad Laboral</strong></p></li>
+</ol>
+<dl class="simple">
+<dt><strong>Niveles de impacto:</strong></dt><dd><ul class="simple">
+<li><p>ALTO: Aumenta significativamente el riesgo</p></li>
+<li><p>MEDIO: Impacto neutral</p></li>
+<li><p>BAJO: Disminuye el riesgo</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</section>
+<section id="funciones-de-renderizado">
+<h2>Funciones de Renderizado<a class="headerlink" href="#funciones-de-renderizado" title="Link to this heading"></a></h2>
+<section id="render-prediction-interface">
+<h3>render_prediction_interface<a class="headerlink" href="#render-prediction-interface" title="Link to this heading"></a></h3>
+<p>Renderiza la interfaz completa de predicción en Streamlit.</p>
+<dl class="simple">
+<dt><strong>Funcionalidades:</strong></dt><dd><ul class="simple">
+<li><p>Selección de modelo</p></li>
+<li><p>Formulario interactivo de datos</p></li>
+<li><p>Validaciones en tiempo real</p></li>
+<li><p>Predicción con visualizaciones</p></li>
+<li><p>Análisis de factores de riesgo</p></li>
+<li><p>Recomendación de aprobación</p></li>
+<li><p>Historial de predicciones</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="render-prediction-module">
+<h3>render_prediction_module<a class="headerlink" href="#render-prediction-module" title="Link to this heading"></a></h3>
+<p>Función principal para renderizar el módulo de predicción.</p>
+</section>
+</section>
+<section id="funciones-auxiliares">
+<h2>Funciones Auxiliares<a class="headerlink" href="#funciones-auxiliares" title="Link to this heading"></a></h2>
+<section id="save-prediction-to-history">
+<h3>_save_prediction_to_history<a class="headerlink" href="#save-prediction-to-history" title="Link to this heading"></a></h3>
+<p>Guarda la predicción en el historial JSON.</p>
+<p><strong>Archivo:</strong> <code class="docutils literal notranslate"><span class="pre">data/predictions_history.json</span></code></p>
+<p><strong>Estructura del historial:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="s1">&#39;2024-01-01T12:00:00&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;model_used&#39;</span><span class="p">:</span> <span class="s1">&#39;xgboost&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;prediction&#39;</span><span class="p">:</span> <span class="s1">&#39;Bajo&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;probabilities&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Bajo&#39;</span><span class="p">:</span> <span class="mf">0.85</span><span class="p">,</span> <span class="s1">&#39;Medio&#39;</span><span class="p">:</span> <span class="mf">0.12</span><span class="p">,</span> <span class="s1">&#39;Alto&#39;</span><span class="p">:</span> <span class="mf">0.03</span><span class="p">},</span>
+        <span class="s1">&#39;recommendation&#39;</span><span class="p">:</span> <span class="s1">&#39;APROBAR&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;applicant_summary&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;edad&#39;</span><span class="p">:</span> <span class="mi">35</span><span class="p">,</span>
+            <span class="s1">&#39;salario&#39;</span><span class="p">:</span> <span class="mi">4500000</span><span class="p">,</span>
+            <span class="s1">&#39;puntaje_datacredito&#39;</span><span class="p">:</span> <span class="mi">720</span><span class="p">,</span>
+            <span class="s1">&#39;dti&#39;</span><span class="p">:</span> <span class="mf">22.5</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="validaciones-en-tiempo-real">
+<h2>Validaciones en Tiempo Real<a class="headerlink" href="#validaciones-en-tiempo-real" title="Link to this heading"></a></h2>
+<p>El sistema realiza validaciones automáticas:</p>
+<ol class="arabic simple">
+<li><p><strong>DTI estimado:</strong> Alerta si &gt; 40%</p></li>
+<li><p><strong>Capacidad de ahorro:</strong> Error si ≤ 0</p></li>
+<li><p><strong>Consistencia monto:</strong> Error si monto &gt; valor inmueble</p></li>
+<li><p><strong>Edad + Plazo:</strong> Advertencia si &gt; 75 años</p></li>
+<li><p><strong>Cuota inicial:</strong> Validación de porcentaje (10-50%)</p></li>
+</ol>
+</section>
+<section id="ejemplo-completo-de-prediccion">
+<h2>Ejemplo Completo de Predicción<a class="headerlink" href="#ejemplo-completo-de-prediccion" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.prediction</span><span class="w"> </span><span class="kn">import</span> <span class="n">CreditRiskPredictor</span>
+
+<span class="c1"># Inicializar predictor</span>
+<span class="n">predictor</span> <span class="o">=</span> <span class="n">CreditRiskPredictor</span><span class="p">()</span>
+
+<span class="c1"># Cargar modelo</span>
+<span class="n">predictor</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="s1">&#39;xgboost&#39;</span><span class="p">)</span>
+
+<span class="c1"># Datos del solicitante</span>
+<span class="n">applicant</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># Personal</span>
+    <span class="s1">&#39;edad&#39;</span><span class="p">:</span> <span class="mi">38</span><span class="p">,</span>
+    <span class="s1">&#39;ciudad&#39;</span><span class="p">:</span> <span class="s1">&#39;Bogotá&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;estrato_socioeconomico&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s1">&#39;nivel_educacion&#39;</span><span class="p">:</span> <span class="s1">&#39;Profesional&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;estado_civil&#39;</span><span class="p">:</span> <span class="s1">&#39;Casado&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;personas_a_cargo&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+
+    <span class="c1"># Laboral</span>
+    <span class="s1">&#39;tipo_empleo&#39;</span><span class="p">:</span> <span class="s1">&#39;Formal&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;antiguedad_empleo&#39;</span><span class="p">:</span> <span class="mf">6.5</span><span class="p">,</span>
+    <span class="s1">&#39;salario_mensual&#39;</span><span class="p">:</span> <span class="mi">5500000</span><span class="p">,</span>
+    <span class="s1">&#39;egresos_mensuales&#39;</span><span class="p">:</span> <span class="mi">3200000</span><span class="p">,</span>
+
+    <span class="c1"># Financiero</span>
+    <span class="s1">&#39;puntaje_datacredito&#39;</span><span class="p">:</span> <span class="mi">750</span><span class="p">,</span>
+    <span class="s1">&#39;patrimonio_total&#39;</span><span class="p">:</span> <span class="mi">85000000</span><span class="p">,</span>
+    <span class="s1">&#39;numero_propiedades&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;saldo_promedio_banco&#39;</span><span class="p">:</span> <span class="mi">12000000</span><span class="p">,</span>
+    <span class="s1">&#39;numero_demandas&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+
+    <span class="c1"># Inmueble</span>
+    <span class="s1">&#39;valor_inmueble&#39;</span><span class="p">:</span> <span class="mi">220000000</span><span class="p">,</span>
+    <span class="s1">&#39;porcentaje_cuota_inicial&#39;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+    <span class="s1">&#39;anos_inmueble&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s1">&#39;plazo_credito&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="s1">&#39;tasa_interes_anual&#39;</span><span class="p">:</span> <span class="mf">10.8</span>
+<span class="p">}</span>
+
+<span class="c1"># Calcular características derivadas</span>
+<span class="n">enhanced_data</span> <span class="o">=</span> <span class="n">predictor</span><span class="o">.</span><span class="n">calculate_derived_features</span><span class="p">(</span><span class="n">applicant</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Características derivadas:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Monto crédito: $</span><span class="si">{</span><span class="n">enhanced_data</span><span class="p">[</span><span class="s1">&#39;monto_credito&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.0f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Cuota mensual: $</span><span class="si">{</span><span class="n">enhanced_data</span><span class="p">[</span><span class="s1">&#39;cuota_mensual&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.0f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  DTI: </span><span class="si">{</span><span class="n">enhanced_data</span><span class="p">[</span><span class="s1">&#39;dti&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  LTV: </span><span class="si">{</span><span class="n">enhanced_data</span><span class="p">[</span><span class="s1">&#39;ltv&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Capacidad residual: $</span><span class="si">{</span><span class="n">enhanced_data</span><span class="p">[</span><span class="s1">&#39;capacidad_residual&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,.0f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Realizar predicción</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">predictor</span><span class="o">.</span><span class="n">predict_risk</span><span class="p">(</span><span class="n">enhanced_data</span><span class="p">)</span>
+
+<span class="c1"># Mostrar resultados</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">60</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RESULTADO DE LA PREDICCIÓN&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">60</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🎯 Riesgo Predicho: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;predicted_class&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Confianza: </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;probabilities&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Probabilidades por clase:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">clase</span><span class="p">,</span> <span class="n">prob</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;probabilities&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">emoji</span> <span class="o">=</span> <span class="s1">&#39;🟢&#39;</span> <span class="k">if</span> <span class="n">clase</span> <span class="o">==</span> <span class="s1">&#39;Bajo&#39;</span> <span class="k">else</span> <span class="s1">&#39;🟡&#39;</span> <span class="k">if</span> <span class="n">clase</span> <span class="o">==</span> <span class="s1">&#39;Medio&#39;</span> <span class="k">else</span> <span class="s1">&#39;🔴&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">emoji</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">clase</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">prob</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">💼 Recomendación: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;recommendation&#39;</span><span class="p">][</span><span class="s1">&#39;decision&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;recommendation&#39;</span><span class="p">][</span><span class="s1">&#39;conditions&#39;</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Condiciones a considerar:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">condition</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;recommendation&#39;</span><span class="p">][</span><span class="s1">&#39;conditions&#39;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="n">condition</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📝 Explicación:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;explanation&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">⚠️ Factores de Riesgo:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">factor</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;risk_factors&#39;</span><span class="p">]:</span>
+    <span class="n">emoji</span> <span class="o">=</span> <span class="s1">&#39;🔴&#39;</span> <span class="k">if</span> <span class="n">factor</span><span class="p">[</span><span class="s1">&#39;impact&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ALTO&#39;</span> <span class="k">else</span> <span class="s1">&#39;🟡&#39;</span> <span class="k">if</span> <span class="n">factor</span><span class="p">[</span><span class="s1">&#39;impact&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;MEDIO&#39;</span> <span class="k">else</span> <span class="s1">&#39;🟢&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">emoji</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">factor</span><span class="p">[</span><span class="s1">&#39;factor&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">factor</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">factor</span><span class="p">[</span><span class="s1">&#39;direction&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> riesgo)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="metodos-de-calculo">
+<h2>Métodos de Cálculo<a class="headerlink" href="#metodos-de-calculo" title="Link to this heading"></a></h2>
+<section id="id1">
+<h3>calculate_derived_features<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>Calcula todas las características derivadas necesarias para la predicción.</p>
+<p><strong>Características calculadas:</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Característica</p></th>
+<th class="head"><p>Fórmula</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>valor_cuota_inicial</p></td>
+<td><p>valor_inmueble × (porcentaje_cuota_inicial / 100)</p></td>
+</tr>
+<tr class="row-odd"><td><p>monto_credito</p></td>
+<td><p>valor_inmueble - valor_cuota_inicial</p></td>
+</tr>
+<tr class="row-even"><td><p>cuota_mensual</p></td>
+<td><p>Fórmula de amortización francesa</p></td>
+</tr>
+<tr class="row-odd"><td><p>ltv</p></td>
+<td><p>(monto_credito / valor_inmueble) × 100</p></td>
+</tr>
+<tr class="row-even"><td><p>dti</p></td>
+<td><p>(cuota_mensual / salario_mensual) × 100</p></td>
+</tr>
+<tr class="row-odd"><td><p>capacidad_ahorro</p></td>
+<td><p>salario_mensual - egresos_mensuales</p></td>
+</tr>
+<tr class="row-even"><td><p>capacidad_residual</p></td>
+<td><p>capacidad_ahorro - cuota_mensual</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id2">
+<h3>predict_risk<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p>Realiza la predicción de riesgo crediticio.</p>
+<p><strong>Proceso:</strong></p>
+<ol class="arabic simple">
+<li><p>Preparar características según modelo</p></li>
+<li><p>Escalar datos</p></li>
+<li><p>Realizar predicción</p></li>
+<li><p>Calcular probabilidades</p></li>
+<li><p>Generar explicación</p></li>
+<li><p>Generar recomendación</p></li>
+<li><p>Identificar factores de riesgo</p></li>
+</ol>
+</section>
+</section>
+<section id="metodos-de-generacion-de-insights">
+<h2>Métodos de Generación de Insights<a class="headerlink" href="#metodos-de-generacion-de-insights" title="Link to this heading"></a></h2>
+<section id="id3">
+<h3>_generate_explanation<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<p>Genera explicación en lenguaje natural.</p>
+<p><strong>Factores analizados:</strong></p>
+<ul class="simple">
+<li><p>Puntaje DataCrédito (rangos: &lt;600, &gt;750)</p></li>
+<li><p>DTI (rangos: &gt;35%, &lt;25%)</p></li>
+<li><p>Capacidad residual (rangos: &lt;0, &gt;500,000)</p></li>
+<li><p>Estabilidad laboral (Formal + antigüedad &gt;3)</p></li>
+<li><p>Tipo de empleo (Informal)</p></li>
+</ul>
+</section>
+<section id="id4">
+<h3>_generate_recommendation<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<p>Genera recomendación de aprobación.</p>
+<p><strong>Lógica de decisión:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">riesgo</span> <span class="o">==</span> <span class="s1">&#39;Bajo&#39;</span> <span class="ow">and</span> <span class="n">confianza</span> <span class="o">&gt;</span> <span class="mf">0.7</span><span class="p">:</span>
+    <span class="n">decision</span> <span class="o">=</span> <span class="s2">&quot;APROBAR&quot;</span>
+<span class="k">elif</span> <span class="n">riesgo</span> <span class="o">==</span> <span class="s1">&#39;Alto&#39;</span> <span class="ow">or</span> <span class="n">confianza</span> <span class="o">&gt;</span> <span class="mf">0.8</span><span class="p">:</span>
+    <span class="n">decision</span> <span class="o">=</span> <span class="s2">&quot;RECHAZAR&quot;</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">decision</span> <span class="o">=</span> <span class="s2">&quot;REVISAR MANUALMENTE&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h3>_identify_risk_factors<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<p>Identifica y clasifica factores de riesgo.</p>
+<p><strong>Clasificación de impacto:</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 30.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Factor</p></th>
+<th class="head"><p>Impacto ALTO</p></th>
+<th class="head"><p>Impacto BAJO</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Puntaje DataCrédito</p></td>
+<td><p>&lt; 600</p></td>
+<td><p>&gt; 750</p></td>
+</tr>
+<tr class="row-odd"><td><p>DTI</p></td>
+<td><p>&gt; 35%</p></td>
+<td><p>&lt; 25%</p></td>
+</tr>
+<tr class="row-even"><td><p>Capacidad Residual</p></td>
+<td><p>&lt; 0</p></td>
+<td><p>&gt; 500,000</p></td>
+</tr>
+<tr class="row-odd"><td><p>LTV</p></td>
+<td><p>&gt; 85%</p></td>
+<td><p>&lt; 70%</p></td>
+</tr>
+<tr class="row-even"><td><p>Estabilidad Laboral</p></td>
+<td><p>Informal o &lt;1 año</p></td>
+<td><p>Formal + &gt;3 años</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="id6">
+<h2>Funciones de Renderizado<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<section id="id7">
+<h3>render_prediction_interface<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<p>Renderiza la interfaz completa de predicción en Streamlit.</p>
+<p><strong>Componentes de la interfaz:</strong></p>
+<ol class="arabic simple">
+<li><p>Selección de modelo con métricas</p></li>
+<li><p>Formulario interactivo en tabs</p></li>
+<li><p>Validaciones en tiempo real</p></li>
+<li><p>Botón de predicción</p></li>
+<li><p>Visualización de resultados:</p>
+<ul class="simple">
+<li><p>Predicción principal con color</p></li>
+<li><p>Probabilidades por clase</p></li>
+<li><p>Gráfico de barras de probabilidades</p></li>
+<li><p>Análisis de factores de riesgo</p></li>
+<li><p>Recomendación final</p></li>
+<li><p>Explicación detallada</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="id8">
+<h3>render_prediction_module<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<p>Función principal para renderizar el módulo.</p>
+</section>
+</section>
+<section id="id9">
+<h2>Funciones Auxiliares<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<section id="id10">
+<h3>_save_prediction_to_history<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<p>Guarda predicción en historial JSON.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">predictor</span></code> (CreditRiskPredictor): Instancia del predictor</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prediction_results</span></code> (Dict): Resultados de la predicción</p></li>
+</ul>
+</dd>
+<dt><strong>Archivo de historial:</strong></dt><dd><ul class="simple">
+<li><p>Ubicación: <code class="docutils literal notranslate"><span class="pre">data/predictions_history.json</span></code></p></li>
+<li><p>Límite: Últimas 100 predicciones</p></li>
+<li><p>Formato: JSON con timestamp</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</section>
+<section id="ejemplo-de-batch-prediction">
+<h2>Ejemplo de Batch Prediction<a class="headerlink" href="#ejemplo-de-batch-prediction" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.prediction</span><span class="w"> </span><span class="kn">import</span> <span class="n">CreditRiskPredictor</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Cargar predictor</span>
+<span class="n">predictor</span> <span class="o">=</span> <span class="n">CreditRiskPredictor</span><span class="p">()</span>
+<span class="n">predictor</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="s1">&#39;xgboost&#39;</span><span class="p">)</span>
+
+<span class="c1"># Cargar múltiples solicitantes</span>
+<span class="n">applicants_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;nuevos_solicitantes.csv&quot;</span><span class="p">)</span>
+
+<span class="c1"># Predecir para cada uno</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">applicants_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="c1"># Convertir fila a diccionario</span>
+    <span class="n">applicant_data</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+
+    <span class="c1"># Calcular características</span>
+    <span class="n">enhanced_data</span> <span class="o">=</span> <span class="n">predictor</span><span class="o">.</span><span class="n">calculate_derived_features</span><span class="p">(</span><span class="n">applicant_data</span><span class="p">)</span>
+
+    <span class="c1"># Predecir</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">predictor</span><span class="o">.</span><span class="n">predict_risk</span><span class="p">(</span><span class="n">enhanced_data</span><span class="p">)</span>
+
+    <span class="n">predictions</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">idx</span><span class="p">,</span>
+        <span class="s1">&#39;riesgo_predicho&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;predicted_class&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;confianza&#39;</span><span class="p">:</span> <span class="nb">max</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;probabilities&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+        <span class="s1">&#39;recomendacion&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;recommendation&#39;</span><span class="p">][</span><span class="s1">&#39;decision&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;prob_bajo&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;probabilities&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Bajo&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="s1">&#39;prob_medio&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;probabilities&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Medio&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="s1">&#39;prob_alto&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;probabilities&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Alto&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">})</span>
+
+<span class="c1"># Crear DataFrame de resultados</span>
+<span class="n">results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+
+<span class="c1"># Guardar resultados</span>
+<span class="n">results_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;predicciones_batch.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Resumen</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total predicciones: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results_df</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Distribución de riesgo:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;riesgo_predicho&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Recomendaciones:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;recomendacion&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="integracion-con-otros-modulos">
+<h2>Integración con Otros Módulos<a class="headerlink" href="#integracion-con-otros-modulos" title="Link to this heading"></a></h2>
+<p>El módulo de predicción se integra con:</p>
+<ul class="simple">
+<li><p><strong>feature_engineering:</strong> Para calcular características derivadas</p></li>
+<li><p><strong>supervised_models:</strong> Carga modelos entrenados</p></li>
+<li><p><strong>data_processor:</strong> Validación de datos de entrada</p></li>
+</ul>
+<p><strong>Flujo completo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Generar datos</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.generar_datos</span><span class="w"> </span><span class="kn">import</span> <span class="n">generar_datos_credito_realista</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">generar_datos_credito_realista</span><span class="p">(</span><span class="n">n_registros</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+
+<span class="c1"># 2. Ingeniería de características</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.feature_engineering</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureEngineer</span>
+<span class="n">engineer</span> <span class="o">=</span> <span class="n">FeatureEngineer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">df_enhanced</span> <span class="o">=</span> <span class="n">engineer</span><span class="o">.</span><span class="n">generate_all_features</span><span class="p">()</span>
+
+<span class="c1"># 3. Entrenar modelo</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.supervised_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">SupervisedModelTrainer</span>
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">SupervisedModelTrainer</span><span class="p">()</span>
+<span class="n">trainer</span><span class="o">.</span><span class="n">prepare_data</span><span class="p">(</span><span class="n">df_enhanced</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train_model</span><span class="p">(</span><span class="s1">&#39;xgboost&#39;</span><span class="p">)</span>
+
+<span class="c1"># 4. Usar para predicción</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.prediction</span><span class="w"> </span><span class="kn">import</span> <span class="n">CreditRiskPredictor</span>
+<span class="n">predictor</span> <span class="o">=</span> <span class="n">CreditRiskPredictor</span><span class="p">()</span>
+<span class="n">predictor</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="s1">&#39;xgboost&#39;</span><span class="p">)</span>
+
+<span class="c1"># 5. Predecir nuevo solicitante</span>
+<span class="n">new_applicant</span> <span class="o">=</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>  <span class="c1"># Datos del formulario</span>
+<span class="n">enhanced</span> <span class="o">=</span> <span class="n">predictor</span><span class="o">.</span><span class="n">calculate_derived_features</span><span class="p">(</span><span class="n">new_applicant</span><span class="p">)</span>
+<span class="n">prediction</span> <span class="o">=</span> <span class="n">predictor</span><span class="o">.</span><span class="n">predict_risk</span><span class="p">(</span><span class="n">enhanced</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="ver-tambien">
+<h2>Ver también<a class="headerlink" href="#ver-tambien" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="supervised_models.html"><span class="doc">supervised_models</span></a> - Entrenamiento de modelos</p></li>
+<li><p><a class="reference internal" href="feature_engineering.html"><span class="doc">feature_engineering</span></a> - Características derivadas</p></li>
+<li><p><a class="reference internal" href="retraining.html"><span class="doc">retraining</span></a> - Reentrenamiento de modelos</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="supervised_models.html" class="btn btn-neutral float-left" title="supervised_models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="educational_rag.html" class="btn btn-neutral float-right" title="educational_rag" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, Andrés Fernando Gómez Rojas &amp; Carlos Andrés Gómez Vasco. Software Libre bajo Licencia MIT.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

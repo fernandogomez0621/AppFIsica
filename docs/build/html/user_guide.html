@@ -1,0 +1,518 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manual de Usuario &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=f85f4cfb"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="1. Página de Inicio y Navegación" href="user_guide/01_inicio.html" />
+    <link rel="prev" title="Instalación" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Instalación</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Manual de Usuario</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduccion">Introducción</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#que-es-este-sistema">¿Qué es este sistema?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#para-quien-es-este-sistema">¿Para quién es este sistema?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#flujo-de-trabajo-recomendado">Flujo de Trabajo Recomendado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#requisitos-previos">Requisitos Previos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#convenciones-de-este-manual">Convenciones de este Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#estructura-del-manual">Estructura del Manual</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/01_inicio.html">1. Página de Inicio y Navegación</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/02_generar_datos.html">2. Generar Datos Sintéticos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/03_cargar_datos.html">3. Cargar Datos Externos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/04_analisis_descriptivo.html">4. Análisis Descriptivo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/05_ingenieria_caracteristicas.html">5. Ingeniería de Características</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/06_clustering.html">6. Clustering y Segmentación</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/07_rbm.html">7. Máquina de Boltzmann Restringida (RBM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/08_modelos_supervisados.html">8. Modelos Supervisados</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/09_prediccion.html">9. Predicción de Riesgo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/10_reentrenamiento.html">10. Reentrenamiento de Modelos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_guide/11_rag_educativo.html">11. Sistema RAG Educativo</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#acceso-rapido">Acceso Rápido</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#soporte-y-recursos">Soporte y Recursos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Módulos del Sistema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Manual de Usuario</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/user_guide.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="manual-de-usuario">
+<h1>Manual de Usuario<a class="headerlink" href="#manual-de-usuario" title="Link to this heading"></a></h1>
+<p>Bienvenido al manual de usuario del <strong>Sistema de Riesgo Crediticio con RBM</strong>. Esta guía te llevará paso a paso a través de todas las funcionalidades de la aplicación Streamlit.</p>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p>Este manual está diseñado para usuarios no técnicos. Si buscas documentación técnica del código, consulta la <a class="reference internal" href="api_reference.html"><span class="doc">Referencia de la API</span></a>.</p>
+</div>
+<section id="introduccion">
+<h2>Introducción<a class="headerlink" href="#introduccion" title="Link to this heading"></a></h2>
+<section id="que-es-este-sistema">
+<h3>¿Qué es este sistema?<a class="headerlink" href="#que-es-este-sistema" title="Link to this heading"></a></h3>
+<p>Este sistema integral permite analizar y predecir el riesgo crediticio hipotecario utilizando técnicas avanzadas de Machine Learning, específicamente <strong>Máquinas de Boltzmann Restringidas (RBM)</strong> combinadas con modelos supervisados.</p>
+<p><strong>Características principales:</strong></p>
+<ul class="simple">
+<li><p>📊 Generación de datos sintéticos realistas</p></li>
+<li><p>📁 Carga y validación de datos externos</p></li>
+<li><p>📈 Análisis exploratorio completo</p></li>
+<li><p>🔧 Ingeniería de características automática</p></li>
+<li><p>⚡ Entrenamiento de RBM para extracción de características</p></li>
+<li><p>🤖 Múltiples modelos de clasificación supervisados</p></li>
+<li><p>🔮 Sistema de predicción en tiempo real</p></li>
+<li><p>🔄 Reentrenamiento automático de modelos</p></li>
+<li><p>🎓 Asistente educativo RAG con papers científicos</p></li>
+</ul>
+</section>
+<section id="para-quien-es-este-sistema">
+<h3>¿Para quién es este sistema?<a class="headerlink" href="#para-quien-es-este-sistema" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt><strong>Analistas de Riesgo Crediticio:</strong></dt><dd><p>Evalúa solicitudes de crédito hipotecario, identifica patrones de riesgo y optimiza políticas de aprobación.</p>
+</dd>
+<dt><strong>Estudiantes de Física:</strong></dt><dd><p>Aprende sobre Máquinas de Boltzmann y sus aplicaciones en finanzas mediante el sistema RAG educativo.</p>
+</dd>
+<dt><strong>Data Scientists:</strong></dt><dd><p>Experimenta con modelos generativos, compara algoritmos de ML y construye pipelines completos.</p>
+</dd>
+<dt><strong>Gerentes de Crédito:</strong></dt><dd><p>Toma decisiones informadas basadas en análisis predictivos y visualizaciones claras.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="flujo-de-trabajo-recomendado">
+<h2>Flujo de Trabajo Recomendado<a class="headerlink" href="#flujo-de-trabajo-recomendado" title="Link to this heading"></a></h2>
+<p>Para obtener los mejores resultados, sigue este flujo de trabajo:</p>
+<a class="reference internal image-reference" href="_static/workflow_diagram.png"><img alt="Flujo de trabajo del sistema" class="align-center" src="_static/workflow_diagram.png" style="width: 80%;" />
+</a>
+<ol class="arabic">
+<li><p><strong>📊 Generar o Cargar Datos</strong></p>
+<p>Comienza generando un dataset sintético o cargando tus propios datos de crédito.</p>
+</li>
+<li><p><strong>🔍 Validar y Limpiar</strong></p>
+<p>Asegura la calidad de los datos mediante validación automática y limpieza.</p>
+</li>
+<li><p><strong>📈 Análisis Exploratorio</strong></p>
+<p>Comprende las distribuciones, correlaciones y patrones en tus datos.</p>
+</li>
+<li><p><strong>🔧 Ingeniería de Características</strong></p>
+<p>Crea variables derivadas que mejoren el poder predictivo.</p>
+</li>
+<li><p><strong>⚡ Entrenar RBM</strong></p>
+<p>Extrae características latentes mediante Máquinas de Boltzmann.</p>
+</li>
+<li><p><strong>🤖 Entrenar Modelos Supervisados</strong></p>
+<p>Construye clasificadores de riesgo usando las características extraídas.</p>
+</li>
+<li><p><strong>🔮 Realizar Predicciones</strong></p>
+<p>Evalúa el riesgo de nuevos solicitantes en tiempo real.</p>
+</li>
+<li><p><strong>🔄 Reentrenar Modelos</strong></p>
+<p>Actualiza los modelos con nuevos datos para mantener su precisión.</p>
+</li>
+<li><p><strong>🎓 Aprender sobre RBMs</strong></p>
+<p>Usa el asistente RAG para profundizar en la teoría y aplicaciones.</p>
+</li>
+</ol>
+</section>
+<section id="requisitos-previos">
+<h2>Requisitos Previos<a class="headerlink" href="#requisitos-previos" title="Link to this heading"></a></h2>
+<p>Antes de comenzar, asegúrate de tener:</p>
+<p><strong>Conocimientos Básicos:</strong></p>
+<ul class="simple">
+<li><p>Conceptos financieros básicos (crédito, tasa de interés, etc.)</p></li>
+<li><p>Familiaridad con navegadores web</p></li>
+<li><p>Comprensión básica de estadística (opcional pero útil)</p></li>
+</ul>
+<p><strong>Requisitos Técnicos:</strong></p>
+<ul class="simple">
+<li><p>Navegador web moderno (Chrome, Firefox, Safari, Edge)</p></li>
+<li><p>Conexión a internet (para el sistema RAG)</p></li>
+<li><p>Archivos de datos en formato CSV, Excel o Parquet (si cargas datos propios)</p></li>
+</ul>
+<p><strong>Configuración del Sistema:</strong></p>
+<ul class="simple">
+<li><p>Python 3.8 o superior instalado</p></li>
+<li><p>Ambiente virtual activado</p></li>
+<li><p>Dependencias instaladas (ver <a class="reference internal" href="installation.html"><span class="doc">Instalación</span></a>)</p></li>
+</ul>
+</section>
+<section id="convenciones-de-este-manual">
+<h2>Convenciones de este Manual<a class="headerlink" href="#convenciones-de-este-manual" title="Link to this heading"></a></h2>
+<p>A lo largo de este manual, utilizamos las siguientes convenciones:</p>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p><strong>Notas</strong> proporcionan información adicional útil o consejos.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Advertencia</p>
+<p><strong>Advertencias</strong> indican precauciones importantes que debes tener en cuenta.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Truco</p>
+<p><strong>Tips</strong> ofrecen sugerencias para mejorar tu experiencia o resultados.</p>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Importante</p>
+<p><strong>Importante</strong> resalta información crítica que no debes pasar por alto.</p>
+</div>
+<p><strong>Elementos de interfaz:</strong></p>
+<ul class="simple">
+<li><p>Los botones se muestran como: <strong>«Generar Datos»</strong></p></li>
+<li><p>Los campos de entrada se muestran como: <em>Número de registros</em></p></li>
+<li><p>Los menús se muestran como: → <strong>Sidebar</strong> → <strong>Generar Datos</strong></p></li>
+</ul>
+<p><strong>Código y comandos:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Los comandos de terminal se muestran así</span>
+streamlit<span class="w"> </span>run<span class="w"> </span>app.py
+</pre></div>
+</div>
+<p><strong>Valores y parámetros:</strong></p>
+<ul class="simple">
+<li><p>Los valores numéricos se muestran como: <code class="docutils literal notranslate"><span class="pre">100</span></code></p></li>
+<li><p>Los nombres de variables se muestran como: <code class="docutils literal notranslate"><span class="pre">nivel_riesgo</span></code></p></li>
+<li><p>Los archivos se muestran como: <code class="file docutils literal notranslate"><span class="pre">datos_credito.csv</span></code></p></li>
+</ul>
+</section>
+<section id="estructura-del-manual">
+<h2>Estructura del Manual<a class="headerlink" href="#estructura-del-manual" title="Link to this heading"></a></h2>
+<p>Este manual está organizado en módulos que corresponden a las funcionalidades de la aplicación:</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Guías por Módulo:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/01_inicio.html">1. Página de Inicio y Navegación</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/01_inicio.html#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/01_inicio.html#acceso-a-la-aplicacion">Acceso a la Aplicación</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/01_inicio.html#interfaz-principal">Interfaz Principal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/01_inicio.html#navegacion-por-modulos">Navegación por Módulos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/01_inicio.html#elementos-de-la-interfaz">Elementos de la Interfaz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/01_inicio.html#estado-del-sistema">Estado del Sistema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/01_inicio.html#configuracion-de-la-aplicacion">Configuración de la Aplicación</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/01_inicio.html#casos-de-uso-comunes">Casos de Uso Comunes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/01_inicio.html#tips-y-mejores-practicas">Tips y Mejores Prácticas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/01_inicio.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/01_inicio.html#obtener-ayuda">Obtener Ayuda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/01_inicio.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/02_generar_datos.html">2. Generar Datos Sintéticos</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/02_generar_datos.html#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/02_generar_datos.html#por-que-usar-datos-sinteticos">¿Por Qué Usar Datos Sintéticos?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/02_generar_datos.html#acceso-al-modulo">Acceso al Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/02_generar_datos.html#configuracion-del-generador">Configuración del Generador</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/02_generar_datos.html#proceso-de-generacion">Proceso de Generación</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/02_generar_datos.html#interpretacion-de-resultados">Interpretación de Resultados</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/02_generar_datos.html#variables-generadas">Variables Generadas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/02_generar_datos.html#casos-de-uso-comunes">Casos de Uso Comunes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/02_generar_datos.html#descargar-datos">Descargar Datos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/02_generar_datos.html#tips-y-mejores-practicas">Tips y Mejores Prácticas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/02_generar_datos.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/02_generar_datos.html#preguntas-frecuentes">Preguntas Frecuentes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/02_generar_datos.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/03_cargar_datos.html">3. Cargar Datos Externos</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/03_cargar_datos.html#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/03_cargar_datos.html#formatos-soportados">Formatos Soportados</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/03_cargar_datos.html#acceso-al-modulo">Acceso al Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/03_cargar_datos.html#cargar-archivo">Cargar Archivo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/03_cargar_datos.html#validacion-automatica">Validación Automática</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/03_cargar_datos.html#reporte-de-calidad">Reporte de Calidad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/03_cargar_datos.html#limpieza-de-datos">Limpieza de Datos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/03_cargar_datos.html#mapeo-de-columnas">Mapeo de Columnas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/03_cargar_datos.html#guardar-datos-procesados">Guardar Datos Procesados</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/03_cargar_datos.html#casos-de-uso">Casos de Uso</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/03_cargar_datos.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/03_cargar_datos.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/04_analisis_descriptivo.html">4. Análisis Descriptivo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/04_analisis_descriptivo.html#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/04_analisis_descriptivo.html#acceso-al-modulo">Acceso al Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/04_analisis_descriptivo.html#analisis-univariado">Análisis Univariado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/04_analisis_descriptivo.html#analisis-bivariado">Análisis Bivariado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/04_analisis_descriptivo.html#deteccion-de-outliers">Detección de Outliers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/04_analisis_descriptivo.html#reportes-estadisticos">Reportes Estadísticos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/04_analisis_descriptivo.html#casos-de-uso">Casos de Uso</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/04_analisis_descriptivo.html#tips-y-mejores-practicas">Tips y Mejores Prácticas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/04_analisis_descriptivo.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/04_analisis_descriptivo.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/05_ingenieria_caracteristicas.html">5. Ingeniería de Características</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/05_ingenieria_caracteristicas.html#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/05_ingenieria_caracteristicas.html#acceso-al-modulo">Acceso al Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/05_ingenieria_caracteristicas.html#variables-derivadas-automaticas">Variables Derivadas Automáticas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/05_ingenieria_caracteristicas.html#transformaciones">Transformaciones</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/05_ingenieria_caracteristicas.html#codificacion-de-variables">Codificación de Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/05_ingenieria_caracteristicas.html#normalizacion-y-escalado">Normalización y Escalado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/05_ingenieria_caracteristicas.html#binning-y-discretizacion">Binning y Discretización</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/05_ingenieria_caracteristicas.html#seleccion-de-caracteristicas">Selección de Características</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/05_ingenieria_caracteristicas.html#casos-de-uso">Casos de Uso</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/05_ingenieria_caracteristicas.html#tips-y-mejores-practicas">Tips y Mejores Prácticas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/05_ingenieria_caracteristicas.html#guardar-transformaciones">Guardar Transformaciones</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/05_ingenieria_caracteristicas.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/05_ingenieria_caracteristicas.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/06_clustering.html">6. Clustering y Segmentación</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/06_clustering.html#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/06_clustering.html#acceso-al-modulo">Acceso al Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/06_clustering.html#algoritmos-disponibles">Algoritmos Disponibles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/06_clustering.html#proceso-de-clustering">Proceso de Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/06_clustering.html#analisis-de-clusters">Análisis de Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/06_clustering.html#visualizaciones">Visualizaciones</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/06_clustering.html#casos-de-uso">Casos de Uso</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/06_clustering.html#tips-y-mejores-practicas">Tips y Mejores Prácticas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/06_clustering.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/06_clustering.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/07_rbm.html">7. Máquina de Boltzmann Restringida (RBM)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/07_rbm.html#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/07_rbm.html#que-es-una-rbm">¿Qué es una RBM?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/07_rbm.html#acceso-al-modulo">Acceso al Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/07_rbm.html#configuracion-de-hiperparametros">Configuración de Hiperparámetros</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/07_rbm.html#proceso-de-entrenamiento">Proceso de Entrenamiento</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/07_rbm.html#monitoreo-del-entrenamiento">Monitoreo del Entrenamiento</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/07_rbm.html#visualizacion-de-pesos">Visualización de Pesos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/07_rbm.html#extraccion-de-caracteristicas">Extracción de Características</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/07_rbm.html#casos-de-uso">Casos de Uso</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/07_rbm.html#tips-y-mejores-practicas">Tips y Mejores Prácticas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/07_rbm.html#guardar-y-cargar-modelos">Guardar y Cargar Modelos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/07_rbm.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/07_rbm.html#comparacion-con-otros-metodos">Comparación con Otros Métodos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/07_rbm.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/08_modelos_supervisados.html">8. Modelos Supervisados</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/08_modelos_supervisados.html#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/08_modelos_supervisados.html#acceso-al-modulo">Acceso al Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/08_modelos_supervisados.html#algoritmos-disponibles">Algoritmos Disponibles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/08_modelos_supervisados.html#proceso-de-entrenamiento">Proceso de Entrenamiento</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/08_modelos_supervisados.html#comparacion-de-modelos">Comparación de Modelos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/08_modelos_supervisados.html#importancia-de-features">Importancia de Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/08_modelos_supervisados.html#optimizacion-de-hiperparametros">Optimización de Hiperparámetros</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/08_modelos_supervisados.html#validacion-cruzada">Validación Cruzada</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/08_modelos_supervisados.html#manejo-de-desbalanceo">Manejo de Desbalanceo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/08_modelos_supervisados.html#guardar-modelos">Guardar Modelos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/08_modelos_supervisados.html#casos-de-uso">Casos de Uso</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/08_modelos_supervisados.html#tips-y-mejores-practicas">Tips y Mejores Prácticas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/08_modelos_supervisados.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/08_modelos_supervisados.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/09_prediccion.html">9. Predicción de Riesgo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/09_prediccion.html#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/09_prediccion.html#acceso-al-modulo">Acceso al Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/09_prediccion.html#prediccion-individual">Predicción Individual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/09_prediccion.html#resultado-de-la-prediccion">Resultado de la Predicción</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/09_prediccion.html#prediccion-batch">Predicción Batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/09_prediccion.html#analisis-de-confianza">Análisis de Confianza</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/09_prediccion.html#comparacion-de-modelos">Comparación de Modelos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/09_prediccion.html#monitoreo-de-predicciones">Monitoreo de Predicciones</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/09_prediccion.html#auditoria-y-trazabilidad">Auditoría y Trazabilidad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/09_prediccion.html#casos-de-uso">Casos de Uso</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/09_prediccion.html#tips-y-mejores-practicas">Tips y Mejores Prácticas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/09_prediccion.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/09_prediccion.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/10_reentrenamiento.html">10. Reentrenamiento de Modelos</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/10_reentrenamiento.html#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/10_reentrenamiento.html#acceso-al-modulo">Acceso al Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/10_reentrenamiento.html#por-que-reentrenar">¿Por Qué Reentrenar?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/10_reentrenamiento.html#monitoreo-de-modelos">Monitoreo de Modelos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/10_reentrenamiento.html#proceso-de-reentrenamiento">Proceso de Reentrenamiento</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/10_reentrenamiento.html#comparacion-de-versiones">Comparación de Versiones</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/10_reentrenamiento.html#versionado-de-modelos">Versionado de Modelos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/10_reentrenamiento.html#estrategias-de-reentrenamiento">Estrategias de Reentrenamiento</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/10_reentrenamiento.html#automatizacion">Automatización</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/10_reentrenamiento.html#casos-de-uso">Casos de Uso</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/10_reentrenamiento.html#tips-y-mejores-practicas">Tips y Mejores Prácticas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/10_reentrenamiento.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/10_reentrenamiento.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/11_rag_educativo.html">11. Sistema RAG Educativo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/11_rag_educativo.html#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/11_rag_educativo.html#que-es-rag">¿Qué es RAG?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/11_rag_educativo.html#acceso-al-modulo">Acceso al Módulo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/11_rag_educativo.html#base-de-conocimiento">Base de Conocimiento</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/11_rag_educativo.html#usar-el-chat-educativo">Usar el Chat Educativo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/11_rag_educativo.html#preguntas-sugeridas">Preguntas Sugeridas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/11_rag_educativo.html#caracteristicas-del-sistema">Características del Sistema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/11_rag_educativo.html#configuracion-avanzada">Configuración Avanzada</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/11_rag_educativo.html#casos-de-uso">Casos de Uso</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/11_rag_educativo.html#tips-y-mejores-practicas">Tips y Mejores Prácticas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/11_rag_educativo.html#limitaciones">Limitaciones</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/11_rag_educativo.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/11_rag_educativo.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>Cada guía incluye:</p>
+<ul class="simple">
+<li><p><strong>Objetivo del módulo</strong>: Qué puedes lograr</p></li>
+<li><p><strong>Paso a paso</strong>: Instrucciones detalladas</p></li>
+<li><p><strong>Parámetros configurables</strong>: Qué significa cada opción</p></li>
+<li><p><strong>Interpretación de resultados</strong>: Cómo leer las salidas</p></li>
+<li><p><strong>Casos de uso</strong>: Ejemplos prácticos</p></li>
+<li><p><strong>Tips y mejores prácticas</strong>: Recomendaciones expertas</p></li>
+<li><p><strong>Troubleshooting</strong>: Solución de problemas comunes</p></li>
+</ul>
+</section>
+<section id="acceso-rapido">
+<h2>Acceso Rápido<a class="headerlink" href="#acceso-rapido" title="Link to this heading"></a></h2>
+<p><strong>Primeros Pasos:</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="user_guide/01_inicio.html"><span class="doc">1. Página de Inicio y Navegación</span></a> - Familiarízate con la interfaz</p></li>
+<li><p><a class="reference internal" href="user_guide/02_generar_datos.html"><span class="doc">2. Generar Datos Sintéticos</span></a> - Crea tu primer dataset</p></li>
+</ul>
+<p><strong>Análisis de Datos:</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="user_guide/03_cargar_datos.html"><span class="doc">3. Cargar Datos Externos</span></a> - Trabaja con tus propios datos</p></li>
+<li><p><a class="reference internal" href="user_guide/04_analisis_descriptivo.html"><span class="doc">4. Análisis Descriptivo</span></a> - Explora y visualiza</p></li>
+</ul>
+<p><strong>Modelado Avanzado:</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="user_guide/07_rbm.html"><span class="doc">7. Máquina de Boltzmann Restringida (RBM)</span></a> - Entrena Máquinas de Boltzmann</p></li>
+<li><p><a class="reference internal" href="user_guide/08_modelos_supervisados.html"><span class="doc">8. Modelos Supervisados</span></a> - Construye clasificadores</p></li>
+</ul>
+<p><strong>Producción:</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="user_guide/09_prediccion.html"><span class="doc">9. Predicción de Riesgo</span></a> - Predice riesgo en tiempo real</p></li>
+<li><p><a class="reference internal" href="user_guide/10_reentrenamiento.html"><span class="doc">10. Reentrenamiento de Modelos</span></a> - Mantén modelos actualizados</p></li>
+</ul>
+<p><strong>Aprendizaje:</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="user_guide/11_rag_educativo.html"><span class="doc">11. Sistema RAG Educativo</span></a> - Aprende sobre RBMs con IA</p></li>
+</ul>
+</section>
+<section id="soporte-y-recursos">
+<h2>Soporte y Recursos<a class="headerlink" href="#soporte-y-recursos" title="Link to this heading"></a></h2>
+<p>Si necesitas ayuda adicional:</p>
+<dl class="simple">
+<dt><strong>Documentación Técnica:</strong></dt><dd><p>Consulta la <a class="reference internal" href="api_reference.html"><span class="doc">Referencia de la API</span></a> para detalles de implementación.</p>
+</dd>
+<dt><strong>Instalación:</strong></dt><dd><p>Revisa la guía de <a class="reference internal" href="installation.html"><span class="doc">Instalación</span></a> si tienes problemas de configuración.</p>
+</dd>
+<dt><strong>Preguntas Frecuentes:</strong></dt><dd><p>Cada módulo incluye una sección de troubleshooting con soluciones a problemas comunes.</p>
+</dd>
+<dt><strong>Sistema RAG:</strong></dt><dd><p>Usa el módulo educativo para hacer preguntas específicas sobre RBMs y el sistema.</p>
+</dd>
+<dt><strong>Comunidad:</strong></dt><dd><p>Únete a las discusiones en GitHub Issues para compartir experiencias y obtener ayuda.</p>
+</dd>
+</dl>
+</section>
+<section id="proximos-pasos">
+<h2>Próximos Pasos<a class="headerlink" href="#proximos-pasos" title="Link to this heading"></a></h2>
+<p>¡Estás listo para comenzar! Te recomendamos:</p>
+<ol class="arabic simple">
+<li><p><strong>Lee la guía de inicio</strong>: <a class="reference internal" href="user_guide/01_inicio.html"><span class="doc">1. Página de Inicio y Navegación</span></a></p></li>
+<li><p><strong>Genera tu primer dataset</strong>: <a class="reference internal" href="user_guide/02_generar_datos.html"><span class="doc">2. Generar Datos Sintéticos</span></a></p></li>
+<li><p><strong>Explora los datos</strong>: <a class="reference internal" href="user_guide/04_analisis_descriptivo.html"><span class="doc">4. Análisis Descriptivo</span></a></p></li>
+<li><p><strong>Experimenta con RBM</strong>: <a class="reference internal" href="user_guide/07_rbm.html"><span class="doc">7. Máquina de Boltzmann Restringida (RBM)</span></a></p></li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Truco</p>
+<p>Si eres nuevo en Machine Learning, comienza con el módulo educativo RAG para aprender los conceptos fundamentales antes de entrenar modelos.</p>
+</div>
+<p>¡Disfruta explorando el sistema de riesgo crediticio con RBM! 🚀</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Instalación" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="user_guide/01_inicio.html" class="btn btn-neutral float-right" title="1. Página de Inicio y Navegación" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, Andrés Fernando Gómez Rojas &amp; Carlos Andrés Gómez Vasco. Software Libre bajo Licencia MIT.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

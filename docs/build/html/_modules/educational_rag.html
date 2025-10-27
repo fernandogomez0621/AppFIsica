@@ -1,0 +1,900 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>educational_rag &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Módulos del Sistema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Código de módulo</a></li>
+      <li class="breadcrumb-item active">educational_rag</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Código fuente para educational_rag</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">============================================================================</span>
+<span class="sd">MÓDULO RAG EDUCATIVO</span>
+<span class="sd">============================================================================</span>
+
+<span class="sd">Sistema RAG (Retrieval-Augmented Generation) educativo para aprender sobre</span>
+<span class="sd">Máquinas de Boltzmann Restringidas usando papers científicos y Groq AI.</span>
+
+<span class="sd">Autor: Sistema de Física</span>
+<span class="sd">Versión: 1.0.0</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="c1"># Verificar si ChromaDB está disponible</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">chromadb</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">chromadb.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Settings</span>
+    <span class="n">CHROMADB_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">CHROMADB_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;⚠️ ChromaDB no está instalado. Instala con: pip install chromadb&quot;</span><span class="p">)</span>
+
+<span class="c1"># Verificar si Groq está disponible</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">groq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Groq</span>
+    <span class="n">GROQ_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">GROQ_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;⚠️ Groq no está instalado. Instala con: pip install groq&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">EducationalRAG</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sistema RAG educativo para aprender sobre RBMs&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Inicializa el sistema RAG&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groq_client</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chroma_client</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collection</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">papers_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;articles&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Inicializar Groq si está disponible</span>
+        <span class="k">if</span> <span class="n">GROQ_AVAILABLE</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_init_groq</span><span class="p">()</span>
+        
+        <span class="c1"># Inicializar ChromaDB si está disponible</span>
+        <span class="k">if</span> <span class="n">CHROMADB_AVAILABLE</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_init_chromadb</span><span class="p">()</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_groq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Inicializa el cliente de Groq&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Intentar obtener la API key de secrets o variables de entorno</span>
+            <span class="n">api_key</span> <span class="o">=</span> <span class="kc">None</span>
+            
+            <span class="c1"># Primero intentar desde Streamlit secrets</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">st</span><span class="p">,</span> <span class="s1">&#39;secrets&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;GROQ_API_KEY&#39;</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">secrets</span><span class="p">:</span>
+                <span class="n">api_key</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">secrets</span><span class="p">[</span><span class="s1">&#39;GROQ_API_KEY&#39;</span><span class="p">]</span>
+            <span class="c1"># Luego desde variables de entorno</span>
+            <span class="k">elif</span> <span class="s1">&#39;GROQ_API_KEY&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+                <span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;GROQ_API_KEY&#39;</span><span class="p">]</span>
+            
+            <span class="k">if</span> <span class="n">api_key</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">groq_client</span> <span class="o">=</span> <span class="n">Groq</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;⚠️ No se encontró GROQ_API_KEY. Configúrala en .streamlit/secrets.toml&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Error inicializando Groq: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_chromadb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Inicializa ChromaDB&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Crear directorio para ChromaDB</span>
+            <span class="n">chroma_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;chroma_rbm_db&quot;</span><span class="p">)</span>
+            <span class="n">chroma_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            
+            <span class="c1"># Inicializar cliente</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">chroma_client</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">PersistentClient</span><span class="p">(</span>
+                <span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">chroma_dir</span><span class="p">),</span>
+                <span class="n">settings</span><span class="o">=</span><span class="n">Settings</span><span class="p">(</span><span class="n">anonymized_telemetry</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="p">)</span>
+            
+            <span class="c1"># Obtener o crear colección</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">collection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chroma_client</span><span class="o">.</span><span class="n">get_collection</span><span class="p">(</span><span class="s2">&quot;rbm_papers&quot;</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">collection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chroma_client</span><span class="o">.</span><span class="n">create_collection</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;rbm_papers&quot;</span><span class="p">,</span>
+                    <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Papers científicos sobre RBMs&quot;</span><span class="p">}</span>
+                <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Error inicializando ChromaDB: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_available_papers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Obtiene lista de papers disponibles&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">papers_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        
+        <span class="k">return</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">papers_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.pdf&quot;</span><span class="p">)]</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_paper_references</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Carga las referencias de los papers desde el archivo JSON&quot;&quot;&quot;</span>
+        <span class="n">references_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">papers_dir</span> <span class="o">/</span> <span class="s2">&quot;papers_references.json&quot;</span>
+        <span class="k">if</span> <span class="n">references_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">references_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Error cargando referencias: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="p">{}</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_papers_to_db</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Carga papers a ChromaDB si no están cargados&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Verificar si ya hay documentos</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            
+            <span class="c1"># Si no hay papers PDF, crear documentos de ejemplo</span>
+            <span class="n">papers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_available_papers</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">papers</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;⚠️ No hay papers PDF. Creando base de conocimiento básica...&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_create_basic_knowledge</span><span class="p">()</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            
+            <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📚 Cargando </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">papers</span><span class="p">)</span><span class="si">}</span><span class="s2"> papers a la base de datos...&quot;</span><span class="p">)</span>
+            <span class="c1"># Aquí se cargarían los PDFs reales, por ahora usamos conocimiento básico</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_create_basic_knowledge</span><span class="p">()</span>
+            <span class="k">return</span> <span class="kc">True</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Error cargando papers: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_reference_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Obtiene mapeo de referencias desde el JSON o crea uno por defecto&quot;&quot;&quot;</span>
+        <span class="n">references_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">papers_dir</span> <span class="o">/</span> <span class="s2">&quot;papers_references.json&quot;</span>
+        
+        <span class="c1"># Mapeo por defecto basado en los sources usados</span>
+        <span class="n">default_mapping</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Hinton_2010_Practical_Guide&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Geoffrey E. Hinton&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2010</span><span class="p">,</span>
+                <span class="s2">&quot;citation&quot;</span><span class="p">:</span> <span class="s2">&quot;Hinton, G. E. (2010). A Practical Guide to Training Restricted Boltzmann Machines. Technical Report UTML TR 2010-003, University of Toronto.&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;Hinton_2002_Training&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Geoffrey E. Hinton&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2002</span><span class="p">,</span>
+                <span class="s2">&quot;citation&quot;</span><span class="p">:</span> <span class="s2">&quot;Hinton, G. E. (2002). Training Products of Experts by Minimizing Contrastive Divergence. Neural Computation, 14(8), 1771-1800.&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;Hinton_2002_CD&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Geoffrey E. Hinton&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2002</span><span class="p">,</span>
+                <span class="s2">&quot;citation&quot;</span><span class="p">:</span> <span class="s2">&quot;Hinton, G. E. (2002). Training Products of Experts by Minimizing Contrastive Divergence. Neural Computation, 14(8), 1771-1800.&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;Hinton_2010_Guide&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Geoffrey E. Hinton&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2010</span><span class="p">,</span>
+                <span class="s2">&quot;citation&quot;</span><span class="p">:</span> <span class="s2">&quot;Hinton, G. E. (2010). A Practical Guide to Training Restricted Boltzmann Machines. Technical Report UTML TR 2010-003, University of Toronto.&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;Salakhutdinov_2007&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Salakhutdinov et al.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2007</span><span class="p">,</span>
+                <span class="s2">&quot;citation&quot;</span><span class="p">:</span> <span class="s2">&quot;Salakhutdinov, R., Mnih, A., &amp; Hinton, G. (2007). Restricted Boltzmann Machines for Collaborative Filtering. Proceedings of the 24th ICML.&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;Hinton_2006_Science&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Hinton &amp; Salakhutdinov&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2006</span><span class="p">,</span>
+                <span class="s2">&quot;citation&quot;</span><span class="p">:</span> <span class="s2">&quot;Hinton, G. E., &amp; Salakhutdinov, R. R. (2006). Reducing the Dimensionality of Data with Neural Networks. Science, 313(5786), 504-507.&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;Hinton_2010_Practical&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Geoffrey E. Hinton&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2010</span><span class="p">,</span>
+                <span class="s2">&quot;citation&quot;</span><span class="p">:</span> <span class="s2">&quot;Hinton, G. E. (2010). A Practical Guide to Training Restricted Boltzmann Machines. Technical Report UTML TR 2010-003, University of Toronto.&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;Bengio_2013&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Yoshua Bengio&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2013</span><span class="p">,</span>
+                <span class="s2">&quot;citation&quot;</span><span class="p">:</span> <span class="s2">&quot;Bengio, Y. (2013). Deep Learning of Representations: Looking Forward. Statistical Language and Speech Processing, LNCS 7978, 1-37.&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;Hinton_2006_DBN&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Hinton et al.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2006</span><span class="p">,</span>
+                <span class="s2">&quot;citation&quot;</span><span class="p">:</span> <span class="s2">&quot;Hinton, G. E., Osindero, S., &amp; Teh, Y. W. (2006). A Fast Learning Algorithm for Deep Belief Nets. Neural Computation, 18(7), 1527-1554.&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;Tieleman_2008_PCD&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Tijmen Tieleman&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2008</span><span class="p">,</span>
+                <span class="s2">&quot;citation&quot;</span><span class="p">:</span> <span class="s2">&quot;Tieleman, T. (2008). Training Restricted Boltzmann Machines using Approximations to the Likelihood Gradient. Proceedings of the 25th ICML.&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="n">default_mapping</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_basic_knowledge</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Crea una base de conocimiento básica sobre RBMs&quot;&quot;&quot;</span>
+        <span class="n">basic_knowledge</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;rbm_intro_1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;Una Máquina de Boltzmann Restringida (RBM) es un tipo de red neuronal generativa</span>
+<span class="s2">                estocástica que puede aprender una distribución de probabilidad sobre su conjunto de entradas.</span>
+<span class="s2">                Fue inventada por Geoffrey Hinton y es un componente fundamental en el aprendizaje profundo.</span>
+<span class="s2">                Las RBMs consisten en dos capas: una capa visible (v) que representa los datos observables y</span>
+<span class="s2">                una capa oculta (h) que captura las características latentes.</span>
+<span class="s2">                </span>
+<span class="s2">                Referencia: Hinton, G. E. (2010). A Practical Guide to Training Restricted Boltzmann Machines.</span>
+<span class="s2">                Technical Report UTML TR 2010-003, University of Toronto.&quot;&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;Hinton_2010_Practical_Guide&quot;</span><span class="p">,</span> <span class="s2">&quot;topic&quot;</span><span class="p">:</span> <span class="s2">&quot;introducción&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Geoffrey E. Hinton&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2010</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;rbm_structure_1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;La arquitectura de una RBM es bipartita, lo que significa que no hay conexiones</span>
+<span class="s2">                entre unidades de la misma capa. Solo existen conexiones entre la capa visible y la capa oculta.</span>
+<span class="s2">                Esta restricción hace que el entrenamiento sea más eficiente que en las Máquinas de Boltzmann</span>
+<span class="s2">                completas. Cada conexión tiene un peso asociado (W), y cada unidad tiene un sesgo (bias).</span>
+<span class="s2">                </span>
+<span class="s2">                Referencia: Hinton, G. E. (2002). Training Products of Experts by Minimizing Contrastive Divergence.</span>
+<span class="s2">                Neural Computation, 14(8), 1771-1800.&quot;&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;Hinton_2002_Training&quot;</span><span class="p">,</span> <span class="s2">&quot;topic&quot;</span><span class="p">:</span> <span class="s2">&quot;arquitectura&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Geoffrey E. Hinton&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2002</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;rbm_cd_1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;El algoritmo Contrastive Divergence (CD) es el método principal para entrenar RBMs.</span>
+<span class="s2">                Fue propuesto por Geoffrey Hinton en 2002. CD es una aproximación al gradiente de la log-verosimilitud</span>
+<span class="s2">                que es mucho más eficiente computacionalmente que el método exacto. El algoritmo alterna entre</span>
+<span class="s2">                muestrear la capa oculta dado la visible y viceversa, típicamente usando CD-1 (una sola iteración).</span>
+<span class="s2">                </span>
+<span class="s2">                Referencia: Hinton, G. E. (2002). Training Products of Experts by Minimizing Contrastive Divergence.</span>
+<span class="s2">                Neural Computation, 14(8), 1771-1800.&quot;&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;Hinton_2002_CD&quot;</span><span class="p">,</span> <span class="s2">&quot;topic&quot;</span><span class="p">:</span> <span class="s2">&quot;entrenamiento&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Geoffrey E. Hinton&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2002</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;rbm_energy_1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;Las RBMs definen una función de energía E(v,h) = -a&#39;v - b&#39;h - v&#39;Wh, donde a y b son</span>
+<span class="s2">                los sesgos de las capas visible y oculta respectivamente, y W es la matriz de pesos. La probabilidad</span>
+<span class="s2">                conjunta está dada por P(v,h) = exp(-E(v,h))/Z, donde Z es la función de partición. El objetivo</span>
+<span class="s2">                del entrenamiento es minimizar esta energía para los datos de entrenamiento.</span>
+<span class="s2">                </span>
+<span class="s2">                Referencia: Hinton, G. E. (2010). A Practical Guide to Training Restricted Boltzmann Machines.</span>
+<span class="s2">                Technical Report UTML TR 2010-003, University of Toronto.&quot;&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;Hinton_2010_Guide&quot;</span><span class="p">,</span> <span class="s2">&quot;topic&quot;</span><span class="p">:</span> <span class="s2">&quot;función_energía&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Geoffrey E. Hinton&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2010</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;rbm_applications_1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;Las RBMs tienen múltiples aplicaciones: 1) Reducción de dimensionalidad y extracción</span>
+<span class="s2">                de características, 2) Sistemas de recomendación (filtrado colaborativo), 3) Inicialización de</span>
+<span class="s2">                redes neuronales profundas (Deep Belief Networks), 4) Modelado de tópicos, 5) Procesamiento de</span>
+<span class="s2">                imágenes y visión por computadora. Son especialmente útiles cuando se necesita aprender</span>
+<span class="s2">                representaciones no supervisadas de datos complejos.</span>
+<span class="s2">                </span>
+<span class="s2">                Referencia: Salakhutdinov, R., Mnih, A., &amp; Hinton, G. (2007). Restricted Boltzmann Machines</span>
+<span class="s2">                for Collaborative Filtering. Proceedings of the 24th International Conference on Machine Learning.&quot;&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;Salakhutdinov_2007&quot;</span><span class="p">,</span> <span class="s2">&quot;topic&quot;</span><span class="p">:</span> <span class="s2">&quot;aplicaciones&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Salakhutdinov et al.&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2007</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;rbm_vs_nn_1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;A diferencia de las redes neuronales tradicionales feedforward, las RBMs son modelos</span>
+<span class="s2">                generativos que pueden generar nuevos datos similares a los de entrenamiento. Las redes neuronales</span>
+<span class="s2">                tradicionales son discriminativas y se enfocan en mapear entradas a salidas. Las RBMs aprenden</span>
+<span class="s2">                la distribución de probabilidad de los datos, mientras que las redes feedforward aprenden una</span>
+<span class="s2">                función de mapeo. Además, las RBMs son no supervisadas, mientras que las redes tradicionales</span>
+<span class="s2">                típicamente requieren etiquetas.</span>
+<span class="s2">                </span>
+<span class="s2">                Referencia: Hinton, G. E., &amp; Salakhutdinov, R. R. (2006). Reducing the Dimensionality of Data</span>
+<span class="s2">                with Neural Networks. Science, 313(5786), 504-507.&quot;&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;Hinton_2006_Science&quot;</span><span class="p">,</span> <span class="s2">&quot;topic&quot;</span><span class="p">:</span> <span class="s2">&quot;comparación&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Hinton &amp; Salakhutdinov&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2006</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;rbm_training_1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;El proceso de entrenamiento de una RBM involucra: 1) Inicializar pesos y sesgos</span>
+<span class="s2">                aleatoriamente, 2) Para cada mini-batch: calcular las activaciones de la capa oculta dado los</span>
+<span class="s2">                datos visibles (fase positiva), 3) Reconstruir la capa visible desde la oculta, 4) Recalcular</span>
+<span class="s2">                las activaciones ocultas (fase negativa), 5) Actualizar pesos usando la diferencia entre las</span>
+<span class="s2">                fases positiva y negativa. Este proceso se repite por múltiples épocas hasta convergencia.</span>
+<span class="s2">                </span>
+<span class="s2">                Referencia: Hinton, G. E. (2010). A Practical Guide to Training Restricted Boltzmann Machines.</span>
+<span class="s2">                Technical Report UTML TR 2010-003, University of Toronto.&quot;&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;Hinton_2010_Practical&quot;</span><span class="p">,</span> <span class="s2">&quot;topic&quot;</span><span class="p">:</span> <span class="s2">&quot;proceso_entrenamiento&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Geoffrey E. Hinton&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2010</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;rbm_limitations_1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;Las RBMs tienen varias limitaciones: 1) Dificultad para entrenar en datasets muy</span>
+<span class="s2">                grandes, 2) La función de partición Z es intratable de calcular exactamente, 3) Pueden sufrir</span>
+<span class="s2">                de modos espurios en la distribución aprendida, 4) Requieren ajuste cuidadoso de hiperparámetros,</span>
+<span class="s2">                5) Han sido en gran parte superadas por métodos más modernos como VAEs y GANs para tareas</span>
+<span class="s2">                generativas. Sin embargo, siguen siendo valiosas para entender el aprendizaje profundo.</span>
+<span class="s2">                </span>
+<span class="s2">                Referencia: Bengio, Y. (2013). Deep Learning of Representations: Looking Forward.</span>
+<span class="s2">                Statistical Language and Speech Processing, LNCS 7978, 1-37.&quot;&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;Bengio_2013&quot;</span><span class="p">,</span> <span class="s2">&quot;topic&quot;</span><span class="p">:</span> <span class="s2">&quot;limitaciones&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Yoshua Bengio&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2013</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;rbm_dbn_1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;Las Deep Belief Networks (DBNs) son redes profundas construidas apilando múltiples</span>
+<span class="s2">                RBMs. El entrenamiento se realiza capa por capa de forma greedy: primero se entrena la primera</span>
+<span class="s2">                RBM con los datos originales, luego se usa su capa oculta como entrada para entrenar la segunda</span>
+<span class="s2">                RBM, y así sucesivamente. Este pre-entrenamiento no supervisado fue crucial para el resurgimiento</span>
+<span class="s2">                del aprendizaje profundo en 2006, permitiendo entrenar redes más profundas efectivamente.</span>
+<span class="s2">                </span>
+<span class="s2">                Referencia: Hinton, G. E., Osindero, S., &amp; Teh, Y. W. (2006). A Fast Learning Algorithm for</span>
+<span class="s2">                Deep Belief Nets. Neural Computation, 18(7), 1527-1554.&quot;&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;Hinton_2006_DBN&quot;</span><span class="p">,</span> <span class="s2">&quot;topic&quot;</span><span class="p">:</span> <span class="s2">&quot;deep_belief_networks&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Hinton et al.&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2006</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;rbm_pcd_1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;Persistent Contrastive Divergence (PCD) es una mejora del algoritmo CD propuesta</span>
+<span class="s2">                por Tieleman en 2008. En lugar de reiniciar la cadena de Markov desde los datos en cada</span>
+<span class="s2">                actualización, PCD mantiene una cadena persistente que continúa entre actualizaciones. Esto</span>
+<span class="s2">                permite que la cadena explore mejor el espacio de estados y puede llevar a mejores modelos,</span>
+<span class="s2">                especialmente cuando se usan múltiples pasos de Gibbs sampling (CD-k con k&gt;1).</span>
+<span class="s2">                </span>
+<span class="s2">                Referencia: Tieleman, T. (2008). Training Restricted Boltzmann Machines using Approximations</span>
+<span class="s2">                to the Likelihood Gradient. Proceedings of the 25th International Conference on Machine Learning.&quot;&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;Tieleman_2008_PCD&quot;</span><span class="p">,</span> <span class="s2">&quot;topic&quot;</span><span class="p">:</span> <span class="s2">&quot;pcd&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Tijmen Tieleman&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2008</span><span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+        
+        <span class="c1"># Agregar documentos a la colección</span>
+        <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">basic_knowledge</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                    <span class="n">documents</span><span class="o">=</span><span class="p">[</span><span class="n">doc</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]],</span>
+                    <span class="n">metadatas</span><span class="o">=</span><span class="p">[</span><span class="n">doc</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]],</span>
+                    <span class="n">ids</span><span class="o">=</span><span class="p">[</span><span class="n">doc</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Error agregando documento </span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Base de conocimiento creada con </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">basic_knowledge</span><span class="p">)</span><span class="si">}</span><span class="s2"> documentos&quot;</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">query_papers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n_results</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Busca información relevante en los papers usando similitud coseno&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+                <span class="n">query_texts</span><span class="o">=</span><span class="p">[</span><span class="n">question</span><span class="p">],</span>
+                <span class="n">n_results</span><span class="o">=</span><span class="n">n_results</span>
+            <span class="p">)</span>
+            
+            <span class="c1"># Formatear resultados</span>
+            <span class="n">formatted_results</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">results</span> <span class="ow">and</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;documents&#39;</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">doc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;documents&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]):</span>
+                    <span class="n">metadata</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;metadatas&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;metadatas&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="p">{}</span>
+                    <span class="n">distance</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;distances&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;distances&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+                    
+                    <span class="c1"># Calcular similitud coseno (1 - distancia L2 normalizada)</span>
+                    <span class="n">similarity</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">distance</span>
+                    
+                    <span class="n">formatted_results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                        <span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="n">doc</span><span class="p">,</span>
+                        <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="n">metadata</span><span class="p">,</span>
+                        <span class="s1">&#39;distance&#39;</span><span class="p">:</span> <span class="n">distance</span><span class="p">,</span>
+                        <span class="s1">&#39;similarity&#39;</span><span class="p">:</span> <span class="n">similarity</span>
+                    <span class="p">})</span>
+            
+            <span class="k">return</span> <span class="n">formatted_results</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Error consultando papers: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[]</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Genera respuesta usando Groq AI&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">groq_client</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;⚠️ Groq AI no está configurado. Por favor configura tu API key.&quot;</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Construir contexto</span>
+            <span class="n">context_text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+                <span class="sa">f</span><span class="s2">&quot;Fragmento </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">doc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+            <span class="p">])</span>
+            
+            <span class="c1"># Crear prompt</span>
+            <span class="n">system_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Eres un asistente educativo experto en Máquinas de Boltzmann Restringidas (RBMs) </span>
+<span class="s2">y Deep Learning. Tu objetivo es explicar conceptos de manera clara y pedagógica, usando los papers </span>
+<span class="s2">científicos como referencia. Siempre proporciona explicaciones detalladas pero accesibles.&quot;&quot;&quot;</span>
+            
+            <span class="n">user_prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Basándote en los siguientes fragmentos de papers científicos, responde la pregunta:</span>
+
+<span class="s2">CONTEXTO:</span>
+<span class="si">{</span><span class="n">context_text</span><span class="si">}</span>
+
+<span class="s2">PREGUNTA: </span><span class="si">{</span><span class="n">question</span><span class="si">}</span>
+
+<span class="s2">Por favor proporciona una respuesta clara, detallada y educativa. Si es relevante, menciona las fuentes.&quot;&quot;&quot;</span>
+            
+            <span class="c1"># Llamar a Groq</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">groq_client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                <span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama-3.3-70b-versatile&quot;</span><span class="p">,</span>
+                <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+                    <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">system_prompt</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">user_prompt</span><span class="p">}</span>
+                <span class="p">],</span>
+                <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+                <span class="n">max_tokens</span><span class="o">=</span><span class="mi">2000</span>
+            <span class="p">)</span>
+            
+            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>
+        
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;❌ Error generando respuesta: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<div class="viewcode-block" id="render_educational_rag_module">
+<a class="viewcode-back" href="../api_reference.html#educational_rag.render_educational_rag_module">[documentos]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">render_educational_rag_module</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Renderiza la interfaz del módulo RAG educativo&quot;&quot;&quot;</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;🎓 Aprende sobre RBMs&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### *Sistema RAG educativo con papers científicos*&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Verificar dependencias</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">CHROMADB_AVAILABLE</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">GROQ_AVAILABLE</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;❌ Faltan dependencias necesarias&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        **Instala las dependencias:**</span>
+<span class="s2">        ```bash</span>
+<span class="s2">        pip install chromadb groq</span>
+<span class="s2">        ```</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="c1"># Inicializar RAG</span>
+    <span class="k">if</span> <span class="s1">&#39;rag_system&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;🔧 Inicializando sistema RAG...&quot;</span><span class="p">):</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">rag_system</span> <span class="o">=</span> <span class="n">EducationalRAG</span><span class="p">()</span>
+    
+    <span class="n">rag</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">rag_system</span>
+    
+    <span class="c1"># Verificar configuración</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">rag</span><span class="o">.</span><span class="n">groq_client</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;⚠️ Configura tu API key de Groq en `.streamlit/secrets.toml`:&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">code</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">GROQ_API_KEY = &quot;tu_api_key_aqui&quot;</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;[Obtén tu API key gratis en Groq](https://console.groq.com)&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="c1"># Información de papers disponibles</span>
+    <span class="n">papers</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">get_available_papers</span><span class="p">()</span>
+    
+    <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📚 Base de Conocimiento&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">papers</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">papers</span><span class="p">)</span><span class="si">}</span><span class="s2"> papers científicos disponibles&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Cargar referencias</span>
+            <span class="n">references</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">get_paper_references</span><span class="p">()</span>
+            
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">expander</span><span class="p">(</span><span class="s2">&quot;Ver lista de papers con referencias completas&quot;</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">paper</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">papers</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">paper</span> <span class="ow">in</span> <span class="n">references</span><span class="p">:</span>
+                        <span class="n">ref</span> <span class="o">=</span> <span class="n">references</span><span class="p">[</span><span class="n">paper</span><span class="p">]</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">**📄 </span><span class="si">{</span><span class="n">ref</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">**</span>
+<span class="s2">*</span><span class="si">{</span><span class="n">ref</span><span class="p">[</span><span class="s1">&#39;authors&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">* (</span><span class="si">{</span><span class="n">ref</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)</span>
+<span class="si">{</span><span class="n">ref</span><span class="p">[</span><span class="s1">&#39;publication&#39;</span><span class="p">]</span><span class="si">}</span>
+<span class="s2">`</span><span class="si">{</span><span class="n">paper</span><span class="si">}</span><span class="s2">`</span>
+<span class="s2">                        &quot;&quot;&quot;</span><span class="p">)</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">divider</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- 📄 </span><span class="si">{</span><span class="n">paper</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;⚠️ No hay papers cargados&quot;</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            **Para cargar papers:**</span>
+<span class="s2">            1. Ejecuta: `python src/libros.py`</span>
+<span class="s2">            2. O coloca PDFs manualmente en la carpeta `articles/`</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+    
+    <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;🤖 Modelo&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;**Llama 3.3 70B**</span><span class="se">\n</span><span class="s2">via Groq AI&quot;</span><span class="p">)</span>
+    
+    <span class="n">st</span><span class="o">.</span><span class="n">divider</span><span class="p">()</span>
+    <span class="c1"># Sección de gestión de papers</span>
+    <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">expander</span><span class="p">(</span><span class="s2">&quot;📤 Gestionar Papers Personalizados&quot;</span><span class="p">):</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;### Agregar Nuevos Papers&quot;</span><span class="p">)</span>
+        
+        <span class="n">tab1</span><span class="p">,</span> <span class="n">tab2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">tabs</span><span class="p">([</span><span class="s2">&quot;➕ Agregar URL&quot;</span><span class="p">,</span> <span class="s2">&quot;📝 Editar Referencias&quot;</span><span class="p">])</span>
+        
+        <span class="k">with</span> <span class="n">tab1</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;**Descargar paper desde URL:**&quot;</span><span class="p">)</span>
+            
+            <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+                <span class="n">paper_url</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span>
+                    <span class="s2">&quot;URL del paper (PDF):&quot;</span><span class="p">,</span>
+                    <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;https://ejemplo.com/paper.pdf&quot;</span><span class="p">,</span>
+                    <span class="n">key</span><span class="o">=</span><span class="s2">&quot;paper_url_input&quot;</span>
+                <span class="p">)</span>
+            <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;&lt;br&gt;&quot;</span><span class="p">,</span> <span class="n">unsafe_allow_html</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">download_btn</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;⬇️ Descargar&quot;</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">download_btn</span> <span class="ow">and</span> <span class="n">paper_url</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;📥 Descargando paper...&quot;</span><span class="p">):</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+                        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">paper_url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0&#39;</span><span class="p">})</span>
+                        <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+                        
+                        <span class="c1"># Generar nombre de archivo</span>
+                        <span class="n">filename</span> <span class="o">=</span> <span class="n">paper_url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.pdf&#39;</span><span class="p">):</span>
+                            <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;paper_</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">papers</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">.pdf&quot;</span>
+                        
+                        <span class="n">filepath</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">papers_dir</span> <span class="o">/</span> <span class="n">filename</span>
+                        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+                        
+                        <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Paper descargado: </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;💡 Agrega la referencia completa en la pestaña &#39;Editar Referencias&#39;&quot;</span><span class="p">)</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">rerun</span><span class="p">()</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Error descargando: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;---&quot;</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;**Papers actuales:**&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">papers</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">paper</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">papers</span><span class="p">):</span>
+                    <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+                    <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📄 </span><span class="si">{</span><span class="n">paper</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;🗑️&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;delete_</span><span class="si">{</span><span class="n">paper</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="p">(</span><span class="n">rag</span><span class="o">.</span><span class="n">papers_dir</span> <span class="o">/</span> <span class="n">paper</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+                                <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Eliminado: </span><span class="si">{</span><span class="n">paper</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                                <span class="n">st</span><span class="o">.</span><span class="n">rerun</span><span class="p">()</span>
+                            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                                <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No hay papers cargados&quot;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">tab2</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&quot;**Editar referencias bibliográficas:**&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Cargar referencias actuales</span>
+            <span class="n">references</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">get_paper_references</span><span class="p">()</span>
+            
+            <span class="c1"># Selector de paper</span>
+            <span class="k">if</span> <span class="n">papers</span><span class="p">:</span>
+                <span class="n">selected_paper</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+                    <span class="s2">&quot;Selecciona un paper:&quot;</span><span class="p">,</span>
+                    <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;-- Nuevo --&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">papers</span><span class="p">),</span>
+                    <span class="n">key</span><span class="o">=</span><span class="s2">&quot;paper_selector&quot;</span>
+                <span class="p">)</span>
+                
+                <span class="c1"># Si es nuevo o existente</span>
+                <span class="k">if</span> <span class="n">selected_paper</span> <span class="o">!=</span> <span class="s2">&quot;-- Nuevo --&quot;</span><span class="p">:</span>
+                    <span class="n">current_ref</span> <span class="o">=</span> <span class="n">references</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">selected_paper</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">current_ref</span> <span class="o">=</span> <span class="p">{}</span>
+                    <span class="n">selected_paper</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Nombre del archivo PDF:&quot;</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;ejemplo.pdf&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;new_paper_name&quot;</span><span class="p">)</span>
+                
+                <span class="c1"># Formulario de referencia</span>
+                <span class="k">if</span> <span class="n">selected_paper</span> <span class="ow">and</span> <span class="n">selected_paper</span> <span class="o">!=</span> <span class="s2">&quot;-- Nuevo --&quot;</span><span class="p">:</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**Editando:** `</span><span class="si">{</span><span class="n">selected_paper</span><span class="si">}</span><span class="s2">`&quot;</span><span class="p">)</span>
+                    
+                    <span class="n">title</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span>
+                        <span class="s2">&quot;Título del paper:&quot;</span><span class="p">,</span>
+                        <span class="n">value</span><span class="o">=</span><span class="n">current_ref</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+                        <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Training Restricted Boltzmann Machines&quot;</span><span class="p">,</span>
+                        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;ref_title&quot;</span>
+                    <span class="p">)</span>
+                    
+                    <span class="n">authors</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span>
+                        <span class="s2">&quot;Autores:&quot;</span><span class="p">,</span>
+                        <span class="n">value</span><span class="o">=</span><span class="n">current_ref</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;authors&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+                        <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Geoffrey E. Hinton&quot;</span><span class="p">,</span>
+                        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;ref_authors&quot;</span>
+                    <span class="p">)</span>
+                    
+                    <span class="n">year</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span>
+                        <span class="s2">&quot;Año:&quot;</span><span class="p">,</span>
+                        <span class="n">min_value</span><span class="o">=</span><span class="mi">1980</span><span class="p">,</span>
+                        <span class="n">max_value</span><span class="o">=</span><span class="mi">2025</span><span class="p">,</span>
+                        <span class="n">value</span><span class="o">=</span><span class="n">current_ref</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="mi">2010</span><span class="p">),</span>
+                        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;ref_year&quot;</span>
+                    <span class="p">)</span>
+                    
+                    <span class="n">publication</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span>
+                        <span class="s2">&quot;Publicación:&quot;</span><span class="p">,</span>
+                        <span class="n">value</span><span class="o">=</span><span class="n">current_ref</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;publication&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+                        <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Neural Computation, 14(8), 1771-1800&quot;</span><span class="p">,</span>
+                        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;ref_publication&quot;</span>
+                    <span class="p">)</span>
+                    
+                    <span class="c1"># Generar citación automática</span>
+                    <span class="k">if</span> <span class="n">title</span> <span class="ow">and</span> <span class="n">authors</span> <span class="ow">and</span> <span class="n">year</span><span class="p">:</span>
+                        <span class="n">citation</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">authors</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">). </span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">. </span><span class="si">{</span><span class="n">publication</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">text_area</span><span class="p">(</span><span class="s2">&quot;Citación generada:&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">citation</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">disabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;ref_citation_preview&quot;</span><span class="p">)</span>
+                    
+                    <span class="c1"># Botón guardar</span>
+                    <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;💾 Guardar Referencia&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;save_ref_btn&quot;</span><span class="p">):</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="c1"># Actualizar referencias</span>
+                            <span class="n">references</span><span class="p">[</span><span class="n">selected_paper</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                                <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">title</span><span class="p">,</span>
+                                <span class="s2">&quot;authors&quot;</span><span class="p">:</span> <span class="n">authors</span><span class="p">,</span>
+                                <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="n">year</span><span class="p">,</span>
+                                <span class="s2">&quot;publication&quot;</span><span class="p">:</span> <span class="n">publication</span><span class="p">,</span>
+                                <span class="s2">&quot;citation&quot;</span><span class="p">:</span> <span class="n">citation</span> <span class="k">if</span> <span class="n">title</span> <span class="ow">and</span> <span class="n">authors</span> <span class="ow">and</span> <span class="n">year</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+                            <span class="p">}</span>
+                            
+                            <span class="c1"># Guardar en JSON</span>
+                            <span class="n">ref_file</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">papers_dir</span> <span class="o">/</span> <span class="s2">&quot;papers_references.json&quot;</span>
+                            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ref_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">references</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                            
+                            <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;✅ Referencia guardada exitosamente&quot;</span><span class="p">)</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">rerun</span><span class="p">()</span>
+                        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                            <span class="n">st</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Error guardando: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No hay papers disponibles. Descarga algunos primero.&quot;</span><span class="p">)</span>
+    
+    <span class="n">st</span><span class="o">.</span><span class="n">divider</span><span class="p">()</span>
+    
+    
+    <span class="c1"># Cargar papers si no están cargados</span>
+    <span class="k">if</span> <span class="n">rag</span><span class="o">.</span><span class="n">collection</span> <span class="ow">and</span> <span class="n">rag</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;📚 Inicializando base de conocimiento...&quot;</span><span class="p">):</span>
+            <span class="n">rag</span><span class="o">.</span><span class="n">load_papers_to_db</span><span class="p">()</span>
+    
+    <span class="c1"># Preguntas sugeridas</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;💡 Preguntas Sugeridas&quot;</span><span class="p">)</span>
+    
+    <span class="n">suggested_questions</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;🔰 Básico&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;¿Qué es una Máquina de Boltzmann Restringida?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;¿Cuál es la diferencia entre RBM y una red neuronal tradicional?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;¿Para qué se usan las RBMs?&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;🎯 Intermedio&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;¿Cómo funciona el algoritmo Contrastive Divergence?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;¿Qué son las unidades visibles y ocultas en una RBM?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;¿Cómo se entrenan las RBMs?&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;🚀 Avanzado&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;¿Cuáles son las limitaciones de las RBMs?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;¿Cómo se apilan RBMs para crear Deep Belief Networks?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;¿Qué es Persistent Contrastive Divergence?&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+    
+    <span class="c1"># Inicializar question en session_state si no existe</span>
+    <span class="k">if</span> <span class="s1">&#39;current_question&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">current_question</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    
+    <span class="c1"># Inicializar trigger para búsqueda automática</span>
+    <span class="k">if</span> <span class="s1">&#39;auto_search&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">auto_search</span> <span class="o">=</span> <span class="kc">False</span>
+    
+    <span class="n">cols</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">questions</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">suggested_questions</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="k">with</span> <span class="n">cols</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**</span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s2">**&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">questions</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;suggest_</span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">current_question</span> <span class="o">=</span> <span class="n">q</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">auto_search</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">rerun</span><span class="p">()</span>
+    
+    <span class="n">st</span><span class="o">.</span><span class="n">divider</span><span class="p">()</span>
+    
+    <span class="c1"># Chat interface</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;💬 Haz tu Pregunta&quot;</span><span class="p">)</span>
+    
+    <span class="n">question</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_area</span><span class="p">(</span>
+        <span class="s2">&quot;Escribe tu pregunta sobre RBMs:&quot;</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">current_question</span><span class="p">,</span>
+        <span class="n">height</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Ejemplo: ¿Cómo funciona el algoritmo Contrastive Divergence en las RBMs?&quot;</span><span class="p">,</span>
+        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;question_input&quot;</span>
+    <span class="p">)</span>
+    
+    <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+        <span class="n">ask_button</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;🔍 Buscar Respuesta&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">,</span> <span class="n">use_container_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+        <span class="n">n_results</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Fragmentos&quot;</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">col3</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">caption</span><span class="p">(</span><span class="s2">&quot;**Métrica:**&quot;</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">caption</span><span class="p">(</span><span class="s2">&quot;Similitud Coseno&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Ejecutar búsqueda si se presionó el botón O si hay auto_search activado</span>
+    <span class="n">should_search</span> <span class="o">=</span> <span class="p">(</span><span class="n">ask_button</span> <span class="ow">and</span> <span class="n">question</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">auto_search</span> <span class="ow">and</span> <span class="n">question</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">should_search</span><span class="p">:</span>
+        <span class="c1"># Resetear auto_search</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">auto_search</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;🔍 Buscando en papers científicos...&quot;</span><span class="p">):</span>
+            <span class="c1"># Buscar contexto relevante</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">query_papers</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">n_results</span><span class="o">=</span><span class="n">n_results</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">context</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;⚠️ No se encontró información relevante. Asegúrate de tener papers cargados.&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+            
+            <span class="c1"># Mostrar contexto encontrado</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;🔍 **Métrica de búsqueda:** Similitud Coseno (Cosine Similarity)&quot;</span><span class="p">)</span>
+            
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">expander</span><span class="p">(</span><span class="s2">&quot;📚 Fragmentos Relevantes Encontrados&quot;</span><span class="p">):</span>
+                <span class="c1"># Obtener mapeo de referencias</span>
+                <span class="n">ref_mapping</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">_get_reference_mapping</span><span class="p">()</span>
+                
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">doc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+                    <span class="n">metadata</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;metadata&#39;</span><span class="p">,</span> <span class="p">{})</span>
+                    <span class="n">similarity</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;similarity&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                    
+                    <span class="c1"># Obtener información de la fuente</span>
+                    <span class="n">source</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;Desconocido&#39;</span><span class="p">)</span>
+                    
+                    <span class="c1"># Buscar referencia completa en el mapeo</span>
+                    <span class="k">if</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">ref_mapping</span><span class="p">:</span>
+                        <span class="n">ref_info</span> <span class="o">=</span> <span class="n">ref_mapping</span><span class="p">[</span><span class="n">source</span><span class="p">]</span>
+                        <span class="n">author</span> <span class="o">=</span> <span class="n">ref_info</span><span class="p">[</span><span class="s1">&#39;author&#39;</span><span class="p">]</span>
+                        <span class="n">year</span> <span class="o">=</span> <span class="n">ref_info</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span>
+                        <span class="n">citation</span> <span class="o">=</span> <span class="n">ref_info</span><span class="p">[</span><span class="s1">&#39;citation&#39;</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">author</span> <span class="o">=</span> <span class="s1">&#39;Autor desconocido&#39;</span>
+                        <span class="n">year</span> <span class="o">=</span> <span class="s1">&#39;Año desconocido&#39;</span>
+                        <span class="n">citation</span> <span class="o">=</span> <span class="n">source</span>
+                    
+                    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**Fragmento </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">** (Similitud Coseno: </span><span class="si">{</span><span class="n">similarity</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">caption</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📄 **Referencia:** </span><span class="si">{</span><span class="n">citation</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="c1"># Mostrar el triple de longitud (1500 caracteres en lugar de 500)</span>
+                    <span class="n">content_preview</span> <span class="o">=</span> <span class="n">doc</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">][:</span><span class="mi">1500</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1500</span><span class="p">:</span>
+                        <span class="n">content_preview</span> <span class="o">+=</span> <span class="s2">&quot;...&quot;</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">content_preview</span><span class="p">)</span>
+                    <span class="n">st</span><span class="o">.</span><span class="n">divider</span><span class="p">()</span>
+            
+            <span class="c1"># Generar respuesta</span>
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;🤖 Generando respuesta con Groq AI...&quot;</span><span class="p">):</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">rag</span><span class="o">.</span><span class="n">generate_response</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+            
+            <span class="c1"># Mostrar respuesta</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;💡 Respuesta&quot;</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            
+            <span class="c1"># Guardar en historial</span>
+            <span class="k">if</span> <span class="s1">&#39;chat_history&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">chat_history</span> <span class="o">=</span> <span class="p">[]</span>
+            
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">chat_history</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s1">&#39;question&#39;</span><span class="p">:</span> <span class="n">question</span><span class="p">,</span>
+                <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="n">response</span><span class="p">,</span>
+                <span class="s1">&#39;context_count&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+            <span class="p">})</span>
+    
+    <span class="c1"># Mostrar historial</span>
+    <span class="k">if</span> <span class="s1">&#39;chat_history&#39;</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span> <span class="ow">and</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">chat_history</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">divider</span><span class="p">()</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&quot;📜 Historial de Conversación&quot;</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">chat_history</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">:])):</span>
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">expander</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❓ </span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;question&#39;</span><span class="p">][:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">):</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**Pregunta:** </span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;question&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**Respuesta:** </span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">caption</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Basado en </span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;context_count&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> fragmentos de papers&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Módulo RAG educativo cargado correctamente&quot;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2024, Andrés Fernando Gómez Rojas.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

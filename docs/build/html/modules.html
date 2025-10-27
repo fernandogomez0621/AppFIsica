@@ -1,0 +1,553 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Módulos del Sistema &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=f85f4cfb"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="generar_datos" href="api/generar_datos.html" />
+    <link rel="prev" title="11. Sistema RAG Educativo" href="user_guide/11_rag_educativo.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide.html">Manual de Usuario</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Módulos del Sistema</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#modulos-principales">Módulos Principales</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#referencia-completa-de-la-api">Referencia Completa de la API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/generar_datos.html">generar_datos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/data_processor.html">data_processor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/univariate_analysis.html">univariate_analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/bivariate_analysis.html">bivariate_analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/feature_engineering.html">feature_engineering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/clustering.html">clustering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/rbm_model.html">rbm_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/supervised_models.html">supervised_models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/prediction.html">prediction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/educational_rag.html">educational_rag</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/retraining.html">retraining</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#arquitectura-del-sistema">Arquitectura del Sistema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#flujo-de-datos">Flujo de Datos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#descripcion-de-modulos">Descripción de Módulos</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#generacion-de-datos">📊 Generación de Datos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#procesamiento-de-datos">🔧 Procesamiento de Datos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#analisis-descriptivo">📈 Análisis Descriptivo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ingenieria-de-caracteristicas">⚙️ Ingeniería de Características</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clustering">🎯 Clustering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#maquina-de-boltzmann-restringida">⚡ Máquina de Boltzmann Restringida</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#modelos-supervisados">🤖 Modelos Supervisados</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prediccion">🔮 Predicción</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sistema-rag-educativo">🎓 Sistema RAG Educativo</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#configuracion-avanzada">Configuración Avanzada</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hiperparametros-rbm">Hiperparámetros RBM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuracion-rag">Configuración RAG</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#optimizacion-de-rendimiento">Optimización de Rendimiento</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#integracion-con-otros-sistemas">Integración con Otros Sistemas</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#api-rest">API REST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#base-de-datos">Base de Datos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#monitoreo">Monitoreo</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Módulos del Sistema</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modules.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="modulos-del-sistema">
+<h1>Módulos del Sistema<a class="headerlink" href="#modulos-del-sistema" title="Link to this heading"></a></h1>
+<p>El sistema está organizado en módulos especializados que trabajan en conjunto
+para proporcionar una solución completa de análisis de riesgo crediticio.</p>
+<section id="modulos-principales">
+<h2>Módulos Principales<a class="headerlink" href="#modulos-principales" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+<section id="referencia-completa-de-la-api">
+<h2>Referencia Completa de la API<a class="headerlink" href="#referencia-completa-de-la-api" title="Link to this heading"></a></h2>
+<p>Documentación detallada de todos los módulos del código fuente:</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/generar_datos.html">generar_datos</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/generar_datos.html#descripcion-general">Descripción General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generar_datos.html#clases-principales">Clases Principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generar_datos.html#metodos-principales">Métodos Principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generar_datos.html#funciones-auxiliares">Funciones Auxiliares</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generar_datos.html#variables-generadas">Variables Generadas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generar_datos.html#validaciones-implementadas">Validaciones Implementadas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generar_datos.html#notas-de-implementacion">Notas de Implementación</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generar_datos.html#ver-tambien">Ver también</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/data_processor.html">data_processor</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/data_processor.html#descripcion-general">Descripción General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_processor.html#clases-principales">Clases Principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_processor.html#metodos-principales">Métodos Principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_processor.html#funciones-de-renderizado">Funciones de Renderizado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_processor.html#rangos-de-validacion">Rangos de Validación</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_processor.html#estructura-del-reporte-de-validacion">Estructura del Reporte de Validación</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_processor.html#ejemplo-completo">Ejemplo Completo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_processor.html#ver-tambien">Ver también</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/univariate_analysis.html">univariate_analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/univariate_analysis.html#descripcion-general">Descripción General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/univariate_analysis.html#clases-principales">Clases Principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/univariate_analysis.html#metodos-de-analisis">Métodos de Análisis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/univariate_analysis.html#metodos-de-visualizacion">Métodos de Visualización</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/univariate_analysis.html#funciones-de-renderizado">Funciones de Renderizado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/univariate_analysis.html#tests-estadisticos">Tests Estadísticos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/univariate_analysis.html#interpretacion-de-estadisticas">Interpretación de Estadísticas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/univariate_analysis.html#ejemplo-completo-de-analisis">Ejemplo Completo de Análisis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/univariate_analysis.html#ver-tambien">Ver también</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/bivariate_analysis.html">bivariate_analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/bivariate_analysis.html#descripcion-general">Descripción General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bivariate_analysis.html#clases-principales">Clases Principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bivariate_analysis.html#metodos-de-analisis">Métodos de Análisis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bivariate_analysis.html#metodos-de-visualizacion">Métodos de Visualización</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bivariate_analysis.html#funciones-de-renderizado">Funciones de Renderizado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bivariate_analysis.html#ejemplo-completo">Ejemplo Completo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bivariate_analysis.html#ver-tambien">Ver también</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/feature_engineering.html">feature_engineering</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/feature_engineering.html#descripcion-general">Descripción General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/feature_engineering.html#clases-principales">Clases Principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/feature_engineering.html#metodos-de-creacion-de-caracteristicas">Métodos de Creación de Características</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/feature_engineering.html#funciones-de-renderizado">Funciones de Renderizado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/feature_engineering.html#ejemplo-completo-de-uso">Ejemplo Completo de Uso</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/feature_engineering.html#formulas-de-caracteristicas">Fórmulas de Características</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/feature_engineering.html#ver-tambien">Ver también</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/clustering.html">clustering</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/clustering.html#descripcion-general">Descripción General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/clustering.html#clases-principales">Clases Principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/clustering.html#metodos-de-preparacion">Métodos de Preparación</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/clustering.html#metodos-de-clustering">Métodos de Clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/clustering.html#metodos-de-visualizacion">Métodos de Visualización</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/clustering.html#funciones-de-renderizado">Funciones de Renderizado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/clustering.html#metricas-de-evaluacion">Métricas de Evaluación</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/clustering.html#ejemplo-completo">Ejemplo Completo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/clustering.html#ver-tambien">Ver también</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/rbm_model.html">rbm_model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/rbm_model.html#descripcion-general">Descripción General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/rbm_model.html#clases-principales">Clases Principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/rbm_model.html#metodos-de-entrenamiento">Métodos de Entrenamiento</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/rbm_model.html#metodos-de-persistencia">Métodos de Persistencia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/rbm_model.html#funciones-de-visualizacion">Funciones de Visualización</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/rbm_model.html#funciones-de-renderizado">Funciones de Renderizado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/rbm_model.html#fundamentos-teoricos">Fundamentos Teóricos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/rbm_model.html#ejemplo-completo">Ejemplo Completo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/rbm_model.html#metodos-internos">Métodos Internos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/rbm_model.html#id2">Funciones de Visualización</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/rbm_model.html#id4">Funciones de Renderizado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/rbm_model.html#hiperparametros-recomendados">Hiperparámetros Recomendados</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/rbm_model.html#interpretacion-de-metricas">Interpretación de Métricas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/rbm_model.html#ver-tambien">Ver también</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/supervised_models.html">supervised_models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/supervised_models.html#descripcion-general">Descripción General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/supervised_models.html#clases-principales">Clases Principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/supervised_models.html#metodos-de-preparacion">Métodos de Preparación</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/supervised_models.html#metodos-de-entrenamiento">Métodos de Entrenamiento</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/supervised_models.html#metodos-de-evaluacion">Métodos de Evaluación</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/supervised_models.html#metodos-de-visualizacion">Métodos de Visualización</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/supervised_models.html#funciones-de-renderizado">Funciones de Renderizado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/supervised_models.html#configuracion-de-modelos">Configuración de Modelos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/supervised_models.html#ejemplo-completo">Ejemplo Completo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/supervised_models.html#interpretacion-de-metricas">Interpretación de Métricas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/supervised_models.html#id1">Funciones de Renderizado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/supervised_models.html#ejemplo-de-optimizacion-de-hiperparametros">Ejemplo de Optimización de Hiperparámetros</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/supervised_models.html#ejemplo-de-validacion-cruzada">Ejemplo de Validación Cruzada</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/supervised_models.html#ejemplo-de-analisis-de-errores">Ejemplo de Análisis de Errores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/supervised_models.html#guardado-de-modelos">Guardado de Modelos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/supervised_models.html#ver-tambien">Ver también</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/prediction.html">prediction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/prediction.html#descripcion-general">Descripción General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/prediction.html#clases-principales">Clases Principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/prediction.html#metodos-de-carga">Métodos de Carga</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/prediction.html#metodos-de-formulario">Métodos de Formulario</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/prediction.html#metodos-de-prediccion">Métodos de Predicción</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/prediction.html#metodos-de-explicacion">Métodos de Explicación</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/prediction.html#funciones-de-renderizado">Funciones de Renderizado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/prediction.html#funciones-auxiliares">Funciones Auxiliares</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/prediction.html#validaciones-en-tiempo-real">Validaciones en Tiempo Real</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/prediction.html#ejemplo-completo-de-prediccion">Ejemplo Completo de Predicción</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/prediction.html#metodos-de-calculo">Métodos de Cálculo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/prediction.html#metodos-de-generacion-de-insights">Métodos de Generación de Insights</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/prediction.html#id6">Funciones de Renderizado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/prediction.html#id9">Funciones Auxiliares</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/prediction.html#ejemplo-de-batch-prediction">Ejemplo de Batch Prediction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/prediction.html#integracion-con-otros-modulos">Integración con Otros Módulos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/prediction.html#ver-tambien">Ver también</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/educational_rag.html">educational_rag</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#descripcion-general">Descripción General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#clases-principales">Clases Principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#metodos-de-inicializacion">Métodos de Inicialización</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#metodos-de-gestion-de-papers">Métodos de Gestión de Papers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#metodos-de-busqueda">Métodos de Búsqueda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#metodos-de-generacion">Métodos de Generación</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#funciones-de-renderizado">Funciones de Renderizado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#preguntas-sugeridas">Preguntas Sugeridas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#ejemplo-completo-de-uso">Ejemplo Completo de Uso</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#gestion-de-papers-personalizados">Gestión de Papers Personalizados</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#arquitectura-del-sistema-rag">Arquitectura del Sistema RAG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#id1">Métodos de Búsqueda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#id3">Métodos de Generación</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#id5">Funciones de Renderizado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#papers-cientificos-incluidos">Papers Científicos Incluidos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#ejemplo-de-sesion-educativa">Ejemplo de Sesión Educativa</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#configuracion-avanzada">Configuración Avanzada</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#dependencias-requeridas">Dependencias Requeridas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/educational_rag.html#ver-tambien">Ver también</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/retraining.html">retraining</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/retraining.html#descripcion-general">Descripción General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/retraining.html#clases-principales">Clases Principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/retraining.html#metodos-de-gestion">Métodos de Gestión</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/retraining.html#metodos-de-deteccion-de-drift">Métodos de Detección de Drift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/retraining.html#metodos-de-versionado">Métodos de Versionado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/retraining.html#metodos-de-re-entrenamiento">Métodos de Re-entrenamiento</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/retraining.html#funciones-de-renderizado">Funciones de Renderizado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/retraining.html#tests-estadisticos">Tests Estadísticos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/retraining.html#ejemplo-completo-de-re-entrenamiento">Ejemplo Completo de Re-entrenamiento</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/retraining.html#workflow-de-re-entrenamiento">Workflow de Re-entrenamiento</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/retraining.html#gestion-de-versiones">Gestión de Versiones</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/retraining.html#monitoreo-de-drift">Monitoreo de Drift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/retraining.html#ejemplo-de-pipeline-completo">Ejemplo de Pipeline Completo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/retraining.html#mejores-practicas">Mejores Prácticas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/retraining.html#ver-tambien">Ver también</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="arquitectura-del-sistema">
+<h2>Arquitectura del Sistema<a class="headerlink" href="#arquitectura-del-sistema" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>AppFIsica/
+│
+├── app.py                          # 🚀 Aplicación principal
+├── src/                           # 💻 Módulos de código
+│   ├── generar_datos.py           # 📊 Generación de datos
+│   ├── data_processor.py          # 🔧 Procesamiento
+│   ├── univariate_analysis.py     # 📈 Análisis univariado
+│   ├── bivariate_analysis.py      # 🔗 Análisis bivariado
+│   ├── feature_engineering.py     # ⚙️ Ingeniería características
+│   ├── clustering.py              # 🎯 Clustering
+│   ├── rbm_model.py               # ⚡ Máquina de Boltzmann
+│   ├── supervised_models.py       # 🤖 Modelos supervisados
+│   ├── prediction.py              # 🔮 Predicción
+│   └── educational_rag.py         # 🎓 Sistema RAG
+│
+├── data/                          # 💾 Almacenamiento de datos
+├── models/                        # 🧠 Modelos entrenados
+├── articles/                      # 📚 Papers científicos
+└── docs/                          # 📖 Documentación
+</pre></div>
+</div>
+</section>
+<section id="flujo-de-datos">
+<h2>Flujo de Datos<a class="headerlink" href="#flujo-de-datos" title="Link to this heading"></a></h2>
+</section>
+<section id="descripcion-de-modulos">
+<h2>Descripción de Módulos<a class="headerlink" href="#descripcion-de-modulos" title="Link to this heading"></a></h2>
+<section id="generacion-de-datos">
+<h3>📊 Generación de Datos<a class="headerlink" href="#generacion-de-datos" title="Link to this heading"></a></h3>
+<p><strong>Propósito</strong>: Crear datasets sintéticos realistas para Colombia.</p>
+<p><strong>Características</strong>:
+- Correlaciones lógicas entre variables
+- Distribuciones realistas (60% Bajo, 25% Medio, 15% Alto)
+- Configuración de parámetros
+- Exportación múltiple (CSV, Excel, Parquet)</p>
+<p><strong>Uso</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.generar_datos</span><span class="w"> </span><span class="kn">import</span> <span class="n">generar_datos_credito_realista</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">generar_datos_credito_realista</span><span class="p">(</span>
+    <span class="n">n_registros</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+    <span class="n">semilla</span><span class="o">=</span><span class="mi">42</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="procesamiento-de-datos">
+<h3>🔧 Procesamiento de Datos<a class="headerlink" href="#procesamiento-de-datos" title="Link to this heading"></a></h3>
+<p><strong>Propósito</strong>: Validar y limpiar datos cargados por el usuario.</p>
+<p><strong>Funcionalidades</strong>:
+- Carga de múltiples formatos
+- Validaciones automáticas
+- Detección de outliers
+- Imputación inteligente
+- Reportes de calidad</p>
+</section>
+<section id="analisis-descriptivo">
+<h3>📈 Análisis Descriptivo<a class="headerlink" href="#analisis-descriptivo" title="Link to this heading"></a></h3>
+<p><strong>Propósito</strong>: Análisis estadístico univariado y bivariado.</p>
+<p><strong>Análisis Univariado</strong>:
+- Estadísticas completas (media, mediana, percentiles)
+- Visualizaciones (histogramas, boxplots, Q-Q plots)
+- Tests de normalidad
+- Detección de outliers</p>
+<p><strong>Análisis Bivariado</strong>:
+- Matrices de correlación
+- Gráficos de dispersión
+- Tablas de contingencia
+- Tests estadísticos (Chi², ANOVA)</p>
+</section>
+<section id="ingenieria-de-caracteristicas">
+<h3>⚙️ Ingeniería de Características<a class="headerlink" href="#ingenieria-de-caracteristicas" title="Link to this heading"></a></h3>
+<p><strong>Propósito</strong>: Crear variables derivadas automáticamente.</p>
+<p><strong>Tipos de Características</strong>:
+- <strong>Ratios Financieros</strong>: LTV, DTI, capacidad ahorro
+- <strong>Indicadores de Riesgo</strong>: Scores de edad, estabilidad, legal
+- <strong>Interacciones</strong>: Educación×Salario, Edad×Empleo
+- <strong>Discretización</strong>: Grupos de edad, rangos salariales
+- <strong>Transformaciones</strong>: Log, raíz cuadrada</p>
+</section>
+<section id="clustering">
+<h3>🎯 Clustering<a class="headerlink" href="#clustering" title="Link to this heading"></a></h3>
+<p><strong>Propósito</strong>: Segmentación de solicitantes en grupos homogéneos.</p>
+<p><strong>Algoritmos</strong>:
+- K-Means (rápido, esférico)
+- Jerárquico (dendrograma)
+- DBSCAN (detecta outliers)
+- Gaussian Mixture (probabilístico)</p>
+<p><strong>Visualizaciones</strong>:
+- PCA 2D/3D interactivo
+- Determinación de K óptimo
+- Perfiles por cluster</p>
+</section>
+<section id="maquina-de-boltzmann-restringida">
+<h3>⚡ Máquina de Boltzmann Restringida<a class="headerlink" href="#maquina-de-boltzmann-restringida" title="Link to this heading"></a></h3>
+<p><strong>Propósito</strong>: Extracción de características latentes.</p>
+<p><strong>Implementación</strong>:
+- RBM desde cero en NumPy
+- Contrastive Divergence (CD-k)
+- Métricas de evaluación
+- Visualizaciones de pesos</p>
+<p><strong>Ecuaciones Clave</strong>:</p>
+<div class="math notranslate nohighlight">
+\[P(h_j = 1 | v) = \sigma(b_j + \sum_i v_i W_{ij})\]</div>
+<div class="math notranslate nohighlight">
+\[P(v_i = 1 | h) = \sigma(a_i + \sum_j h_j W_{ij})\]</div>
+</section>
+<section id="modelos-supervisados">
+<h3>🤖 Modelos Supervisados<a class="headerlink" href="#modelos-supervisados" title="Link to this heading"></a></h3>
+<p><strong>Propósito</strong>: Clasificación de riesgo crediticio.</p>
+<p><strong>Modelos Incluidos</strong>:
+- Logistic Regression (baseline)
+- Random Forest
+- XGBoost
+- LightGBM
+- Support Vector Machine
+- Multi-Layer Perceptron</p>
+<p><strong>Evaluación</strong>:
+- Validación cruzada 5-fold
+- Múltiples métricas (Accuracy, F1, ROC-AUC)
+- Matrices de confusión
+- Importancia de características</p>
+</section>
+<section id="prediccion">
+<h3>🔮 Predicción<a class="headerlink" href="#prediccion" title="Link to this heading"></a></h3>
+<p><strong>Propósito</strong>: Evaluar riesgo de nuevos solicitantes.</p>
+<p><strong>Características</strong>:
+- Formulario interactivo
+- Validaciones en tiempo real
+- Explicaciones detalladas
+- Recomendaciones automáticas
+- Historial de predicciones</p>
+</section>
+<section id="sistema-rag-educativo">
+<h3>🎓 Sistema RAG Educativo<a class="headerlink" href="#sistema-rag-educativo" title="Link to this heading"></a></h3>
+<p><strong>Propósito</strong>: Aprendizaje interactivo sobre RBMs.</p>
+<p><strong>Componentes</strong>:
+- Procesamiento de PDFs (PyMuPDF)
+- Base vectorial (ChromaDB)
+- Embeddings locales (HuggingFace)
+- LLM (Groq Llama 3.3 70B)
+- Chat interactivo</p>
+</section>
+</section>
+<section id="configuracion-avanzada">
+<h2>Configuración Avanzada<a class="headerlink" href="#configuracion-avanzada" title="Link to this heading"></a></h2>
+<section id="hiperparametros-rbm">
+<h3>Hiperparámetros RBM<a class="headerlink" href="#hiperparametros-rbm" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rbm_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;n_hidden&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>        <span class="c1"># Unidades ocultas</span>
+    <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>  <span class="c1"># Tasa de aprendizaje</span>
+    <span class="s1">&#39;n_epochs&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>        <span class="c1"># Épocas</span>
+    <span class="s1">&#39;batch_size&#39;</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>       <span class="c1"># Tamaño de batch</span>
+    <span class="s1">&#39;k_cd&#39;</span><span class="p">:</span> <span class="mi">1</span>              <span class="c1"># Pasos CD</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="configuracion-rag">
+<h3>Configuración RAG<a class="headerlink" href="#configuracion-rag" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rag_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;chunk_size&#39;</span><span class="p">:</span> <span class="mi">1500</span><span class="p">,</span>     <span class="c1"># Tamaño de chunks</span>
+    <span class="s1">&#39;chunk_overlap&#39;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>   <span class="c1"># Solapamiento</span>
+    <span class="s1">&#39;top_k_results&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>     <span class="c1"># Documentos relevantes</span>
+    <span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="mf">0.3</span>      <span class="c1"># Creatividad LLM</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="optimizacion-de-rendimiento">
+<h3>Optimización de Rendimiento<a class="headerlink" href="#optimizacion-de-rendimiento" title="Link to this heading"></a></h3>
+<p><strong>Para Datasets Grandes (&gt;50K registros)</strong>:
+- Usar muestreo estratificado
+- Reducir épocas de RBM
+- Usar validación holdout en lugar de CV</p>
+<p><strong>Para Recursos Limitados</strong>:
+- Reducir <code class="docutils literal notranslate"><span class="pre">n_hidden</span></code> en RBM
+- Usar menos modelos supervisados
+- Desactivar visualizaciones 3D</p>
+</section>
+</section>
+<section id="integracion-con-otros-sistemas">
+<h2>Integración con Otros Sistemas<a class="headerlink" href="#integracion-con-otros-sistemas" title="Link to this heading"></a></h2>
+<section id="api-rest">
+<h3>API REST<a class="headerlink" href="#api-rest" title="Link to this heading"></a></h3>
+<p>El sistema puede extenderse con una API REST:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.prediction</span><span class="w"> </span><span class="kn">import</span> <span class="n">CreditRiskPredictor</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+<span class="n">predictor</span> <span class="o">=</span> <span class="n">CreditRiskPredictor</span><span class="p">()</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/predict&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">predict_risk</span><span class="p">(</span><span class="n">applicant_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">predictor</span><span class="o">.</span><span class="n">predict_risk</span><span class="p">(</span><span class="n">applicant_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="base-de-datos">
+<h3>Base de Datos<a class="headerlink" href="#base-de-datos" title="Link to this heading"></a></h3>
+<p>Para producción, considera integrar con:
+- PostgreSQL para datos transaccionales
+- MongoDB para documentos no estructurados
+- Redis para caché de predicciones</p>
+</section>
+<section id="monitoreo">
+<h3>Monitoreo<a class="headerlink" href="#monitoreo" title="Link to this heading"></a></h3>
+<p>Implementa monitoreo de:
+- Drift en distribuciones de datos
+- Degradación de métricas de modelos
+- Uso de recursos del sistema
+- Latencia de predicciones</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="user_guide/11_rag_educativo.html" class="btn btn-neutral float-left" title="11. Sistema RAG Educativo" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="api/generar_datos.html" class="btn btn-neutral float-right" title="generar_datos" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, Andrés Fernando Gómez Rojas &amp; Carlos Andrés Gómez Vasco. Software Libre bajo Licencia MIT.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

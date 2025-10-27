@@ -1,0 +1,93 @@
+{
+  "Hinton_2002_Contrastive_Divergence.pdf": {
+    "title": "Training Products of Experts by Minimizing Contrastive Divergence",
+    "authors": "Geoffrey E. Hinton",
+    "year": 2002,
+    "publication": "Neural Computation, 14(8), 1771-1800",
+    "citation": "Hinton, G. E. (2002). Training Products of Experts by Minimizing Contrastive Divergence. Neural Computation, 14(8), 1771-1800."
+  },
+  "Hinton_Salakhutdinov_2006_Science.pdf": {
+    "title": "Reducing the Dimensionality of Data with Neural Networks",
+    "authors": "Geoffrey E. Hinton, Ruslan R. Salakhutdinov",
+    "year": 2006,
+    "publication": "Science, 313(5786), 504-507",
+    "citation": "Hinton, G. E., & Salakhutdinov, R. R. (2006). Reducing the Dimensionality of Data with Neural Networks. Science, 313(5786), 504-507."
+  },
+  "Hinton_2010_Practical_Guide_RBMs.pdf": {
+    "title": "A Practical Guide to Training Restricted Boltzmann Machines",
+    "authors": "Geoffrey E. Hinton",
+    "year": 2010,
+    "publication": "Technical Report UTML TR 2010-003, University of Toronto",
+    "citation": "Hinton, G. E. (2010). A Practical Guide to Training Restricted Boltzmann Machines. Technical Report UTML TR 2010-003, University of Toronto."
+  },
+  "Salakhutdinov_2007_Collaborative_Filtering.pdf": {
+    "title": "Restricted Boltzmann Machines for Collaborative Filtering",
+    "authors": "Ruslan Salakhutdinov, Andriy Mnih, Geoffrey Hinton",
+    "year": 2007,
+    "publication": "Proceedings of the 24th International Conference on Machine Learning",
+    "citation": "Salakhutdinov, R., Mnih, A., & Hinton, G. (2007). Restricted Boltzmann Machines for Collaborative Filtering. Proceedings of the 24th ICML."
+  },
+  "Larochelle_2008_Discriminative_RBMs.pdf": {
+    "title": "Classification using Discriminative Restricted Boltzmann Machines",
+    "authors": "Hugo Larochelle, Yoshua Bengio",
+    "year": 2008,
+    "publication": "Proceedings of the 25th International Conference on Machine Learning",
+    "citation": "Larochelle, H., & Bengio, Y. (2008). Classification using Discriminative Restricted Boltzmann Machines. Proceedings of the 25th ICML."
+  },
+  "Ackley_1985_Boltzmann_Machines.pdf": {
+    "title": "A Learning Algorithm for Boltzmann Machines",
+    "authors": "David H. Ackley, Geoffrey E. Hinton, Terrence J. Sejnowski",
+    "year": 1985,
+    "publication": "Cognitive Science, 9(1), 147-169",
+    "citation": "Ackley, D. H., Hinton, G. E., & Sejnowski, T. J. (1985). A Learning Algorithm for Boltzmann Machines. Cognitive Science, 9(1), 147-169."
+  },
+  "Tieleman_2008_PCD.pdf": {
+    "title": "Training Restricted Boltzmann Machines using Approximations to the Likelihood Gradient",
+    "authors": "Tijmen Tieleman",
+    "year": 2008,
+    "publication": "Proceedings of the 25th International Conference on Machine Learning",
+    "citation": "Tieleman, T. (2008). Training Restricted Boltzmann Machines using Approximations to the Likelihood Gradient. Proceedings of the 25th ICML."
+  },
+  "Salakhutdinov_2009_Deep_BMs.pdf": {
+    "title": "Deep Boltzmann Machines",
+    "authors": "Ruslan Salakhutdinov, Geoffrey Hinton",
+    "year": 2009,
+    "publication": "Proceedings of the 12th International Conference on AI and Statistics",
+    "citation": "Salakhutdinov, R., & Hinton, G. (2009). Deep Boltzmann Machines. Proceedings of the 12th AISTATS."
+  },
+  "Fischer_Igel_2012_Introduction_RBMs.pdf": {
+    "title": "An Introduction to Restricted Boltzmann Machines",
+    "authors": "Asja Fischer, Christian Igel",
+    "year": 2012,
+    "publication": "Progress in Pattern Recognition, Image Analysis, Computer Vision, and Applications",
+    "citation": "Fischer, A., & Igel, C. (2012). An Introduction to Restricted Boltzmann Machines. Progress in Pattern Recognition, LNCS 7441."
+  },
+  "Bengio_2013_Better_Mixing.pdf": {
+    "title": "Deep Learning of Representations: Looking Forward",
+    "authors": "Yoshua Bengio",
+    "year": 2013,
+    "publication": "Statistical Language and Speech Processing, LNCS 7978",
+    "citation": "Bengio, Y. (2013). Deep Learning of Representations: Looking Forward. Statistical Language and Speech Processing, LNCS 7978, 1-37."
+  },
+  "Montufar_2011_Universal_Approximation.pdf": {
+    "title": "Refinements of Universal Approximation Results for Deep Belief Networks and Restricted Boltzmann Machines",
+    "authors": "Guido Montúfar, Jason Morton",
+    "year": 2011,
+    "publication": "arXiv preprint arXiv:1105.6169",
+    "citation": "Montúfar, G., & Morton, J. (2011). Refinements of Universal Approximation Results for Deep Belief Networks. arXiv:1105.6169."
+  },
+  "Kingma_2014_VAE.pdf": {
+    "title": "Auto-Encoding Variational Bayes",
+    "authors": "Diederik P. Kingma, Max Welling",
+    "year": 2014,
+    "publication": "International Conference on Learning Representations",
+    "citation": "Kingma, D. P., & Welling, M. (2014). Auto-Encoding Variational Bayes. ICLR 2014."
+  },
+  "Goodfellow_2014_GANs.pdf": {
+    "title": "Generative Adversarial Networks",
+    "authors": "Ian J. Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, et al.",
+    "year": 2014,
+    "publication": "Advances in Neural Information Processing Systems 27",
+    "citation": "Goodfellow, I. J., et al. (2014). Generative Adversarial Networks. NIPS 2014."
+  }
+}

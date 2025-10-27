@@ -1,0 +1,396 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>6. Clustering y Segmentación &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="7. Máquina de Boltzmann Restringida (RBM)" href="07_rbm.html" />
+    <link rel="prev" title="5. Ingeniería de Características" href="05_ingenieria_caracteristicas.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#introduccion">Introducción</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#flujo-de-trabajo-recomendado">Flujo de Trabajo Recomendado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#requisitos-previos">Requisitos Previos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#convenciones-de-este-manual">Convenciones de este Manual</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../user_guide.html#estructura-del-manual">Estructura del Manual</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="01_inicio.html">1. Página de Inicio y Navegación</a></li>
+<li class="toctree-l3"><a class="reference internal" href="02_generar_datos.html">2. Generar Datos Sintéticos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="03_cargar_datos.html">3. Cargar Datos Externos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04_analisis_descriptivo.html">4. Análisis Descriptivo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05_ingenieria_caracteristicas.html">5. Ingeniería de Características</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">6. Clustering y Segmentación</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#acceso-al-modulo">Acceso al Módulo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#algoritmos-disponibles">Algoritmos Disponibles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proceso-de-clustering">Proceso de Clustering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#analisis-de-clusters">Análisis de Clusters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#visualizaciones">Visualizaciones</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#casos-de-uso">Casos de Uso</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tips-y-mejores-practicas">Tips y Mejores Prácticas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="07_rbm.html">7. Máquina de Boltzmann Restringida (RBM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="08_modelos_supervisados.html">8. Modelos Supervisados</a></li>
+<li class="toctree-l3"><a class="reference internal" href="09_prediccion.html">9. Predicción de Riesgo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="10_reentrenamiento.html">10. Reentrenamiento de Modelos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="11_rag_educativo.html">11. Sistema RAG Educativo</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#acceso-rapido">Acceso Rápido</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#soporte-y-recursos">Soporte y Recursos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Módulos del Sistema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../user_guide.html">Manual de Usuario</a></li>
+      <li class="breadcrumb-item active">6. Clustering y Segmentación</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/06_clustering.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="clustering-y-segmentacion">
+<h1>6. Clustering y Segmentación<a class="headerlink" href="#clustering-y-segmentacion" title="Link to this heading"></a></h1>
+<p>Esta guía te enseñará a segmentar clientes en grupos homogéneos usando algoritmos de clustering no supervisado.</p>
+<section id="objetivo-del-modulo">
+<h2>Objetivo del Módulo<a class="headerlink" href="#objetivo-del-modulo" title="Link to this heading"></a></h2>
+<p>El módulo de clustering te permite:</p>
+<ul class="simple">
+<li><p>🎯 <strong>Segmentar clientes</strong> en grupos similares</p></li>
+<li><p>📊 <strong>Identificar patrones</strong> ocultos en datos</p></li>
+<li><p>🔍 <strong>Descubrir perfiles</strong> de riesgo</p></li>
+<li><p>📈 <strong>Optimizar estrategias</strong> por segmento</p></li>
+<li><p>🎨 <strong>Visualizar clusters</strong> en 2D/3D</p></li>
+<li><p>💡 <strong>Generar insights</strong> accionables</p></li>
+</ul>
+</section>
+<section id="acceso-al-modulo">
+<h2>Acceso al Módulo<a class="headerlink" href="#acceso-al-modulo" title="Link to this heading"></a></h2>
+<p>En el sidebar, click en:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>📈 Análisis → 🎯 Clustering
+</pre></div>
+</div>
+</section>
+<section id="algoritmos-disponibles">
+<h2>Algoritmos Disponibles<a class="headerlink" href="#algoritmos-disponibles" title="Link to this heading"></a></h2>
+<section id="k-means">
+<h3>K-Means<a class="headerlink" href="#k-means" title="Link to this heading"></a></h3>
+<p><strong>Características:</strong></p>
+<ul class="simple">
+<li><p>Rápido y escalable</p></li>
+<li><p>Requiere especificar número de clusters</p></li>
+<li><p>Sensible a outliers</p></li>
+<li><p>Clusters esféricos</p></li>
+</ul>
+<p><strong>Cuándo usar:</strong> Datasets grandes, clusters bien separados.</p>
+</section>
+<section id="dbscan">
+<h3>DBSCAN<a class="headerlink" href="#dbscan" title="Link to this heading"></a></h3>
+<p><strong>Características:</strong></p>
+<ul class="simple">
+<li><p>No requiere número de clusters</p></li>
+<li><p>Detecta outliers automáticamente</p></li>
+<li><p>Clusters de forma arbitraria</p></li>
+<li><p>Sensible a parámetros</p></li>
+</ul>
+<p><strong>Cuándo usar:</strong> Clusters de forma irregular, presencia de ruido.</p>
+</section>
+<section id="hierarchical-clustering">
+<h3>Hierarchical Clustering<a class="headerlink" href="#hierarchical-clustering" title="Link to this heading"></a></h3>
+<p><strong>Características:</strong></p>
+<ul class="simple">
+<li><p>Crea dendrograma</p></li>
+<li><p>No requiere número de clusters a priori</p></li>
+<li><p>Computacionalmente costoso</p></li>
+<li><p>Visualización intuitiva</p></li>
+</ul>
+<p><strong>Cuándo usar:</strong> Datasets pequeños, análisis exploratorio.</p>
+</section>
+<section id="gaussian-mixture-models-gmm">
+<h3>Gaussian Mixture Models (GMM)<a class="headerlink" href="#gaussian-mixture-models-gmm" title="Link to this heading"></a></h3>
+<p><strong>Características:</strong></p>
+<ul class="simple">
+<li><p>Clusters probabilísticos</p></li>
+<li><p>Flexible (elípticos)</p></li>
+<li><p>Asigna probabilidades</p></li>
+<li><p>Más lento que K-Means</p></li>
+</ul>
+<p><strong>Cuándo usar:</strong> Clusters superpuestos, incertidumbre en asignación.</p>
+</section>
+</section>
+<section id="proceso-de-clustering">
+<h2>Proceso de Clustering<a class="headerlink" href="#proceso-de-clustering" title="Link to this heading"></a></h2>
+<section id="paso-1-seleccionar-variables">
+<h3>Paso 1: Seleccionar Variables<a class="headerlink" href="#paso-1-seleccionar-variables" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Variables para clustering:
+
+☑ puntaje_datacredito
+☑ dti
+☑ capacidad_residual
+☑ ltv
+☑ salario_mensual
+☑ patrimonio_total
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Truco</p>
+<p>Selecciona variables relevantes y no correlacionadas.</p>
+</div>
+</section>
+<section id="paso-2-preprocesamiento">
+<h3>Paso 2: Preprocesamiento<a class="headerlink" href="#paso-2-preprocesamiento" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[⚙️ Preprocesar Datos]
+
+✓ Normalización (StandardScaler)
+✓ Eliminación de outliers extremos
+✓ Reducción de dimensionalidad (PCA)
+</pre></div>
+</div>
+</section>
+<section id="paso-3-determinar-numero-optimo">
+<h3>Paso 3: Determinar Número Óptimo<a class="headerlink" href="#paso-3-determinar-numero-optimo" title="Link to this heading"></a></h3>
+<p><strong>Método del Codo (Elbow Method):</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[📊 Calcular Método del Codo]
+
+K=2: Inertia = 1250.5
+K=3: Inertia = 890.2  ← Codo
+K=4: Inertia = 750.8
+K=5: Inertia = 680.3
+
+Número óptimo sugerido: 3
+</pre></div>
+</div>
+<p><strong>Silhouette Score:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>K=2: Score = 0.65
+K=3: Score = 0.72  ← Mejor
+K=4: Score = 0.68
+K=5: Score = 0.61
+</pre></div>
+</div>
+</section>
+<section id="paso-4-entrenar-modelo">
+<h3>Paso 4: Entrenar Modelo<a class="headerlink" href="#paso-4-entrenar-modelo" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Algoritmo: K-Means
+Número de clusters: 3
+
+[🎯 Entrenar Clustering]
+
+✓ Modelo entrenado
+✓ Clusters asignados
+✓ Centroides calculados
+</pre></div>
+</div>
+</section>
+</section>
+<section id="analisis-de-clusters">
+<h2>Análisis de Clusters<a class="headerlink" href="#analisis-de-clusters" title="Link to this heading"></a></h2>
+<section id="perfil-de-clusters">
+<h3>Perfil de Clusters<a class="headerlink" href="#perfil-de-clusters" title="Link to this heading"></a></h3>
+<p><strong>Cluster 0: Bajo Riesgo (60%)</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Características:
+• Puntaje DataCrédito: 750-850
+• DTI: 15-25%
+• Capacidad residual: Alta
+• Salario: Medio-Alto
+• Patrimonio: Alto
+
+Perfil: Clientes premium, bajo riesgo
+</pre></div>
+</div>
+<p><strong>Cluster 1: Riesgo Moderado (25%)</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Características:
+• Puntaje DataCrédito: 600-750
+• DTI: 25-35%
+• Capacidad residual: Media
+• Salario: Medio
+• Patrimonio: Medio
+
+Perfil: Clientes estándar, riesgo controlado
+</pre></div>
+</div>
+<p><strong>Cluster 2: Alto Riesgo (15%)</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Características:
+• Puntaje DataCrédito: 350-600
+• DTI: 35-45%
+• Capacidad residual: Baja
+• Salario: Bajo
+• Patrimonio: Bajo
+
+Perfil: Clientes de alto riesgo
+</pre></div>
+</div>
+</section>
+</section>
+<section id="visualizaciones">
+<h2>Visualizaciones<a class="headerlink" href="#visualizaciones" title="Link to this heading"></a></h2>
+<section id="scatter-plot-2d">
+<h3>Scatter Plot 2D<a class="headerlink" href="#scatter-plot-2d" title="Link to this heading"></a></h3>
+<p>Proyección PCA en 2 dimensiones:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[📊 Visualizar Clusters 2D]
+
+Componente 1 vs Componente 2
+Colores por cluster
+Centroides marcados
+</pre></div>
+</div>
+</section>
+<section id="scatter-plot-3d">
+<h3>Scatter Plot 3D<a class="headerlink" href="#scatter-plot-3d" title="Link to this heading"></a></h3>
+<p>Proyección en 3 dimensiones:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[🎨 Visualizar Clusters 3D]
+
+Interactivo con Plotly
+Rotación y zoom
+</pre></div>
+</div>
+</section>
+<section id="dendrograma">
+<h3>Dendrograma<a class="headerlink" href="#dendrograma" title="Link to this heading"></a></h3>
+<p>Para clustering jerárquico:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[🌳 Generar Dendrograma]
+
+Muestra jerarquía de agrupación
+Ayuda a determinar número de clusters
+</pre></div>
+</div>
+</section>
+</section>
+<section id="casos-de-uso">
+<h2>Casos de Uso<a class="headerlink" href="#casos-de-uso" title="Link to this heading"></a></h2>
+<p><strong>Caso 1: Segmentación de Mercado</strong></p>
+<p>Objetivo: Identificar grupos de clientes para estrategias diferenciadas.</p>
+<p><strong>Caso 2: Detección de Anomalías</strong></p>
+<p>Objetivo: Identificar clientes atípicos usando DBSCAN.</p>
+<p><strong>Caso 3: Personalización de Productos</strong></p>
+<p>Objetivo: Diseñar productos específicos por segmento.</p>
+</section>
+<section id="tips-y-mejores-practicas">
+<h2>Tips y Mejores Prácticas<a class="headerlink" href="#tips-y-mejores-practicas" title="Link to this heading"></a></h2>
+<p>✅ <strong>Haz:</strong></p>
+<ul class="simple">
+<li><p>Normaliza datos antes de clustering</p></li>
+<li><p>Prueba múltiples algoritmos</p></li>
+<li><p>Valida clusters con métricas</p></li>
+<li><p>Interpreta resultados con domain knowledge</p></li>
+</ul>
+<p>❌ <strong>Evita:</strong></p>
+<ul class="simple">
+<li><p>Usar demasiadas variables</p></li>
+<li><p>Ignorar outliers</p></li>
+<li><p>Forzar número de clusters sin validar</p></li>
+<li><p>Clustering sin preprocesamiento</p></li>
+</ul>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<p><strong>Problema: Clusters no tienen sentido</strong></p>
+<p>Solución: Revisa selección de variables y normalización.</p>
+<p><strong>Problema: Todos los puntos en un cluster</strong></p>
+<p>Solución: Ajusta parámetros o prueba otro algoritmo.</p>
+</section>
+<section id="proximos-pasos">
+<h2>Próximos Pasos<a class="headerlink" href="#proximos-pasos" title="Link to this heading"></a></h2>
+<p>Con tus clusters definidos:</p>
+<ol class="arabic simple">
+<li><p><strong>Entrenar RBM</strong>: <a class="reference internal" href="07_rbm.html"><span class="doc">7. Máquina de Boltzmann Restringida (RBM)</span></a></p></li>
+<li><p><strong>Modelos por cluster</strong>: <a class="reference internal" href="08_modelos_supervisados.html"><span class="doc">8. Modelos Supervisados</span></a></p></li>
+<li><p><strong>Predicción segmentada</strong>: <a class="reference internal" href="09_prediccion.html"><span class="doc">9. Predicción de Riesgo</span></a></p></li>
+</ol>
+<p>¡Segmentación completada! 🎯</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="05_ingenieria_caracteristicas.html" class="btn btn-neutral float-left" title="5. Ingeniería de Características" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="07_rbm.html" class="btn btn-neutral float-right" title="7. Máquina de Boltzmann Restringida (RBM)" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, Andrés Fernando Gómez Rojas &amp; Carlos Andrés Gómez Vasco. Software Libre bajo Licencia MIT.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

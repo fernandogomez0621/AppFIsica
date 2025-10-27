@@ -1,0 +1,688 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>supervised_models &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="prediction" href="prediction.html" />
+    <link rel="prev" title="rbm_model" href="rbm_model.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Módulos del Sistema</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#modulos-principales">Módulos Principales</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../modules.html#referencia-completa-de-la-api">Referencia Completa de la API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="generar_datos.html">generar_datos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_processor.html">data_processor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="univariate_analysis.html">univariate_analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bivariate_analysis.html">bivariate_analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature_engineering.html">feature_engineering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clustering.html">clustering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbm_model.html">rbm_model</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">supervised_models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#descripcion-general">Descripción General</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#clases-principales">Clases Principales</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-de-preparacion">Métodos de Preparación</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-de-entrenamiento">Métodos de Entrenamiento</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-de-evaluacion">Métodos de Evaluación</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-de-visualizacion">Métodos de Visualización</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#funciones-de-renderizado">Funciones de Renderizado</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configuracion-de-modelos">Configuración de Modelos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ejemplo-completo">Ejemplo Completo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interpretacion-de-metricas">Interpretación de Métricas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Funciones de Renderizado</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ejemplo-de-optimizacion-de-hiperparametros">Ejemplo de Optimización de Hiperparámetros</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ejemplo-de-validacion-cruzada">Ejemplo de Validación Cruzada</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ejemplo-de-analisis-de-errores">Ejemplo de Análisis de Errores</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#guardado-de-modelos">Guardado de Modelos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ver-tambien">Ver también</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prediction.html">prediction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="educational_rag.html">educational_rag</a></li>
+<li class="toctree-l3"><a class="reference internal" href="retraining.html">retraining</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#arquitectura-del-sistema">Arquitectura del Sistema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#flujo-de-datos">Flujo de Datos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#descripcion-de-modulos">Descripción de Módulos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#configuracion-avanzada">Configuración Avanzada</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#integracion-con-otros-sistemas">Integración con Otros Sistemas</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">Módulos del Sistema</a></li>
+      <li class="breadcrumb-item active">supervised_models</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/supervised_models.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="supervised-models">
+<h1>supervised_models<a class="headerlink" href="#supervised-models" title="Link to this heading"></a></h1>
+<section id="descripcion-general">
+<h2>Descripción General<a class="headerlink" href="#descripcion-general" title="Link to this heading"></a></h2>
+<p>Módulo de entrenamiento y evaluación de múltiples modelos de clasificación de riesgo crediticio con integración de características RBM y optimización de hiperparámetros.</p>
+</section>
+<section id="clases-principales">
+<h2>Clases Principales<a class="headerlink" href="#clases-principales" title="Link to this heading"></a></h2>
+<section id="supervisedmodeltrainer">
+<h3>SupervisedModelTrainer<a class="headerlink" href="#supervisedmodeltrainer" title="Link to this heading"></a></h3>
+</section>
+</section>
+<section id="metodos-de-preparacion">
+<h2>Métodos de Preparación<a class="headerlink" href="#metodos-de-preparacion" title="Link to this heading"></a></h2>
+<section id="prepare-data">
+<h3>prepare_data<a class="headerlink" href="#prepare-data" title="Link to this heading"></a></h3>
+<p>Prepara datos para entrenamiento con división estratificada.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">df</span></code> (DataFrame): DataFrame con datos</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">target_col</span></code> (str): Variable objetivo (default: “nivel_riesgo”)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_size</span></code> (float): Proporción para testing (default: 0.2)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">holdout_size</span></code> (float): Proporción para holdout (default: 0.1)</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>True si exitoso</p>
+</dd>
+<dt><strong>División de datos:</strong></dt><dd><ul class="simple">
+<li><p>70% Entrenamiento (con validación cruzada 5-fold)</p></li>
+<li><p>20% Testing (evaluación final)</p></li>
+<li><p>10% Holdout (simulación de producción)</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">success</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">prepare_data</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">,</span>
+    <span class="n">target_col</span><span class="o">=</span><span class="s1">&#39;nivel_riesgo&#39;</span><span class="p">,</span>
+    <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">holdout_size</span><span class="o">=</span><span class="mf">0.1</span>
+<span class="p">)</span>
+
+<span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Train: </span><span class="si">{</span><span class="n">trainer</span><span class="o">.</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test: </span><span class="si">{</span><span class="n">trainer</span><span class="o">.</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Holdout: </span><span class="si">{</span><span class="n">trainer</span><span class="o">.</span><span class="n">X_holdout</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Características: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">trainer</span><span class="o">.</span><span class="n">feature_names</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="metodos-de-entrenamiento">
+<h2>Métodos de Entrenamiento<a class="headerlink" href="#metodos-de-entrenamiento" title="Link to this heading"></a></h2>
+<section id="train-model">
+<h3>train_model<a class="headerlink" href="#train-model" title="Link to this heading"></a></h3>
+<p>Entrena un modelo específico con optimización opcional.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">model_key</span></code> (str): Clave del modelo (“logistic”, “random_forest”, “xgboost”, etc.)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">use_grid_search</span></code> (bool): Si usar búsqueda de hiperparámetros (default: True)</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Diccionario con resultados del entrenamiento</p>
+</dd>
+</dl>
+<p><strong>Proceso:</strong></p>
+<ol class="arabic simple">
+<li><p>Cargar configuración del modelo</p></li>
+<li><p>GridSearchCV si use_grid_search=True</p></li>
+<li><p>Entrenar con mejores parámetros</p></li>
+<li><p>Calcular métricas completas</p></li>
+<li><p>Guardar modelo y métricas</p></li>
+</ol>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Entrenar con optimización</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train_model</span><span class="p">(</span><span class="s1">&#39;xgboost&#39;</span><span class="p">,</span> <span class="n">use_grid_search</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mejores parámetros: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;best_params&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accuracy: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;metrics&#39;</span><span class="p">][</span><span class="s1">&#39;accuracy&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;F1-Score: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;metrics&#39;</span><span class="p">][</span><span class="s1">&#39;f1_weighted&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ROC-AUC: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;metrics&#39;</span><span class="p">][</span><span class="s1">&#39;roc_auc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="train-all-models">
+<h3>train_all_models<a class="headerlink" href="#train-all-models" title="Link to this heading"></a></h3>
+<p>Entrena todos los modelos seleccionados.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">selected_models</span></code> (List[str]): Lista de modelos a entrenar</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">use_grid_search</span></code> (bool): Si usar optimización (default: True)</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Diccionario con resultados de todos los modelos</p>
+</dd>
+</dl>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Entrenar múltiples modelos</span>
+<span class="n">models_to_train</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;logistic&#39;</span><span class="p">,</span> <span class="s1">&#39;random_forest&#39;</span><span class="p">,</span> <span class="s1">&#39;xgboost&#39;</span><span class="p">,</span> <span class="s1">&#39;lightgbm&#39;</span><span class="p">]</span>
+
+<span class="n">all_results</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train_all_models</span><span class="p">(</span>
+    <span class="n">selected_models</span><span class="o">=</span><span class="n">models_to_train</span><span class="p">,</span>
+    <span class="n">use_grid_search</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="c1"># Comparar resultados</span>
+<span class="k">for</span> <span class="n">model_key</span><span class="p">,</span> <span class="n">results</span> <span class="ow">in</span> <span class="n">all_results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_key</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Accuracy: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;metrics&#39;</span><span class="p">][</span><span class="s1">&#39;accuracy&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  F1-Score: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;metrics&#39;</span><span class="p">][</span><span class="s1">&#39;f1_weighted&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="metodos-de-evaluacion">
+<h2>Métodos de Evaluación<a class="headerlink" href="#metodos-de-evaluacion" title="Link to this heading"></a></h2>
+<section id="calculate-metrics">
+<h3>_calculate_metrics<a class="headerlink" href="#calculate-metrics" title="Link to this heading"></a></h3>
+<p>Calcula métricas de evaluación completas.</p>
+<p><strong>Métricas calculadas:</strong></p>
+<ul class="simple">
+<li><p><strong>Accuracy:</strong> Precisión global</p></li>
+<li><p><strong>Precision:</strong> Macro y weighted</p></li>
+<li><p><strong>Recall:</strong> Macro y weighted</p></li>
+<li><p><strong>F1-Score:</strong> Macro y weighted</p></li>
+<li><p><strong>Cohen’s Kappa:</strong> Acuerdo ajustado por azar</p></li>
+<li><p><strong>Matthews Correlation:</strong> Correlación de Matthews</p></li>
+<li><p><strong>ROC-AUC:</strong> Área bajo curva ROC</p></li>
+<li><p><strong>Confusion Matrix:</strong> Matriz de confusión</p></li>
+<li><p><strong>Classification Report:</strong> Reporte detallado por clase</p></li>
+</ul>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">classification_report</span>
+
+<span class="c1"># Las métricas se calculan automáticamente</span>
+<span class="n">metrics</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;metrics&#39;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accuracy: </span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Precision (weighted): </span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;precision_weighted&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recall (weighted): </span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;recall_weighted&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;F1-Score (weighted): </span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;f1_weighted&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cohen&#39;s Kappa: </span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;cohen_kappa&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ROC-AUC: </span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;roc_auc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Matriz de confusión</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Matriz de Confusión:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;confusion_matrix&#39;</span><span class="p">])</span>
+
+<span class="c1"># Reporte por clase</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Reporte de Clasificación:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">class_metrics</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;classification_report&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">class_metrics</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">class_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">class_metrics</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="metodos-de-visualizacion">
+<h2>Métodos de Visualización<a class="headerlink" href="#metodos-de-visualizacion" title="Link to this heading"></a></h2>
+<section id="create-comparison-visualizations">
+<h3>create_comparison_visualizations<a class="headerlink" href="#create-comparison-visualizations" title="Link to this heading"></a></h3>
+<p>Crea visualizaciones comparativas de múltiples modelos.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">results</span></code> (Dict): Resultados de múltiples modelos</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Diccionario con figuras de Plotly</p>
+</dd>
+<dt><strong>Visualizaciones:</strong></dt><dd><ul class="simple">
+<li><p><strong>model_comparison:</strong> Barras comparativas de métricas</p></li>
+<li><p><strong>roc_curves:</strong> Curvas ROC superpuestas</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="create-confusion-matrix-plot">
+<h3>create_confusion_matrix_plot<a class="headerlink" href="#create-confusion-matrix-plot" title="Link to this heading"></a></h3>
+<p>Crea visualización de matriz de confusión.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">model_key</span></code> (str): Clave del modelo</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">results</span></code> (Dict): Resultados del modelo</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Figura de Plotly con heatmap</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="funciones-de-renderizado">
+<h2>Funciones de Renderizado<a class="headerlink" href="#funciones-de-renderizado" title="Link to this heading"></a></h2>
+<section id="render-supervised-models">
+<h3>render_supervised_models<a class="headerlink" href="#render-supervised-models" title="Link to this heading"></a></h3>
+<p>Renderiza el módulo completo de modelos supervisados en Streamlit.</p>
+</section>
+<section id="render-supervised-models-module">
+<h3>render_supervised_models_module<a class="headerlink" href="#render-supervised-models-module" title="Link to this heading"></a></h3>
+<p>Función principal para renderizar el módulo.</p>
+</section>
+</section>
+<section id="configuracion-de-modelos">
+<h2>Configuración de Modelos<a class="headerlink" href="#configuracion-de-modelos" title="Link to this heading"></a></h2>
+<section id="logistic-regression">
+<h3>Logistic Regression<a class="headerlink" href="#logistic-regression" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt><strong>Hiperparámetros optimizados:</strong></dt><dd><ul class="simple">
+<li><p>C: [0.1, 1.0, 10.0]</p></li>
+<li><p>penalty: [“l1”, “l2”]</p></li>
+<li><p>solver: [“liblinear”]</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="random-forest">
+<h3>Random Forest<a class="headerlink" href="#random-forest" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt><strong>Hiperparámetros optimizados:</strong></dt><dd><ul class="simple">
+<li><p>n_estimators: [100, 200]</p></li>
+<li><p>max_depth: [10, 20, None]</p></li>
+<li><p>min_samples_split: [2, 5]</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="xgboost">
+<h3>XGBoost<a class="headerlink" href="#xgboost" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt><strong>Hiperparámetros optimizados:</strong></dt><dd><ul class="simple">
+<li><p>n_estimators: [100, 200]</p></li>
+<li><p>max_depth: [3, 6]</p></li>
+<li><p>learning_rate: [0.01, 0.1]</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="lightgbm">
+<h3>LightGBM<a class="headerlink" href="#lightgbm" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt><strong>Hiperparámetros optimizados:</strong></dt><dd><ul class="simple">
+<li><p>n_estimators: [100, 200]</p></li>
+<li><p>max_depth: [3, 6]</p></li>
+<li><p>learning_rate: [0.01, 0.1]</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="svm">
+<h3>SVM<a class="headerlink" href="#svm" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt><strong>Hiperparámetros optimizados:</strong></dt><dd><ul class="simple">
+<li><p>C: [0.1, 1.0, 10.0]</p></li>
+<li><p>kernel: [“rbf”, “linear”]</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="mlp">
+<h3>MLP<a class="headerlink" href="#mlp" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt><strong>Hiperparámetros optimizados:</strong></dt><dd><ul class="simple">
+<li><p>hidden_layer_sizes: [(100,), (100, 50)]</p></li>
+<li><p>alpha: [0.001, 0.01]</p></li>
+<li><p>learning_rate: [“constant”, “adaptive”]</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</section>
+<section id="ejemplo-completo">
+<h2>Ejemplo Completo<a class="headerlink" href="#ejemplo-completo" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.supervised_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">SupervisedModelTrainer</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Cargar datos con características RBM</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;datos_con_rbm.csv&quot;</span><span class="p">)</span>
+
+<span class="c1"># Crear entrenador</span>
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">SupervisedModelTrainer</span><span class="p">()</span>
+
+<span class="c1"># Preparar datos</span>
+<span class="n">trainer</span><span class="o">.</span><span class="n">prepare_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target_col</span><span class="o">=</span><span class="s1">&#39;nivel_riesgo&#39;</span><span class="p">)</span>
+
+<span class="c1"># Entrenar múltiples modelos</span>
+<span class="n">models</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;logistic&#39;</span><span class="p">,</span> <span class="s1">&#39;random_forest&#39;</span><span class="p">,</span> <span class="s1">&#39;xgboost&#39;</span><span class="p">,</span> <span class="s1">&#39;lightgbm&#39;</span><span class="p">]</span>
+<span class="n">all_results</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train_all_models</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">use_grid_search</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Comparar modelos</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Comparación de Modelos:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">model_key</span><span class="p">,</span> <span class="n">results</span> <span class="ow">in</span> <span class="n">all_results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;metrics&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">trainer</span><span class="o">.</span><span class="n">model_configs</span><span class="p">[</span><span class="n">model_key</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Accuracy:  </span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  F1-Score:  </span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;f1_weighted&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Precision: </span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;precision_weighted&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Recall:    </span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;recall_weighted&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  ROC-AUC:   </span><span class="si">{</span><span class="n">metrics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;roc_auc&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Kappa:     </span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;cohen_kappa&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Crear visualizaciones comparativas</span>
+<span class="n">comparison_figs</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">create_comparison_visualizations</span><span class="p">(</span><span class="n">all_results</span><span class="p">)</span>
+<span class="n">comparison_figs</span><span class="p">[</span><span class="s1">&#39;model_comparison&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">comparison_figs</span><span class="p">[</span><span class="s1">&#39;roc_curves&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Analizar mejor modelo</span>
+<span class="n">best_model_key</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+    <span class="n">all_results</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>
+    <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">all_results</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;metrics&#39;</span><span class="p">][</span><span class="s1">&#39;f1_weighted&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🏆 Mejor modelo: </span><span class="si">{</span><span class="n">trainer</span><span class="o">.</span><span class="n">model_configs</span><span class="p">[</span><span class="n">best_model_key</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">best_results</span> <span class="o">=</span> <span class="n">all_results</span><span class="p">[</span><span class="n">best_model_key</span><span class="p">]</span>
+
+<span class="c1"># Matriz de confusión</span>
+<span class="n">fig_cm</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">create_confusion_matrix_plot</span><span class="p">(</span><span class="n">best_model_key</span><span class="p">,</span> <span class="n">best_results</span><span class="p">)</span>
+<span class="n">fig_cm</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Importancia de características (si disponible)</span>
+<span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">best_results</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">],</span> <span class="s1">&#39;feature_importances_&#39;</span><span class="p">):</span>
+    <span class="n">importances</span> <span class="o">=</span> <span class="n">best_results</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">feature_importances_</span>
+    <span class="n">feature_importance_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s1">&#39;Feature&#39;</span><span class="p">:</span> <span class="n">trainer</span><span class="o">.</span><span class="n">feature_names</span><span class="p">,</span>
+        <span class="s1">&#39;Importance&#39;</span><span class="p">:</span> <span class="n">importances</span>
+    <span class="p">})</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;Importance&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Top 10 Características:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">feature_importance_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="interpretacion-de-metricas">
+<h2>Interpretación de Métricas<a class="headerlink" href="#interpretacion-de-metricas" title="Link to this heading"></a></h2>
+<section id="accuracy">
+<h3>Accuracy<a class="headerlink" href="#accuracy" title="Link to this heading"></a></h3>
+<p>Proporción de predicciones correctas.</p>
+<div class="math notranslate nohighlight">
+\[\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}\]</div>
+<ul class="simple">
+<li><p><strong>&gt; 0.90:</strong> Excelente</p></li>
+<li><p><strong>0.80-0.90:</strong> Muy bueno</p></li>
+<li><p><strong>0.70-0.80:</strong> Bueno</p></li>
+<li><p><strong>&lt; 0.70:</strong> Revisar modelo</p></li>
+</ul>
+</section>
+<section id="precision">
+<h3>Precision<a class="headerlink" href="#precision" title="Link to this heading"></a></h3>
+<p>Proporción de predicciones positivas correctas.</p>
+<div class="math notranslate nohighlight">
+\[\text{Precision} = \frac{TP}{TP + FP}\]</div>
+</section>
+<section id="recall-sensibilidad">
+<h3>Recall (Sensibilidad)<a class="headerlink" href="#recall-sensibilidad" title="Link to this heading"></a></h3>
+<p>Proporción de positivos reales detectados.</p>
+<div class="math notranslate nohighlight">
+\[\text{Recall} = \frac{TP}{TP + FN}\]</div>
+</section>
+<section id="f1-score">
+<h3>F1-Score<a class="headerlink" href="#f1-score" title="Link to this heading"></a></h3>
+<p>Media armónica de precision y recall.</p>
+<div class="math notranslate nohighlight">
+\[F1 = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}\]</div>
+</section>
+<section id="cohen-s-kappa">
+<h3>Cohen’s Kappa<a class="headerlink" href="#cohen-s-kappa" title="Link to this heading"></a></h3>
+<p>Acuerdo entre predicciones y realidad, ajustado por azar.</p>
+<ul class="simple">
+<li><p><strong>&lt; 0:</strong> Peor que azar</p></li>
+<li><p><strong>0-0.20:</strong> Acuerdo leve</p></li>
+<li><p><strong>0.21-0.40:</strong> Acuerdo justo</p></li>
+<li><p><strong>0.41-0.60:</strong> Acuerdo moderado</p></li>
+<li><p><strong>0.61-0.80:</strong> Acuerdo sustancial</p></li>
+<li><p><strong>0.81-1.00:</strong> Acuerdo casi perfecto</p></li>
+</ul>
+</section>
+<section id="roc-auc">
+<h3>ROC-AUC<a class="headerlink" href="#roc-auc" title="Link to this heading"></a></h3>
+<p>Área bajo la curva ROC (Receiver Operating Characteristic).</p>
+<ul class="simple">
+<li><p><strong>0.90-1.00:</strong> Excelente</p></li>
+<li><p><strong>0.80-0.90:</strong> Muy bueno</p></li>
+<li><p><strong>0.70-0.80:</strong> Bueno</p></li>
+<li><p><strong>0.60-0.70:</strong> Pobre</p></li>
+<li><p><strong>0.50-0.60:</strong> Falla</p></li>
+</ul>
+</section>
+</section>
+<section id="id1">
+<h2>Funciones de Renderizado<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<section id="id2">
+<h3>render_supervised_models<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p>Renderiza el módulo completo de modelos supervisados en Streamlit.</p>
+<dl class="simple">
+<dt><strong>Funcionalidades:</strong></dt><dd><ul class="simple">
+<li><p>Selección de dataset (original, con características, con RBM)</p></li>
+<li><p>Selección de modelos a entrenar</p></li>
+<li><p>Optimización de hiperparámetros</p></li>
+<li><p>Entrenamiento con barra de progreso</p></li>
+<li><p>Comparación de modelos</p></li>
+<li><p>Análisis detallado por modelo</p></li>
+<li><p>Visualización de importancia de características</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="id3">
+<h3>render_supervised_models_module<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<p>Función principal para renderizar el módulo.</p>
+</section>
+</section>
+<section id="ejemplo-de-optimizacion-de-hiperparametros">
+<h2>Ejemplo de Optimización de Hiperparámetros<a class="headerlink" href="#ejemplo-de-optimizacion-de-hiperparametros" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.supervised_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">SupervisedModelTrainer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">GridSearchCV</span>
+
+<span class="c1"># Crear entrenador</span>
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">SupervisedModelTrainer</span><span class="p">()</span>
+<span class="n">trainer</span><span class="o">.</span><span class="n">prepare_data</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Configuración personalizada para XGBoost</span>
+<span class="n">custom_params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">],</span>
+    <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span>
+    <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
+    <span class="s1">&#39;subsample&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+    <span class="s1">&#39;colsample_bytree&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="c1"># Actualizar configuración</span>
+<span class="n">trainer</span><span class="o">.</span><span class="n">model_configs</span><span class="p">[</span><span class="s1">&#39;xgboost&#39;</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">custom_params</span>
+
+<span class="c1"># Entrenar con búsqueda exhaustiva</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train_model</span><span class="p">(</span><span class="s1">&#39;xgboost&#39;</span><span class="p">,</span> <span class="n">use_grid_search</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mejores hiperparámetros encontrados:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;best_params&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">param</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="ejemplo-de-validacion-cruzada">
+<h2>Ejemplo de Validación Cruzada<a class="headerlink" href="#ejemplo-de-validacion-cruzada" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">cross_val_score</span>
+
+<span class="c1"># Entrenar modelo</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train_model</span><span class="p">(</span><span class="s1">&#39;random_forest&#39;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span>
+
+<span class="c1"># Validación cruzada 5-fold</span>
+<span class="n">cv_scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span>
+    <span class="n">trainer</span><span class="o">.</span><span class="n">X_train_scaled</span><span class="p">,</span>
+    <span class="n">trainer</span><span class="o">.</span><span class="n">y_train</span><span class="p">,</span>
+    <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;f1_weighted&#39;</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;F1-Scores por fold: </span><span class="si">{</span><span class="n">cv_scores</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Media: </span><span class="si">{</span><span class="n">cv_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Desv. Estándar: </span><span class="si">{</span><span class="n">cv_scores</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="ejemplo-de-analisis-de-errores">
+<h2>Ejemplo de Análisis de Errores<a class="headerlink" href="#ejemplo-de-analisis-de-errores" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Obtener predicciones</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;predictions&#39;</span><span class="p">][</span><span class="s1">&#39;y_test_pred&#39;</span><span class="p">]</span>
+<span class="n">y_true</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">y_test</span>
+
+<span class="c1"># Identificar errores</span>
+<span class="n">errors_mask</span> <span class="o">=</span> <span class="n">y_pred</span> <span class="o">!=</span> <span class="n">y_true</span>
+<span class="n">errors_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">errors_mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total de errores: </span><span class="si">{</span><span class="n">errors_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tasa de error: </span><span class="si">{</span><span class="n">errors_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Analizar errores por clase</span>
+<span class="k">for</span> <span class="n">class_idx</span><span class="p">,</span> <span class="n">class_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">trainer</span><span class="o">.</span><span class="n">label_encoder</span><span class="o">.</span><span class="n">classes_</span><span class="p">):</span>
+    <span class="n">class_mask</span> <span class="o">=</span> <span class="n">y_true</span> <span class="o">==</span> <span class="n">class_idx</span>
+    <span class="n">class_errors</span> <span class="o">=</span> <span class="n">errors_mask</span><span class="p">[</span><span class="n">class_mask</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">class_total</span> <span class="o">=</span> <span class="n">class_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Clase &#39;</span><span class="si">{</span><span class="n">class_name</span><span class="si">}</span><span class="s2">&#39;:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Total: </span><span class="si">{</span><span class="n">class_total</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Errores: </span><span class="si">{</span><span class="n">class_errors</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Tasa de error: </span><span class="si">{</span><span class="n">class_errors</span><span class="o">/</span><span class="n">class_total</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Ver casos mal clasificados</span>
+<span class="n">X_test_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">trainer</span><span class="o">.</span><span class="n">X_test</span><span class="p">,</span>
+    <span class="n">columns</span><span class="o">=</span><span class="n">trainer</span><span class="o">.</span><span class="n">feature_names</span>
+<span class="p">)</span>
+
+<span class="n">errors_df</span> <span class="o">=</span> <span class="n">X_test_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">errors_indices</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">errors_df</span><span class="p">[</span><span class="s1">&#39;true_class&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">label_encoder</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">y_true</span><span class="p">[</span><span class="n">errors_indices</span><span class="p">])</span>
+<span class="n">errors_df</span><span class="p">[</span><span class="s1">&#39;predicted_class&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">label_encoder</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="n">errors_indices</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Primeros 5 casos mal clasificados:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">errors_df</span><span class="p">[[</span><span class="s1">&#39;true_class&#39;</span><span class="p">,</span> <span class="s1">&#39;predicted_class&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="guardado-de-modelos">
+<h2>Guardado de Modelos<a class="headerlink" href="#guardado-de-modelos" title="Link to this heading"></a></h2>
+<p>Los modelos se guardan automáticamente en:</p>
+<ul class="simple">
+<li><p><strong>Modelo:</strong> <code class="docutils literal notranslate"><span class="pre">models/supervised/{model_key}_model.pkl</span></code></p></li>
+<li><p><strong>Métricas:</strong> <code class="docutils literal notranslate"><span class="pre">models/supervised/{model_key}_metrics.json</span></code></p></li>
+</ul>
+<p><strong>Contenido del archivo de modelo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">trained_model</span><span class="p">,</span>
+    <span class="s1">&#39;scaler&#39;</span><span class="p">:</span> <span class="n">StandardScaler</span><span class="p">,</span>
+    <span class="s1">&#39;label_encoder&#39;</span><span class="p">:</span> <span class="n">LabelEncoder</span><span class="p">,</span>
+    <span class="s1">&#39;feature_names&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+    <span class="s1">&#39;best_params&#39;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="s1">&#39;metrics&#39;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="ver-tambien">
+<h2>Ver también<a class="headerlink" href="#ver-tambien" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="feature_engineering.html"><span class="doc">feature_engineering</span></a> - Ingeniería de características</p></li>
+<li><p><a class="reference internal" href="rbm_model.html"><span class="doc">rbm_model</span></a> - Características RBM</p></li>
+<li><p><a class="reference internal" href="prediction.html"><span class="doc">prediction</span></a> - Sistema de predicción</p></li>
+<li><p><a class="reference internal" href="retraining.html"><span class="doc">retraining</span></a> - Reentrenamiento de modelos</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="rbm_model.html" class="btn btn-neutral float-left" title="rbm_model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="prediction.html" class="btn btn-neutral float-right" title="prediction" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, Andrés Fernando Gómez Rojas &amp; Carlos Andrés Gómez Vasco. Software Libre bajo Licencia MIT.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

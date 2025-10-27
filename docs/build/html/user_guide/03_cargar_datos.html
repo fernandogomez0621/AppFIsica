@@ -1,0 +1,439 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3. Cargar Datos Externos &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="4. Análisis Descriptivo" href="04_analisis_descriptivo.html" />
+    <link rel="prev" title="2. Generar Datos Sintéticos" href="02_generar_datos.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#introduccion">Introducción</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#flujo-de-trabajo-recomendado">Flujo de Trabajo Recomendado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#requisitos-previos">Requisitos Previos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#convenciones-de-este-manual">Convenciones de este Manual</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../user_guide.html#estructura-del-manual">Estructura del Manual</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="01_inicio.html">1. Página de Inicio y Navegación</a></li>
+<li class="toctree-l3"><a class="reference internal" href="02_generar_datos.html">2. Generar Datos Sintéticos</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">3. Cargar Datos Externos</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#objetivo-del-modulo">Objetivo del Módulo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#formatos-soportados">Formatos Soportados</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#acceso-al-modulo">Acceso al Módulo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cargar-archivo">Cargar Archivo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#validacion-automatica">Validación Automática</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reporte-de-calidad">Reporte de Calidad</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#limpieza-de-datos">Limpieza de Datos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mapeo-de-columnas">Mapeo de Columnas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#guardar-datos-procesados">Guardar Datos Procesados</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#casos-de-uso">Casos de Uso</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="04_analisis_descriptivo.html">4. Análisis Descriptivo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05_ingenieria_caracteristicas.html">5. Ingeniería de Características</a></li>
+<li class="toctree-l3"><a class="reference internal" href="06_clustering.html">6. Clustering y Segmentación</a></li>
+<li class="toctree-l3"><a class="reference internal" href="07_rbm.html">7. Máquina de Boltzmann Restringida (RBM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="08_modelos_supervisados.html">8. Modelos Supervisados</a></li>
+<li class="toctree-l3"><a class="reference internal" href="09_prediccion.html">9. Predicción de Riesgo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="10_reentrenamiento.html">10. Reentrenamiento de Modelos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="11_rag_educativo.html">11. Sistema RAG Educativo</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#acceso-rapido">Acceso Rápido</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#soporte-y-recursos">Soporte y Recursos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide.html#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Módulos del Sistema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../user_guide.html">Manual de Usuario</a></li>
+      <li class="breadcrumb-item active">3. Cargar Datos Externos</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/03_cargar_datos.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cargar-datos-externos">
+<h1>3. Cargar Datos Externos<a class="headerlink" href="#cargar-datos-externos" title="Link to this heading"></a></h1>
+<p>Esta guía te enseñará a cargar, validar y preparar tus propios datos de crédito hipotecario para análisis y modelado.</p>
+<section id="objetivo-del-modulo">
+<h2>Objetivo del Módulo<a class="headerlink" href="#objetivo-del-modulo" title="Link to this heading"></a></h2>
+<p>El módulo de carga de datos te permite:</p>
+<ul class="simple">
+<li><p>📁 <strong>Importar datos externos</strong> en múltiples formatos</p></li>
+<li><p>✅ <strong>Validar calidad</strong> automáticamente</p></li>
+<li><p>🔧 <strong>Limpiar y preparar</strong> datos para análisis</p></li>
+<li><p>📊 <strong>Visualizar problemas</strong> de calidad</p></li>
+<li><p>💾 <strong>Guardar datos procesados</strong> para uso posterior</p></li>
+<li><p>🔍 <strong>Detectar anomalías</strong> y valores atípicos</p></li>
+</ul>
+</section>
+<section id="formatos-soportados">
+<h2>Formatos Soportados<a class="headerlink" href="#formatos-soportados" title="Link to this heading"></a></h2>
+<p>El sistema acepta los siguientes formatos:</p>
+<p><strong>CSV (Comma-Separated Values)</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>✅ Extensión: .csv
+✅ Encoding: UTF-8, Latin-1
+✅ Separadores: coma, punto y coma, tabulador
+✅ Tamaño máximo: 100 MB
+</pre></div>
+</div>
+<p><strong>Excel</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>✅ Extensión: .xlsx, .xls
+✅ Múltiples hojas soportadas
+✅ Tamaño máximo: 50 MB
+</pre></div>
+</div>
+<p><strong>Parquet</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>✅ Extensión: .parquet
+✅ Formato columnar comprimido
+✅ Ideal para datasets grandes
+✅ Tamaño máximo: 200 MB
+</pre></div>
+</div>
+</section>
+<section id="acceso-al-modulo">
+<h2>Acceso al Módulo<a class="headerlink" href="#acceso-al-modulo" title="Link to this heading"></a></h2>
+<p><strong>Navegar al módulo:</strong></p>
+<p>En el sidebar, click en:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>📊 Gestión de Datos → 📁 Cargar Datos
+</pre></div>
+</div>
+</section>
+<section id="cargar-archivo">
+<h2>Cargar Archivo<a class="headerlink" href="#cargar-archivo" title="Link to this heading"></a></h2>
+<section id="metodo-1-arrastrar-y-soltar">
+<h3>Método 1: Arrastrar y Soltar<a class="headerlink" href="#metodo-1-arrastrar-y-soltar" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Arrastra tu archivo desde el explorador</p></li>
+<li><p>Suéltalo en el área designada</p></li>
+<li><p>Espera la confirmación de carga</p></li>
+</ol>
+<p><strong>Área de carga:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────┐
+│  📁 Arrastra tu archivo aquí        │
+│                                     │
+│  o haz click para seleccionar      │
+│                                     │
+│  Formatos: CSV, Excel, Parquet     │
+│  Tamaño máximo: 100 MB             │
+└─────────────────────────────────────┘
+</pre></div>
+</div>
+</section>
+<section id="metodo-2-seleccionar-archivo">
+<h3>Método 2: Seleccionar Archivo<a class="headerlink" href="#metodo-2-seleccionar-archivo" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Click en <strong>«Browse files»</strong></p></li>
+<li><p>Navega a tu archivo</p></li>
+<li><p>Selecciona y abre</p></li>
+</ol>
+</section>
+</section>
+<section id="validacion-automatica">
+<h2>Validación Automática<a class="headerlink" href="#validacion-automatica" title="Link to this heading"></a></h2>
+<p>Una vez cargado, el sistema ejecuta validaciones automáticas:</p>
+<p><strong>Validación 1: Estructura del Archivo</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>✓ Archivo leído correctamente
+✓ 10,000 registros detectados
+✓ 25 columnas encontradas
+✓ Encoding: UTF-8
+</pre></div>
+</div>
+<p><strong>Validación 2: Columnas Requeridas</strong></p>
+<p>El sistema verifica que existan las columnas mínimas:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">edad</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">salario_mensual</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">puntaje_datacredito</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">valor_inmueble</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">monto_credito</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nivel_riesgo</span></code> (opcional)</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Advertencia</p>
+<p>Si faltan columnas críticas, el sistema te pedirá mapearlas o agregarlas.</p>
+</div>
+<p><strong>Validación 3: Tipos de Datos</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>✓ Variables numéricas: 18
+✓ Variables categóricas: 7
+✓ Conversiones necesarias: 2
+</pre></div>
+</div>
+<p><strong>Validación 4: Valores Faltantes</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>⚠ Valores faltantes detectados:
+
+salario_mensual: 15 (0.15%)
+puntaje_datacredito: 8 (0.08%)
+ciudad: 3 (0.03%)
+</pre></div>
+</div>
+<p><strong>Validación 5: Valores Atípicos</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>⚠ Outliers detectados:
+
+salario_mensual: 23 valores extremos
+valor_inmueble: 12 valores extremos
+</pre></div>
+</div>
+</section>
+<section id="reporte-de-calidad">
+<h2>Reporte de Calidad<a class="headerlink" href="#reporte-de-calidad" title="Link to this heading"></a></h2>
+<p>El sistema genera un reporte completo:</p>
+<p><strong>Resumen General:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>📊 REPORTE DE CALIDAD DE DATOS
+================================
+
+Total de registros: 10,000
+Total de columnas: 25
+Completitud: 99.7%
+Calidad general: ★★★★☆ (4/5)
+</pre></div>
+</div>
+<p><strong>Problemas Detectados:</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 40.0%" />
+<col style="width: 30.0%" />
+<col style="width: 30.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Problema</p></th>
+<th class="head"><p>Severidad</p></th>
+<th class="head"><p>Registros Afectados</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Valores faltantes</p></td>
+<td><p>Media</p></td>
+<td><p>26 (0.26%)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Outliers extremos</p></td>
+<td><p>Baja</p></td>
+<td><p>35 (0.35%)</p></td>
+</tr>
+<tr class="row-even"><td><p>Duplicados</p></td>
+<td><p>Alta</p></td>
+<td><p>0 (0%)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Inconsistencias</p></td>
+<td><p>Media</p></td>
+<td><p>12 (0.12%)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="limpieza-de-datos">
+<h2>Limpieza de Datos<a class="headerlink" href="#limpieza-de-datos" title="Link to this heading"></a></h2>
+<p>El módulo ofrece opciones de limpieza automática:</p>
+<p><strong>Opción 1: Valores Faltantes</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Estrategia para valores faltantes:
+
+○ Eliminar registros con faltantes
+● Imputar con mediana (numéricos)
+○ Imputar con moda (categóricos)
+○ Dejar sin cambios
+</pre></div>
+</div>
+<p><strong>Opción 2: Outliers</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Tratamiento de outliers:
+
+○ Eliminar outliers extremos
+● Winsorizar (reemplazar con percentiles)
+○ Transformar (log, sqrt)
+○ Dejar sin cambios
+</pre></div>
+</div>
+<p><strong>Opción 3: Duplicados</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>☑ Eliminar registros duplicados
+</pre></div>
+</div>
+<p><strong>Aplicar Limpieza:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[🔧 Aplicar Limpieza Automática]
+</pre></div>
+</div>
+<section id="resultados-despues-de-limpieza">
+<h3>Resultados Después de Limpieza<a class="headerlink" href="#resultados-despues-de-limpieza" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>✓ Limpieza completada
+
+Registros originales: 10,000
+Registros eliminados: 26
+Registros finales: 9,974
+
+Valores imputados:
+- salario_mensual: 15
+- puntaje_datacredito: 8
+- ciudad: 3
+
+Outliers tratados: 35
+</pre></div>
+</div>
+</section>
+</section>
+<section id="mapeo-de-columnas">
+<h2>Mapeo de Columnas<a class="headerlink" href="#mapeo-de-columnas" title="Link to this heading"></a></h2>
+<p>Si tus columnas tienen nombres diferentes, usa el mapeador:</p>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Tus Columnas          →    Columnas del Sistema
+─────────────────────────────────────────────────
+age                   →    edad
+monthly_salary        →    salario_mensual
+credit_score          →    puntaje_datacredito
+property_value        →    valor_inmueble
+loan_amount           →    monto_credito
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Truco</p>
+<p>El sistema intenta detectar automáticamente las correspondencias.</p>
+</div>
+</section>
+<section id="guardar-datos-procesados">
+<h2>Guardar Datos Procesados<a class="headerlink" href="#guardar-datos-procesados" title="Link to this heading"></a></h2>
+<p>Una vez validados y limpiados:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[💾 Guardar Datos Procesados]
+</pre></div>
+</div>
+<p>Opciones de guardado:</p>
+<ul class="simple">
+<li><p><strong>En memoria</strong>: Para uso inmediato en la sesión</p></li>
+<li><p><strong>CSV</strong>: Para exportar y compartir</p></li>
+<li><p><strong>Parquet</strong>: Para almacenamiento eficiente</p></li>
+</ul>
+</section>
+<section id="casos-de-uso">
+<h2>Casos de Uso<a class="headerlink" href="#casos-de-uso" title="Link to this heading"></a></h2>
+<p><strong>Caso 1: Datos de Producción</strong></p>
+<p>Cargar datos reales de tu banco para análisis.</p>
+<p><strong>Caso 2: Datos de Terceros</strong></p>
+<p>Importar datasets de competencias o investigación.</p>
+<p><strong>Caso 3: Combinar con Sintéticos</strong></p>
+<p>Mezclar datos reales con sintéticos para aumentar volumen.</p>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<p><strong>Problema: «Archivo muy grande»</strong></p>
+<p><strong>Solución:</strong></p>
+<ul class="simple">
+<li><p>Divide el archivo en partes más pequeñas</p></li>
+<li><p>Usa formato Parquet (más comprimido)</p></li>
+<li><p>Filtra datos antes de cargar</p></li>
+</ul>
+<p><strong>Problema: «Encoding error»</strong></p>
+<p><strong>Solución:</strong></p>
+<ul class="simple">
+<li><p>Guarda el archivo como UTF-8</p></li>
+<li><p>Usa Excel para convertir encoding</p></li>
+<li><p>Especifica encoding manualmente</p></li>
+</ul>
+<p><strong>Problema: «Columnas no reconocidas»</strong></p>
+<p><strong>Solución:</strong></p>
+<ul class="simple">
+<li><p>Usa el mapeador de columnas</p></li>
+<li><p>Renombra columnas en tu archivo</p></li>
+<li><p>Consulta la documentación de variables requeridas</p></li>
+</ul>
+</section>
+<section id="proximos-pasos">
+<h2>Próximos Pasos<a class="headerlink" href="#proximos-pasos" title="Link to this heading"></a></h2>
+<p>Con tus datos cargados y validados:</p>
+<ol class="arabic simple">
+<li><p><strong>Analizar</strong>: <a class="reference internal" href="04_analisis_descriptivo.html"><span class="doc">4. Análisis Descriptivo</span></a></p></li>
+<li><p><strong>Crear características</strong>: <a class="reference internal" href="05_ingenieria_caracteristicas.html"><span class="doc">5. Ingeniería de Características</span></a></p></li>
+<li><p><strong>Entrenar modelos</strong>: <a class="reference internal" href="07_rbm.html"><span class="doc">7. Máquina de Boltzmann Restringida (RBM)</span></a></p></li>
+</ol>
+<p>¡Tus datos están listos para análisis! 🎉</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="02_generar_datos.html" class="btn btn-neutral float-left" title="2. Generar Datos Sintéticos" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="04_analisis_descriptivo.html" class="btn btn-neutral float-right" title="4. Análisis Descriptivo" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, Andrés Fernando Gómez Rojas &amp; Carlos Andrés Gómez Vasco. Software Libre bajo Licencia MIT.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

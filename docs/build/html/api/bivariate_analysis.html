@@ -1,0 +1,411 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bivariate_analysis &mdash; documentación de Sistema de Riesgo Crediticio con RBM - 1.0.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="feature_engineering" href="feature_engineering.html" />
+    <link rel="prev" title="univariate_analysis" href="univariate_analysis.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sistema de Riesgo Crediticio con RBM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contenidos:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">Manual de Usuario</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Módulos del Sistema</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#modulos-principales">Módulos Principales</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../modules.html#referencia-completa-de-la-api">Referencia Completa de la API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="generar_datos.html">generar_datos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_processor.html">data_processor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="univariate_analysis.html">univariate_analysis</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">bivariate_analysis</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#descripcion-general">Descripción General</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#clases-principales">Clases Principales</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-de-analisis">Métodos de Análisis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metodos-de-visualizacion">Métodos de Visualización</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#funciones-de-renderizado">Funciones de Renderizado</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ejemplo-completo">Ejemplo Completo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ver-tambien">Ver también</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="feature_engineering.html">feature_engineering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clustering.html">clustering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbm_model.html">rbm_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="supervised_models.html">supervised_models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="prediction.html">prediction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="educational_rag.html">educational_rag</a></li>
+<li class="toctree-l3"><a class="reference internal" href="retraining.html">retraining</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#arquitectura-del-sistema">Arquitectura del Sistema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#flujo-de-datos">Flujo de Datos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#descripcion-de-modulos">Descripción de Módulos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#configuracion-avanzada">Configuración Avanzada</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#integracion-con-otros-sistemas">Integración con Otros Sistemas</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">Referencia de la API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sistema de Riesgo Crediticio con RBM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">Módulos del Sistema</a></li>
+      <li class="breadcrumb-item active">bivariate_analysis</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/bivariate_analysis.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="bivariate-analysis">
+<h1>bivariate_analysis<a class="headerlink" href="#bivariate-analysis" title="Link to this heading"></a></h1>
+<section id="descripcion-general">
+<h2>Descripción General<a class="headerlink" href="#descripcion-general" title="Link to this heading"></a></h2>
+<p>Módulo de análisis bivariado para estudiar relaciones entre pares de variables. Incluye correlaciones, tablas de contingencia y tests estadísticos.</p>
+</section>
+<section id="clases-principales">
+<h2>Clases Principales<a class="headerlink" href="#clases-principales" title="Link to this heading"></a></h2>
+<section id="bivariateanalyzer">
+<h3>BivariateAnalyzer<a class="headerlink" href="#bivariateanalyzer" title="Link to this heading"></a></h3>
+</section>
+</section>
+<section id="metodos-de-analisis">
+<h2>Métodos de Análisis<a class="headerlink" href="#metodos-de-analisis" title="Link to this heading"></a></h2>
+<section id="analyze-numeric-vs-numeric">
+<h3>analyze_numeric_vs_numeric<a class="headerlink" href="#analyze-numeric-vs-numeric" title="Link to this heading"></a></h3>
+<p>Análisis de relación entre dos variables numéricas.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">var1</span></code> (str): Primera variable numérica</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">var2</span></code> (str): Segunda variable numérica</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Diccionario con correlaciones y regresión lineal</p>
+</dd>
+</dl>
+<p><strong>Análisis incluidos:</strong></p>
+<ul class="simple">
+<li><p><strong>Correlación de Pearson:</strong> Relación lineal</p></li>
+<li><p><strong>Correlación de Spearman:</strong> Relación monotónica</p></li>
+<li><p><strong>Correlación de Kendall:</strong> Relación ordinal</p></li>
+<li><p><strong>Regresión lineal:</strong> Pendiente, intercepto, R², p-valor</p></li>
+</ul>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">analyze_numeric_vs_numeric</span><span class="p">(</span><span class="s1">&#39;dti&#39;</span><span class="p">,</span> <span class="s1">&#39;puntaje_datacredito&#39;</span><span class="p">)</span>
+
+<span class="c1"># Correlaciones</span>
+<span class="n">pearson_r</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;correlations&#39;</span><span class="p">][</span><span class="s1">&#39;pearson&#39;</span><span class="p">][</span><span class="s1">&#39;r&#39;</span><span class="p">]</span>
+<span class="n">pearson_p</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;correlations&#39;</span><span class="p">][</span><span class="s1">&#39;pearson&#39;</span><span class="p">][</span><span class="s1">&#39;p_value&#39;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Correlación Pearson: r=</span><span class="si">{</span><span class="n">pearson_r</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, p=</span><span class="si">{</span><span class="n">pearson_p</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Regresión</span>
+<span class="n">slope</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;linear_regression&#39;</span><span class="p">][</span><span class="s1">&#39;slope&#39;</span><span class="p">]</span>
+<span class="n">r_squared</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;linear_regression&#39;</span><span class="p">][</span><span class="s1">&#39;r_squared&#39;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pendiente: </span><span class="si">{</span><span class="n">slope</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R²: </span><span class="si">{</span><span class="n">r_squared</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="analyze-categorical-vs-categorical">
+<h3>analyze_categorical_vs_categorical<a class="headerlink" href="#analyze-categorical-vs-categorical" title="Link to this heading"></a></h3>
+<p>Análisis de relación entre dos variables categóricas.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">var1</span></code> (str): Primera variable categórica</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">var2</span></code> (str): Segunda variable categórica</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Diccionario con tabla de contingencia y tests</p>
+</dd>
+</dl>
+<p><strong>Análisis incluidos:</strong></p>
+<ul class="simple">
+<li><p><strong>Tabla de contingencia:</strong> Frecuencias cruzadas</p></li>
+<li><p><strong>Test Chi-cuadrado:</strong> Independencia estadística</p></li>
+<li><p><strong>V de Cramér:</strong> Fuerza de asociación (0-1)</p></li>
+</ul>
+<dl class="simple">
+<dt><strong>Interpretación V de Cramér:</strong></dt><dd><ul class="simple">
+<li><p>&lt; 0.1: Asociación muy débil</p></li>
+<li><p>0.1-0.3: Asociación débil</p></li>
+<li><p>0.3-0.5: Asociación moderada</p></li>
+<li><p>&gt; 0.5: Asociación fuerte</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">analyze_categorical_vs_categorical</span><span class="p">(</span>
+    <span class="s1">&#39;nivel_educacion&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;nivel_riesgo&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># Test Chi-cuadrado</span>
+<span class="n">chi2</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;chi2_test&#39;</span><span class="p">][</span><span class="s1">&#39;statistic&#39;</span><span class="p">]</span>
+<span class="n">p_value</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;chi2_test&#39;</span><span class="p">][</span><span class="s1">&#39;p_value&#39;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Chi²: </span><span class="si">{</span><span class="n">chi2</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, p-value: </span><span class="si">{</span><span class="n">p_value</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">p_value</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Existe asociación significativa&quot;</span><span class="p">)</span>
+
+<span class="c1"># V de Cramér</span>
+<span class="n">cramers_v</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;cramers_v&#39;</span><span class="p">]</span>
+<span class="n">strength</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;association_strength&#39;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;V de Cramér: </span><span class="si">{</span><span class="n">cramers_v</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">strength</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="analyze-numeric-vs-categorical">
+<h3>analyze_numeric_vs_categorical<a class="headerlink" href="#analyze-numeric-vs-categorical" title="Link to this heading"></a></h3>
+<p>Análisis de relación entre variable numérica y categórica.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">numeric_var</span></code> (str): Variable numérica</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">categorical_var</span></code> (str): Variable categórica</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Diccionario con estadísticas por grupo y tests</p>
+</dd>
+</dl>
+<p><strong>Análisis incluidos:</strong></p>
+<ul class="simple">
+<li><p><strong>Estadísticas por grupo:</strong> Media, mediana, desv. estándar por categoría</p></li>
+<li><p><strong>Test ANOVA:</strong> Diferencias entre medias (paramétrico)</p></li>
+<li><p><strong>Test Kruskal-Wallis:</strong> Diferencias entre grupos (no paramétrico)</p></li>
+</ul>
+<p><strong>Ejemplo:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">analyze_numeric_vs_categorical</span><span class="p">(</span>
+    <span class="s1">&#39;salario_mensual&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;nivel_riesgo&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># Estadísticas por grupo</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;grouped_statistics&#39;</span><span class="p">])</span>
+
+<span class="c1"># Test ANOVA</span>
+<span class="n">f_stat</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;anova_test&#39;</span><span class="p">][</span><span class="s1">&#39;f_statistic&#39;</span><span class="p">]</span>
+<span class="n">p_value</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;anova_test&#39;</span><span class="p">][</span><span class="s1">&#39;p_value&#39;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;F-estadístico: </span><span class="si">{</span><span class="n">f_stat</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;P-valor: </span><span class="si">{</span><span class="n">p_value</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">p_value</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Diferencias significativas entre grupos&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="metodos-de-visualizacion">
+<h2>Métodos de Visualización<a class="headerlink" href="#metodos-de-visualizacion" title="Link to this heading"></a></h2>
+<section id="create-correlation-matrix">
+<h3>create_correlation_matrix<a class="headerlink" href="#create-correlation-matrix" title="Link to this heading"></a></h3>
+<p>Crea matriz de correlación interactiva.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">method</span></code> (str): Método de correlación (“pearson”, “spearman”, “kendall”)</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Figura de Plotly con heatmap</p>
+</dd>
+</dl>
+</section>
+<section id="create-scatter-plot">
+<h3>create_scatter_plot<a class="headerlink" href="#create-scatter-plot" title="Link to this heading"></a></h3>
+<p>Crea gráfico de dispersión con línea de regresión.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">var1</span></code> (str): Variable para eje X</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">var2</span></code> (str): Variable para eje Y</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">color_var</span></code> (str, optional): Variable para colorear puntos</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Figura de Plotly</p>
+</dd>
+</dl>
+</section>
+<section id="create-contingency-heatmap">
+<h3>create_contingency_heatmap<a class="headerlink" href="#create-contingency-heatmap" title="Link to this heading"></a></h3>
+<p>Crea heatmap de tabla de contingencia.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">var1</span></code> (str): Primera variable categórica</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">var2</span></code> (str): Segunda variable categórica</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Figura de Plotly</p>
+</dd>
+</dl>
+</section>
+<section id="create-grouped-boxplot">
+<h3>create_grouped_boxplot<a class="headerlink" href="#create-grouped-boxplot" title="Link to this heading"></a></h3>
+<p>Crea boxplot agrupado por categoría.</p>
+<dl class="simple">
+<dt><strong>Parameters:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">numeric_var</span></code> (str): Variable numérica</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">categorical_var</span></code> (str): Variable categórica</p></li>
+</ul>
+</dd>
+<dt><strong>Returns:</strong></dt><dd><p>Figura de Plotly</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="funciones-de-renderizado">
+<h2>Funciones de Renderizado<a class="headerlink" href="#funciones-de-renderizado" title="Link to this heading"></a></h2>
+<section id="render-bivariate-analysis">
+<h3>render_bivariate_analysis<a class="headerlink" href="#render-bivariate-analysis" title="Link to this heading"></a></h3>
+<p>Renderiza el módulo completo de análisis bivariado en Streamlit.</p>
+<dl class="simple">
+<dt><strong>Funcionalidades:</strong></dt><dd><ul class="simple">
+<li><p>Matriz de correlación interactiva</p></li>
+<li><p>Análisis numérica vs numérica</p></li>
+<li><p>Análisis categórica vs categórica</p></li>
+<li><p>Análisis numérica vs categórica</p></li>
+<li><p>Visualizaciones interactivas</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="render-bivariate-module">
+<h3>render_bivariate_module<a class="headerlink" href="#render-bivariate-module" title="Link to this heading"></a></h3>
+<p>Función principal para renderizar el módulo bivariado.</p>
+</section>
+</section>
+<section id="ejemplo-completo">
+<h2>Ejemplo Completo<a class="headerlink" href="#ejemplo-completo" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.bivariate_analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">BivariateAnalyzer</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Cargar datos</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;datos_credito_hipotecario_realista.csv&quot;</span><span class="p">)</span>
+
+<span class="c1"># Crear analizador</span>
+<span class="n">analyzer</span> <span class="o">=</span> <span class="n">BivariateAnalyzer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># 1. Matriz de correlación</span>
+<span class="n">fig_corr</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">create_correlation_matrix</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;pearson&#39;</span><span class="p">)</span>
+<span class="n">fig_corr</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># 2. Analizar edad vs salario</span>
+<span class="n">results_num</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">analyze_numeric_vs_numeric</span><span class="p">(</span><span class="s1">&#39;edad&#39;</span><span class="p">,</span> <span class="s1">&#39;salario_mensual&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Correlación: </span><span class="si">{</span><span class="n">results_num</span><span class="p">[</span><span class="s1">&#39;correlations&#39;</span><span class="p">][</span><span class="s1">&#39;pearson&#39;</span><span class="p">][</span><span class="s1">&#39;r&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 3. Scatter plot</span>
+<span class="n">fig_scatter</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">create_scatter_plot</span><span class="p">(</span>
+    <span class="s1">&#39;edad&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;salario_mensual&#39;</span><span class="p">,</span>
+    <span class="n">color_var</span><span class="o">=</span><span class="s1">&#39;nivel_riesgo&#39;</span>
+<span class="p">)</span>
+<span class="n">fig_scatter</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># 4. Analizar educación vs riesgo</span>
+<span class="n">results_cat</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">analyze_categorical_vs_categorical</span><span class="p">(</span>
+    <span class="s1">&#39;nivel_educacion&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;nivel_riesgo&#39;</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;V de Cramér: </span><span class="si">{</span><span class="n">results_cat</span><span class="p">[</span><span class="s1">&#39;cramers_v&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 5. Analizar salario por tipo de empleo</span>
+<span class="n">results_mixed</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">analyze_numeric_vs_categorical</span><span class="p">(</span>
+    <span class="s1">&#39;salario_mensual&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;tipo_empleo&#39;</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ANOVA p-value: </span><span class="si">{</span><span class="n">results_mixed</span><span class="p">[</span><span class="s1">&#39;anova_test&#39;</span><span class="p">][</span><span class="s1">&#39;p_value&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="ver-tambien">
+<h2>Ver también<a class="headerlink" href="#ver-tambien" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="univariate_analysis.html"><span class="doc">univariate_analysis</span></a> - Análisis univariado</p></li>
+<li><p><a class="reference internal" href="feature_engineering.html"><span class="doc">feature_engineering</span></a> - Ingeniería de características</p></li>
+<li><p><a class="reference internal" href="clustering.html"><span class="doc">clustering</span></a> - Análisis de clustering</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="univariate_analysis.html" class="btn btn-neutral float-left" title="univariate_analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="feature_engineering.html" class="btn btn-neutral float-right" title="feature_engineering" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, Andrés Fernando Gómez Rojas &amp; Carlos Andrés Gómez Vasco. Software Libre bajo Licencia MIT.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
