@@ -2,44 +2,41 @@
 # docker-compose.yml — App de Riesgo Crediticio con RBM y RAG Educativo
 # ============================================================================
 # Uso:
-#   1. cp .env.example .env        (y pon tu GROQ_API_KEY dentro)
+#   1. cp .env.example .env        (y pon tu GROQ_API_KEY / GROQ_API_KEYS)
 #   2. docker compose up --build
-#   3. App   → http://localhost:8501
-#      Docs  → http://localhost:8502
+#   3. App   → http://localhost:1111
+#      Docs  → http://localhost:2222
 # ============================================================================
 
 services:
-  # ----- Aplicación Streamlit -----------------------------------------------
+  # ----- Aplicación Streamlit (CONSTRUYE la imagen) -------------------------
   app:
     build: .
     image: appfisica:latest
     container_name: appfisica
     ports:
-      - "8501:8501"
+      - "1111:8501"
     # Pasa TODAS las variables del .env al contenedor (incluidas N API keys).
-    # Para añadir más keys solo editas .env, no este archivo.
     env_file:
       - .env
     volumes:
-      # Persisten en el host: datos generados, modelos entrenados y BD vectorial.
       - ./data:/app/data
       - ./models:/app/models
       - ./chroma_rbm_db:/app/chroma_rbm_db
     restart: unless-stopped
 
-  # ----- Documentación Sphinx (sitio estático) ------------------------------
+  # ----- Documentación Sphinx (REUTILIZA la imagen, NO la reconstruye) ------
   docs:
-    build: .
-    image: appfisica:latest        # reutiliza la misma imagen (build cacheado)
+    image: appfisica:latest        # usa la imagen que construye 'app'
     container_name: appfisica-docs
+    depends_on:
+      - app                        # se construye/levanta después de 'app'
     working_dir: /app
     environment:
-      # Necesario para que autodoc importe 'app' y 'src.*' al construir la doc.
-      PYTHONPATH: /app
-    # Anula el entrypoint de la app: aquí no se generan secrets.
+      PYTHONPATH: /app             # para que autodoc importe 'app' y 'src.*'
     entrypoint: ["sh", "-c"]
     command:
       - "sphinx-build -b html docs/source docs/build/html; python -m http.server 8000 --directory docs/build/html"
     ports:
-      - "8502:8000"
+      - "2222:8000"
     restart: unless-stopped

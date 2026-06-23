@@ -23,8 +23,8 @@ a mano: todo corre dentro de contenedores. Levanta **dos servicios**:
 
 | Servicio | URL |
 |----------|-----|
-| App (Streamlit) | http://localhost:8501 |
-| Documentación (Sphinx) | http://localhost:8502 |
+| App (Streamlit) | http://localhost:1111 |
+| Documentación (Sphinx) | http://localhost:2222 |
 
 ```bash
 # 1. Clonar
@@ -330,7 +330,7 @@ python test_rag_simple.py
 cd docs/
 make html
 
-# O servirla con Docker (puerto 8502)
+# O servirla con Docker (puerto 2222)
 docker compose up docs
 ```
 

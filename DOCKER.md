@@ -7,8 +7,8 @@ Levanta **dos servicios**:
 
 | Servicio | Qué es | URL |
 |----------|--------|-----|
-| `app`    | La aplicación Streamlit | http://localhost:8501 |
-| `docs`   | La documentación Sphinx (sitio estático) | http://localhost:8502 |
+| `app`    | La aplicación Streamlit | http://localhost:1111 |
+| `docs`   | La documentación Sphinx (sitio estático) | http://localhost:2222 |
 
 ## Requisitos
 - Docker y Docker Compose ([Docker Desktop](https://www.docker.com/products/docker-desktop/) en Windows/Mac, o `docker` + plugin compose en Linux).
@@ -24,8 +24,8 @@ cp .env.example .env
 docker compose up --build
 
 # 3. Abre:
-#    App  → http://localhost:8501
-#    Docs → http://localhost:8502
+#    App  → http://localhost:1111
+#    Docs → http://localhost:2222
 ```
 
 Detener: `Ctrl+C`. En segundo plano: `docker compose up -d --build` y luego `docker compose down`.
