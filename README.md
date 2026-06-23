@@ -16,11 +16,37 @@ Sistema integral de análisis y predicción de riesgo crediticio hipotecario par
 - 🎓 **Asistente RAG educativo** con papers científicos sobre RBMs
 - 📚 **Documentación completa** con Sphinx
 
-## 🚀 Instalación Rápida
+## 🐳 Instalación con Docker (recomendada)
+
+La forma más rápida y reproducible. No necesitas instalar Python ni las dependencias
+a mano: todo corre dentro de contenedores. Levanta **dos servicios**:
+
+| Servicio | URL |
+|----------|-----|
+| App (Streamlit) | http://localhost:8501 |
+| Documentación (Sphinx) | http://localhost:8502 |
+
+```bash
+# 1. Clonar
+git clone https://github.com/fernandogomez0621/AppFIsica.git
+cd AppFIsica
+
+# 2. Configurar la(s) API key(s) de Groq
+cp .env.example .env
+#    edita .env y pon tu clave (ver "Configurar API Keys" más abajo)
+
+# 3. Construir y levantar
+docker compose up --build
+```
+
+> 💡 La app soporta **N API keys con failover automático**: si una falla o se queda
+> sin cuota, prueba la siguiente. Más detalles en el `.env.example` y en `DOCKER.md`.
+
+## 🚀 Instalación Manual (alternativa)
 
 ### 1. Clonar el repositorio
 ```bash
-git clone <tu-repositorio>
+git clone https://github.com/fernandogomez0621/AppFIsica.git
 cd AppFIsica
 ```
 
@@ -38,10 +64,29 @@ pip install -r requirements.txt
 ```
 
 ### 4. Configurar API Keys
-Crea el archivo `.streamlit/secrets.toml` (ya incluido):
-```toml
-GROQ_API_KEY = "tu-api-key-de-groq"
+Genera tus claves en [console.groq.com/keys](https://console.groq.com/keys) y
+configúralas de **una** de estas formas:
+
+**Opción A — variables de entorno / archivo `.env`** (recomendada, soporta varias keys):
+```bash
+# Una sola clave:
+GROQ_API_KEY=gsk_tu_clave
+
+# O varias con failover (lista separada por comas, en UNA línea):
+GROQ_API_KEYS=gsk_clave1,gsk_clave2,gsk_clave3
 ```
+
+**Opción B — `.streamlit/secrets.toml`**:
+```toml
+GROQ_API_KEY = "gsk_tu_clave"
+
+[rag]
+model_name = "openai/gpt-oss-120b"
+```
+
+> ⚠️ Nunca subas tus claves al repositorio. El archivo `.env` y
+> `.streamlit/secrets.toml` están en `.gitignore` por seguridad. Usa
+> `.env.example` como plantilla.
 
 ### 5. Ejecutar la aplicación
 ```bash
@@ -57,36 +102,35 @@ AppFIsica/
 ├── requirements.txt                # 📦 Dependencias
 ├── README.md                       # 📖 Este archivo
 │
+├── Dockerfile                      # 🐳 Imagen de la app
+├── docker-compose.yml              # 🐳 Orquestación (app + docs)
+├── docker-entrypoint.sh            # 🐳 Genera secrets desde variables
+├── .dockerignore
+├── .env.example                    # 🔑 Plantilla de variables (sin claves)
+├── DOCKER.md                       # 📘 Guía de despliegue con Docker
+│
 ├── .streamlit/
-│   └── secrets.toml               # 🔐 API keys
+│   └── secrets.toml               # 🔐 API keys (ignorado por git)
 │
 ├── src/                           # 💻 Código fuente modularizado
-│   ├── __init__.py
 │   ├── generar_datos.py           # 📊 Generación de datos sintéticos
 │   ├── data_processor.py          # 🔧 Carga y validación de datos
 │   ├── univariate_analysis.py     # 📈 Análisis univariado
+│   ├── bivariate_analysis.py      # 📈 Análisis bivariado
+│   ├── feature_engineering.py     # ⚙️ Ingeniería de características
+│   ├── clustering.py              # 🎯 Clustering
 │   ├── rbm_model.py               # ⚡ Máquina de Boltzmann Restringida
-│   ├── educational_rag.py         # 🎓 Sistema RAG educativo
-│   └── libros.py                  # 📚 Descarga automática de papers
+│   ├── supervised_models.py       # 🤖 Modelos supervisados
+│   ├── prediction.py              # 🔮 Predicción
+│   ├── retraining.py              # 🔁 Reentrenamiento
+│   └── educational_rag.py         # 🎓 Sistema RAG educativo
 │
-├── data/                          # 💾 Datos
-│   ├── raw/                       # Datos originales
-│   ├── processed/                 # Datos procesados
-│   └── synthetic/                 # Datos sintéticos
-│
-├── models/                        # 🧠 Modelos entrenados
-│   ├── rbm/                       # Modelos RBM
-│   ├── supervised/                # Modelos supervisados
-│   └── versions/                  # Versionado de modelos
-│
+├── data/                          # 💾 Datos (volumen en Docker)
+├── models/                        # 🧠 Modelos entrenados (volumen en Docker)
 ├── articles/                      # 📚 Papers científicos (PDFs)
-│   └── README.md                  # Instrucciones para agregar papers
-│
 ├── chroma_rbm_db/                 # 🗄️ Base de datos vectorial
-│
-├── tests/                         # 🧪 Tests unitarios
-│
-└── venv_fisica/                   # 🐍 Ambiente virtual
+├── docs/                          # 📘 Documentación Sphinx
+└── tests/                         # 🧪 Tests unitarios
 ```
 
 ## 🎮 Guía de Uso
@@ -116,7 +160,7 @@ AppFIsica/
 - Extrae características latentes para modelos supervisados
 
 ### 5. 🎓 Aprender sobre RBMs
-- Chat interactivo con **Groq AI** (Llama 3.3 70B)
+- Chat interactivo con **Groq AI** (GPT-OSS 120B)
 - Sube papers científicos en PDF
 - Haz preguntas sobre Máquinas de Boltzmann
 - Obtén respuestas basadas en literatura científica
@@ -177,11 +221,15 @@ E(v,h) = -∑ᵢ aᵢvᵢ - ∑ⱼ bⱼhⱼ - ∑ᵢⱼ vᵢWᵢⱼhⱼ
 ## 🎓 Sistema RAG Educativo
 
 ### Características:
-- 🤖 **Groq AI** con Llama 3.3 70B parámetros
+- 🤖 **Groq AI** con el modelo **GPT-OSS 120B** (con failover entre N keys)
 - 📚 **Base de conocimiento** con papers científicos
 - 🔍 **Búsqueda semántica** con embeddings vectoriales
 - 💬 **Chat interactivo** con citación de fuentes
 - 📤 **Carga automática** de PDFs
+
+> ℹ️ El modelo `llama-3.3-70b-versatile` fue deprecado por Groq (jun-2026);
+> el proyecto migró a `openai/gpt-oss-120b`. Puedes cambiarlo en la sección
+> `[rag]` de `secrets.toml` o vía el entrypoint de Docker.
 
 ### Papers Incluidos:
 - Hinton (2002) - Contrastive Divergence
@@ -200,14 +248,13 @@ E(v,h) = -∑ᵢ aᵢvᵢ - ∑ⱼ bⱼhⱼ - ∑ᵢⱼ vᵢWᵢⱼhⱼ
 ### Machine Learning:
 - **Scikit-learn** - Modelos tradicionales
 - **XGBoost/LightGBM** - Gradient boosting
-- **TensorFlow** - Deep learning
-- **Implementación custom** - RBM desde cero
+- **Implementación custom** - RBM desde cero (NumPy)
 
 ### RAG System:
 - **LangChain** - Framework RAG
 - **ChromaDB** - Base de datos vectorial
 - **HuggingFace** - Embeddings locales
-- **Groq API** - LLM de alta velocidad
+- **Groq API** - LLM de alta velocidad (GPT-OSS 120B)
 - **PyMuPDF** - Procesamiento de PDFs
 
 ### Data Processing:
@@ -259,6 +306,7 @@ k_cd = 1               # Pasos de Contrastive Divergence
 
 ### Configuración RAG:
 ```python
+model_name = "openai/gpt-oss-120b"  # Modelo LLM (vía Groq)
 chunk_size = 1500       # Tamaño de chunks de texto
 chunk_overlap = 300     # Solapamiento entre chunks
 top_k_results = 6       # Documentos más relevantes
@@ -271,8 +319,8 @@ temperature = 0.3       # Creatividad del LLM
 # Ejecutar tests
 pytest tests/
 
-# Con cobertura
-pytest tests/ --cov=src/
+# Prueba rápida del RAG
+python test_rag_simple.py
 ```
 
 ## 📚 Documentación
@@ -281,6 +329,9 @@ pytest tests/ --cov=src/
 # Generar documentación con Sphinx
 cd docs/
 make html
+
+# O servirla con Docker (puerto 8502)
+docker compose up docs
 ```
 
 ## 🤝 Contribuir
@@ -304,9 +355,7 @@ Este proyecto está bajo la Licencia MIT. Ver `LICENSE` para más detalles.
 
 ## 📞 Soporte
 
-- 📧 Email: soporte@sistema-fisica.com
-- 🐛 Issues: [GitHub Issues](https://github.com/tu-repo/issues)
-- 📖 Docs: [Documentación completa](https://tu-repo.github.io/docs)
+- 🐛 Issues: [GitHub Issues](https://github.com/fernandogomez0621/AppFIsica/issues)
 
 ---
 
