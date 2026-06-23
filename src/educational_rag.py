@@ -12,6 +12,7 @@ Versión: 1.0.0
 
 import streamlit as st
 import os
+import re
 import json
 from pathlib import Path
 from typing import List, Dict, Optional
@@ -430,9 +431,17 @@ class EducationalRAG:
             ])
             
             # Crear prompt
-            system_prompt = """Eres un asistente educativo experto en Máquinas de Boltzmann Restringidas (RBMs) 
-y Deep Learning. Tu objetivo es explicar conceptos de manera clara y pedagógica, usando los papers 
-científicos como referencia. Siempre proporciona explicaciones detalladas pero accesibles."""
+            system_prompt = r"""Eres un asistente educativo experto en Máquinas de Boltzmann Restringidas (RBMs)
+y Deep Learning. Tu objetivo es explicar conceptos de manera clara y pedagógica, usando los papers
+científicos como referencia. Siempre proporciona explicaciones detalladas pero accesibles.
+
+FORMATO DE ECUACIONES (MUY IMPORTANTE):
+- Escribe TODA expresión matemática en LaTeX.
+- Para fórmulas EN LÍNEA usa un solo signo de dólar: $W_{ij}$, $\mathbf{v}$, $a_i$.
+- Para fórmulas en BLOQUE (centradas, en su propia línea) usa dobles dólares:
+  $$E(\mathbf{v},\mathbf{h}) = -\mathbf{a}^{\top}\mathbf{v} - \mathbf{b}^{\top}\mathbf{h} - \mathbf{v}^{\top}W\mathbf{h}$$
+- NUNCA uses corchetes [ ... ] ni paréntesis ( ... ) como delimitadores de ecuaciones.
+- Los paréntesis y corchetes solo se usan para texto normal, no para matemáticas."""
             
             user_prompt = f"""Basándote en los siguientes fragmentos de papers científicos, responde la pregunta:
 
@@ -483,6 +492,38 @@ Por favor proporciona una respuesta clara, detallada y educativa. Si es relevant
         
         except Exception as e:
             return f"❌ Error generando respuesta: {e}"
+
+
+def _format_response_math(text: str) -> str:
+    """Convierte delimitadores LaTeX a los que renderiza Streamlit ($ y $$).
+
+    Red de seguridad por si el modelo usa [ ... ], \\[ \\], \\( \\) o ( ... )
+    en vez de $ / $$. Es conservador: los paréntesis/corchetes "desnudos" solo
+    se convierten cuando su contenido parece LaTeX (contiene '\\'), para no tocar
+    paréntesis de texto normal como "(RBM)".
+    """
+    if not text:
+        return text
+
+    # 1) Delimitadores LaTeX escapados estándar:  \[ \] -> $$ ,  \( \) -> $
+    text = re.sub(r'\\\[\s*(.+?)\s*\\\]',
+                  lambda m: f"\n$$\n{m.group(1).strip()}\n$$\n", text, flags=re.DOTALL)
+    text = re.sub(r'\\\(\s*(.+?)\s*\\\)',
+                  lambda m: f"${m.group(1).strip()}$", text, flags=re.DOTALL)
+
+    # 2) Bloques con corchetes "desnudos" que contienen LaTeX:  [ ... ] -> $$
+    text = re.sub(r'\[\s*([^\[\]]*?\\[^\[\]]*?)\s*\]',
+                  lambda m: f"\n$$\n{m.group(1).strip()}\n$$\n", text, flags=re.DOTALL)
+
+    # 3) Paréntesis "desnudos" con LaTeX:  ( \mathbf{v} ) / ( W_{ij} ) -> $...$
+    #    Se activa si el contenido tiene señales LaTeX (\\ _ ^ { }); así no toca
+    #    texto normal como "(RBM)" o "(por sus siglas)".
+    #    Solo FUERA de regiones ya delimitadas con $ o $$ (para no romperlas).
+    partes = re.split(r'(\$\$.*?\$\$|\$[^$]*?\$)', text, flags=re.DOTALL)
+    for i in range(0, len(partes), 2):          # índices pares = texto normal
+        partes[i] = re.sub(r'\(\s*([^()]*?[\\_^{}][^()]*?)\s*\)',
+                           lambda m: f"${m.group(1).strip()}$", partes[i], flags=re.DOTALL)
+    return ''.join(partes)
 
 
 def render_educational_rag_module():
@@ -822,7 +863,7 @@ GROQ_API_KEY = "tu_api_key_aqui"
             
             # Mostrar respuesta
             st.subheader("💡 Respuesta")
-            st.markdown(response)
+            st.markdown(_format_response_math(response))
             
             # Guardar en historial
             if 'chat_history' not in st.session_state:
@@ -842,7 +883,7 @@ GROQ_API_KEY = "tu_api_key_aqui"
         for i, item in enumerate(reversed(st.session_state.chat_history[-5:])):
             with st.expander(f"❓ {item['question'][:100]}..."):
                 st.markdown(f"**Pregunta:** {item['question']}")
-                st.markdown(f"**Respuesta:** {item['response']}")
+                st.markdown(f"**Respuesta:** {_format_response_math(item['response'])}")
                 st.caption(f"Basado en {item['context_count']} fragmentos de papers")
 
 

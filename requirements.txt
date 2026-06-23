@@ -4,8 +4,8 @@
 
 # Core Framework
 streamlit>=1.28.0
-pandas>=2.0.0
-numpy>=1.24.0
+pandas>=2.0.0,<2.3
+numpy>=1.24.0,<2.0          # <2.0: float() de arrays de 1 elemento (RBM)
 
 # Data Visualization
 plotly>=5.15.0
@@ -14,14 +14,14 @@ seaborn>=0.12.0
 altair>=5.0.0
 
 # Machine Learning
-scikit-learn>=1.3.0
+scikit-learn>=1.3.0,<1.4    # <1.4: liblinear OvR multiclase (modelos supervisados)
 xgboost>=1.7.0
 lightgbm>=4.0.0
 # tensorflow>=2.13.0  ── comentado: no se importa en el código (la RBM es NumPy puro)
 
 # Statistical Analysis
-scipy>=1.11.0
-statsmodels>=0.14.0
+scipy>=1.11.0,<1.13         # <1.13: kstest/norm.cdf (analisis univariado)
+statsmodels>=0.14.0,<0.15
 
 # Data Processing
 openpyxl>=3.1.0
