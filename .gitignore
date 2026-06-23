@@ -1,0 +1,30 @@
+# Secretos / claves API  ── ¡NUNCA subir!
+.streamlit/secrets.toml
+*.env
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Entornos virtuales
+venv/
+venv_fisica/
+env/
+.venv/
+
+# Bases de datos vectoriales generadas
+chroma_db/
+chroma_db_rag/
+chroma_rbm_db/
+
+# Documentación generada por Sphinx
+docs/build/
+
+# Sistema
+.DS_Store
+Thumbs.db

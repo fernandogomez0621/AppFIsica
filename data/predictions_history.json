@@ -1,0 +1,665 @@
+[
+  {
+    "timestamp": "2025-10-26T12:00:28.066435",
+    "model_used": "xgboost",
+    "prediction": "Alto",
+    "probabilities": {
+      "Alto": 0.5622627139091492,
+      "Bajo": 0.04961596056818962,
+      "Medio": 0.38812127709388733
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T20:12:41.545423",
+    "model_used": "xgboost",
+    "prediction": "Alto",
+    "probabilities": {
+      "Alto": 0.5622627139091492,
+      "Bajo": 0.04961596056818962,
+      "Medio": 0.38812127709388733
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T20:12:53.586214",
+    "model_used": "xgboost",
+    "prediction": "Alto",
+    "probabilities": {
+      "Alto": 0.5622627139091492,
+      "Bajo": 0.04961596056818962,
+      "Medio": 0.38812127709388733
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:00:10.863130",
+    "model_used": "xgboost",
+    "prediction": "Alto",
+    "probabilities": {
+      "Alto": 0.5622627139091492,
+      "Bajo": 0.04961596056818962,
+      "Medio": 0.38812127709388733
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 440.43445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:37:57.317760",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.005066323094069958,
+      "Bajo": 0.0448141023516655,
+      "Medio": 0.9501196146011353
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:38:16.243778",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.020493360236287117,
+      "Bajo": 0.047825392335653305,
+      "Medio": 0.931681215763092
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:38:24.958629",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.03313922882080078,
+      "Bajo": 0.047300584614276886,
+      "Medio": 0.9195601940155029
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:38:36.530506",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.025821520015597343,
+      "Bajo": 0.047855257987976074,
+      "Medio": 0.9263232350349426
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:40:20.487783",
+    "model_used": "xgboost",
+    "prediction": "Bajo",
+    "probabilities": {
+      "Alto": 0.004978990647941828,
+      "Bajo": 0.5321803689002991,
+      "Medio": 0.46284064650535583
+    },
+    "recommendation": "REVISAR MANUALMENTE",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:40:40.613477",
+    "model_used": "xgboost",
+    "prediction": "Bajo",
+    "probabilities": {
+      "Alto": 0.08631391823291779,
+      "Bajo": 0.6319890022277832,
+      "Medio": 0.2816971242427826
+    },
+    "recommendation": "REVISAR MANUALMENTE",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:42:13.171721",
+    "model_used": "xgboost",
+    "prediction": "Alto",
+    "probabilities": {
+      "Alto": 0.5165604948997498,
+      "Bajo": 0.04999914392828941,
+      "Medio": 0.43344035744667053
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:42:38.239533",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.021029606461524963,
+      "Bajo": 0.04784448444843292,
+      "Medio": 0.9311258792877197
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:42:51.715189",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.03743191808462143,
+      "Bajo": 0.11746484041213989,
+      "Medio": 0.8451032638549805
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:45:19.726352",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.03743191808462143,
+      "Bajo": 0.11746484041213989,
+      "Medio": 0.8451032638549805
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:46:17.021607",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.005066323094069958,
+      "Bajo": 0.0448141023516655,
+      "Medio": 0.9501196146011353
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:47:29.082710",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.005066323094069958,
+      "Bajo": 0.0448141023516655,
+      "Medio": 0.9501196146011353
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:47:41.333042",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.03313922882080078,
+      "Bajo": 0.047300584614276886,
+      "Medio": 0.9195601940155029
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:47:55.705398",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.025821520015597343,
+      "Bajo": 0.047855257987976074,
+      "Medio": 0.9263232350349426
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:51:04.980045",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.025821520015597343,
+      "Bajo": 0.047855257987976074,
+      "Medio": 0.9263232350349426
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:51:14.911452",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.03365997597575188,
+      "Bajo": 0.055810920894145966,
+      "Medio": 0.9105290770530701
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:51:25.567271",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.27923282980918884,
+      "Bajo": 0.1290157288312912,
+      "Medio": 0.5917514562606812
+    },
+    "recommendation": "REVISAR MANUALMENTE",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:52:05.483027",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.16216517984867096,
+      "Bajo": 0.09051786363124847,
+      "Medio": 0.7473169565200806
+    },
+    "recommendation": "REVISAR MANUALMENTE",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:52:17.491503",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.15209567546844482,
+      "Bajo": 0.08147791773080826,
+      "Medio": 0.7664264440536499
+    },
+    "recommendation": "REVISAR MANUALMENTE",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:53:59.924414",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.15209567546844482,
+      "Bajo": 0.08147791773080826,
+      "Medio": 0.7664264440536499
+    },
+    "recommendation": "REVISAR MANUALMENTE",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:54:18.146541",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.03957577422261238,
+      "Bajo": 0.07479274272918701,
+      "Medio": 0.8856314420700073
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:54:25.240409",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.03995741903781891,
+      "Bajo": 0.07551400363445282,
+      "Medio": 0.8845285773277283
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:54:44.466478",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.03995741903781891,
+      "Bajo": 0.07551400363445282,
+      "Medio": 0.8845285773277283
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:54:49.598256",
+    "model_used": "xgboost",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.21708206832408905,
+      "Bajo": 0.03604994714260101,
+      "Medio": 0.7468679547309875
+    },
+    "recommendation": "REVISAR MANUALMENTE",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 150,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:55:32.568049",
+    "model_used": "random_forest",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.06421428571428572,
+      "Bajo": 0.3611369047619048,
+      "Medio": 0.5746488095238095
+    },
+    "recommendation": "REVISAR MANUALMENTE",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 150,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:55:43.417858",
+    "model_used": "random_forest",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.100625,
+      "Bajo": 0.3840833333333334,
+      "Medio": 0.5152916666666666
+    },
+    "recommendation": "REVISAR MANUALMENTE",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 150,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:55:56.478135",
+    "model_used": "random_forest",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.04629166666666666,
+      "Bajo": 0.4580476190476191,
+      "Medio": 0.4956607142857143
+    },
+    "recommendation": "REVISAR MANUALMENTE",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:58:38.160662",
+    "model_used": "random_forest",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.08479166666666665,
+      "Bajo": 0.38039285714285725,
+      "Medio": 0.5348154761904761
+    },
+    "recommendation": "REVISAR MANUALMENTE",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T22:59:49.777301",
+    "model_used": "random_forest",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.07354166666666666,
+      "Bajo": 0.41544047619047625,
+      "Medio": 0.5110178571428571
+    },
+    "recommendation": "REVISAR MANUALMENTE",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 700,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T23:02:58.753259",
+    "model_used": "random_forest",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.053125,
+      "Bajo": 0.42029761904761914,
+      "Medio": 0.5265773809523808
+    },
+    "recommendation": "REVISAR MANUALMENTE",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 900,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T23:03:25.701665",
+    "model_used": "random_forest",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.053125,
+      "Bajo": 0.4352976190476191,
+      "Medio": 0.5115773809523809
+    },
+    "recommendation": "REVISAR MANUALMENTE",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 900,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T23:03:54.058962",
+    "model_used": "random_forest",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.053125,
+      "Bajo": 0.4289642857142858,
+      "Medio": 0.5179107142857142
+    },
+    "recommendation": "REVISAR MANUALMENTE",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 900,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T23:04:05.578616",
+    "model_used": "random_forest",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.058125,
+      "Bajo": 0.42029761904761914,
+      "Medio": 0.5215773809523809
+    },
+    "recommendation": "REVISAR MANUALMENTE",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 900,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T23:04:23.128240",
+    "model_used": "random_forest",
+    "prediction": "Medio",
+    "probabilities": {
+      "Alto": 0.053125,
+      "Bajo": 0.4352976190476191,
+      "Medio": 0.5115773809523809
+    },
+    "recommendation": "REVISAR MANUALMENTE",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 900,
+      "dti": 44.043445342784395
+    }
+  },
+  {
+    "timestamp": "2025-10-26T23:04:37.094845",
+    "model_used": "logistic",
+    "prediction": "Alto",
+    "probabilities": {
+      "Alto": 0.9999999795613095,
+      "Bajo": 7.061554258868135e-24,
+      "Medio": 2.0438690453867734e-08
+    },
+    "recommendation": "RECHAZAR",
+    "applicant_summary": {
+      "edad": 35,
+      "salario": 3000000,
+      "puntaje_datacredito": 900,
+      "dti": 44.043445342784395
+    }
+  }
+]

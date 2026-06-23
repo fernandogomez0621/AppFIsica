@@ -1,0 +1,35 @@
+# Control de versiones / historial (contiene claves viejas: NO meter en la imagen)
+.git
+.gitignore
+
+# Secretos
+.env
+.streamlit/secrets.toml
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Entornos virtuales
+venv/
+venv_fisica/
+.venv/
+env/
+
+# Datos / modelos / BD vectorial → se montan como volúmenes, no van en la imagen
+data/
+models/
+chroma_rbm_db/
+chroma_db/
+chroma_db_rag/
+
+# Documentación generada
+docs/build/
+
+# Sistema
+.DS_Store
+Thumbs.db
